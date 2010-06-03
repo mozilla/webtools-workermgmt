@@ -1,0 +1,40 @@
+#calendarContainer {
+	border:2px solid #999;
+}
+.cal {
+	font-size:11px;
+	background-color:#CCC;
+	text-align:center;
+	border:0;
+}
+
+.cal img {
+	border:0;
+}
+.cal button{
+	border:0;
+	background-color:#CCC;
+	cursor:pointer;
+	margin:0;
+	padding:0;
+}
+.cal button.today { background-color:#FF6; }
+.cal button.selected { border:1px solid #000; }
+
+.dow {
+	background-color:#000;
+	color:#FFF;
+	font-weight:normal;
+}
+
+.dow td {
+	width:18px;
+}
+thead {
+	font-size:1.2em;
+	font-weight:bold;
+}
+
+thead button {
+	font-size:.7em;
+}

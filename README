@@ -1,0 +1,26 @@
+LICENSING:
+ - All the stock Kohana Files and my files extendng those classes are under
+   the Kohana Liciense : http://kohanaphp.com/license
+ - All my added files not directly extended from the Kohana classes
+   modules/libraries/... are under the MIT license and noted as such in the file.
+
+This is a couple of Web Forms that interact with a Bugzilla installation.
+It is quite specific in the problem it is addressing so it is probably not
+Easily reusable for others but feel free to glean what you can from the various
+Files that make up the app.
+
+This app does require some non default PHP extensions
+- php xmlrpc extension http://us.php.net/manual/en/book.xmlrpc.php
+- php curl extension http://php.net/manual/en/book.curl.php
+- php ldap extension http://us.php.net/manual/en/book.ldap.php
+
+INSTALL
+This is a standard Kohana app refer to their docs for the basics
+
+- create application/logs and application/cache dirs and set so apache can write to them
+- create local config files
+cp application/config/config_dist.php application/config/config.php
+AND
+cp application/config/workermgmt_dist.php application/config/workermgmt.php
+
+For each config file set appropriate settings for your environment.
