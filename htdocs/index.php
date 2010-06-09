@@ -22,7 +22,7 @@ define('IN_PRODUCTION', TRUE);
  *
  * This path can be absolute or relative to this file.
  */
-$kohana_application = 'application';
+$kohana_application = '../application';
 
 /**
  * Kohana modules directory. This directory should contain all the modules used
@@ -31,7 +31,7 @@ $kohana_application = 'application';
  *
  * This path can be absolute or relative to this file.
  */
-$kohana_modules = 'modules';
+$kohana_modules = '../modules';
 
 /**
  * Kohana system directory. This directory should contain the core/ directory,
@@ -39,7 +39,7 @@ $kohana_modules = 'modules';
  *
  * This path can be absolute or relative to this file.
  */
-$kohana_system = 'system';
+$kohana_system = '../system';
 
 /**
  * Test to make sure that Kohana is running on PHP 5.2 or newer. Once you are
