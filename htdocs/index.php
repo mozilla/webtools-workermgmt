@@ -16,7 +16,7 @@ define('SEND_EMAIL',true);
  *
  * @see  http://kohanaframework.org/guide/about.install#application
  */
-$application = '../application3';
+$application = '../application';
 
 /**
  * The directory in which your modules are located.
