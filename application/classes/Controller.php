@@ -16,7 +16,7 @@ class Controller extends Kohana_Controller {
         if( ! in_array($requested_area, $this->non_authed_areas)) {
             // run authentication
             if( ! Bugzilla::instance(Kohana::config('workermgmt'))->authenticated()) {
-                url::redirect('login');
+                $this->request->redirect('authenticate/login');
             }
         }
 

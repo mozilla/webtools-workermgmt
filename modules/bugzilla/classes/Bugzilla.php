@@ -31,7 +31,7 @@ class Bugzilla {
     const CODE_CONTRACTOR_HIRING_GROUP = 59;
 
 
-    public function  __construct($config) {
+    public function  __construct(Kohana_Config_File $config) {
         $this->config = $config;
         $this->bz_id = Session::instance()->get('bz_id');
         $this->bz_token = Session::instance()->get('bz_token');
@@ -47,7 +47,7 @@ class Bugzilla {
      *
      * @return  object
      */
-    public static function instance(array $config) {
+    public static function instance(Kohana_Config_File $config) {
         static $instance;
         empty($instance) and $instance = new self($config);
         return $instance;
@@ -233,7 +233,7 @@ class Bugzilla {
             $result['bug_id'] = isset($filing_response['id'])?$filing_response['id']:null;
             $result['success_message'] = sprintf(
                     $this->bug_filing_types[$request_type]['success_message'],
-                    $this->config['bugzilla_url'], $result['bug_id'], $result['bug_id']
+                    $this->config('bugzilla_url'), $result['bug_id'], $result['bug_id']
             );
         }
         return $result;
@@ -282,7 +282,7 @@ class Bugzilla {
      * @return
      */
     private function call($xml) {
-        $bugzilla_server = $this->config['bugzilla_url'];
+        $bugzilla_server = $this->config('bugzilla_url');
         $bugzilla_xmlrpc = "/xmlrpc.cgi";
         $additional_headers = array('Content-type: text/xml;charset=UTF-8');
         if ( $this->bz_id && $this->bz_token ) {

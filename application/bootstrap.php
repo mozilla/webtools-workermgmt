@@ -87,7 +87,14 @@ Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'controller' => 'hiring',
 		'action'     => 'index',
-	));
+	)
+);
+Route::set('default', '(<controller>(/<action>(/<id>)))')
+	->defaults(array(
+		'controller' => 'hiring',
+		'action'     => 'index',
+	)
+);
 
 /**
  * @todo add
