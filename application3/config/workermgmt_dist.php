@@ -38,3 +38,5 @@ Dear %email_recipient%,
 
 THis email is to inform you that...
 XOXO;
+
+return $config;

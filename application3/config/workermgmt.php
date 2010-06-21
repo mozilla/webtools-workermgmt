@@ -1,4 +1,5 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
+
 $config['bugzilla_url'] = 'https://bugzilla-stage-tip.mozilla.org';
 $config['ldap_anon_bind'] = 'uid=binduser,ou=logins,dc=mozilla';
 $config['ldap_anon_password'] = 'Z6bp3Zrh';
@@ -29,3 +30,5 @@ XOXO;
 $config['buddy_email_from_address'] = 'noreply@mozilla.com';
 $config['buddy_email_from_label'] = 'Buddy Notifier';
 $config['buddy_email_subject'] = 'This is the Buddy Notifier';
+
+return $config;

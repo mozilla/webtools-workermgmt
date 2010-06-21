@@ -10,7 +10,7 @@ class Client {
 
 
     private static $validation_results = null;
-    
+
 
     /**
      * Retrieves messages intended for the user/client from a lower level function.
@@ -24,7 +24,8 @@ class Client {
      * @return	string	HTML output of user messages
      */
     public static function messageFetchHtml() {
-        if ($messages = Session::instance()->get_once('client_messages')) {
+        if ($messages = Session::instance()->get('client_messages')) {
+            Session::instance()->delete('client_messages');
             $notices  = '';
             $warnings = '';
             $errors   = '';
@@ -117,7 +118,7 @@ class Client {
      * Set the results of the validation (from Validation_Core).
      * self::validation($input_key) then uses this to output those errors
      * at the specific form input element
-     * 
+     *
      * @param array $results
      */
     public static function validation_results($results) {
@@ -134,7 +135,7 @@ class Client {
             echo("<span class=\"error\">".htmlspecialchars(self::$validation_results[$input_key], ENT_NOQUOTES, 'UTF-8')."</span>");
         }
     }
-    
+
     /*
      * Returns true if client is storing messages at E_USER_ERROR || E_USER_WARNING
      *
