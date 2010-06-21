@@ -9,17 +9,17 @@
  */
 class Controller_Authenticate extends Controller_Template {
 
-    public function  __construct() {
+    public function  __construct(Kohana_Request $request) {
         $this->bugzilla = Bugzilla::instance(Kohana::config('workermgmt'));
-        parent::__construct();
+        parent::__construct($request);
     }  
-    public function index() {
+    public function action_index() {
         url::redirect('login'); 
     }
     /**
      * note: Route set to /login
      */
-    public function login() {
+    public function action_login() {
         $username = $this->input->post('bz_username');
         $password = $this->input->post('bz_password');
         if($_POST) {
@@ -48,7 +48,7 @@ class Controller_Authenticate extends Controller_Template {
     /**
      * note: Route set to /logout
      */
-    public function logout() {
+    public function action_logout() {
         $this->bugzilla->logout();
         client::messageSend("You have logged out", E_USER_NOTICE);
         url::redirect('login');
