@@ -9,6 +9,7 @@ class Model_Hiring {
    */
   public function __construct(Ldap $ldap) {
     $this->ldap = $ldap;
+    $this->log = Kohana_Log::instance();
   }
 
   public function manager_list() {
@@ -60,13 +61,13 @@ class Model_Hiring {
         }
          $from = !empty ($email_info['from_label']) ? "\"{$email_info['from_label']}\" <{$email_info['from_address']}>" : $email_info['from_address'];
          $mail_sent = mail($email_info['buddy_email'], $email_info['subject'], $email_template, "From: ". $from);
-         kohana::log('info', "Sent Buddy Notification Email to [{$email_info['buddy_email']}] from [{$from}]");
+         $this->log->add('info', "Sent Buddy Notification Email to [{$email_info['buddy_email']}] from [{$from}]");
       } else {
-        kohana::log('error', "One or both To and From email addresses for the Notify Buddy email were invalid\n"
+        $this->log->add('error', "One or both To and From email addresses for the Notify Buddy email were invalid\n"
                 ."To: {$email_info['buddy email']}\nFrom:{$from}");
       }
     } else {
-      kohana::log('debug', "SEND_EMAIL is false so Buddy notification email not sent");
+      $this->log->add('debug', "SEND_EMAIL is false so Buddy notification email not sent");
     }
     return $mail_sent;
   }

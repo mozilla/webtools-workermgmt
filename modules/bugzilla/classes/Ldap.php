@@ -21,18 +21,21 @@ class Ldap {
 
     private $cache_ttl = 0;
 
+    private $log;
+
     /**
      *
      * @param array $config
      * @param array $credentials array('username'=>'...', 'password'=>'...')
      */
-    public function  __construct(array $config, array $credentials) {
+    public function  __construct(Kohana_Config_File $config, array $credentials) {
         $this->credentials = $credentials;
         $this->host = isset($config['ldap_host'])?$config['ldap_host']:null;
         $this->anon_bind = isset($config['ldap_anon_bind'])?$config['ldap_anon_bind']:null;
         $this->anon_password = isset($config['ldap_anon_password'])?$config['ldap_anon_password']:null;
         $this->base_dn = isset($config['ldap_base_dn'])?$config['ldap_base_dn']:null;
         $this->cache_ttl = isset($config['ldap_cache_ttl'])?$config['ldap_cache_ttl']:null;
+        $this->log = Kohana_log::instance();
     }
     public function  __destruct() {
         if($this->ds) {
@@ -76,7 +79,7 @@ class Ldap {
             ldap_sort($this->ds(), $manager_search, 'cn');
             $manager_list = ldap_get_entries($this->ds(), $manager_search);
         } else {
-            kohana::log('error',"LDAP search failed using [{$this->ds()}, {$this->base_dn}, "
+            $this->log->add('error',"LDAP search failed using [{$this->ds()}, {$this->base_dn}, "
                 ."{$search_filter}]"
                 ."LDAP error:[".ldap_error($this->ds)."]");
         }
@@ -122,16 +125,16 @@ class Ldap {
             return true;
         }
         $bind_successful = false;
-        kohana::log('debug', "Attempting: \$this->init_dn_from_username({$this->credentials['username']})");
+        $this->log->add('debug', "Attempting: \$this->init_dn_from_username({$this->credentials['username']})");
         if($this->init_dn_from_username($this->credentials['username'])) {
-            kohana::log('debug', "ldap_bind(..., {$this->user_dn} , ...)");
+            $this->log->add('debug', "ldap_bind(..., {$this->user_dn} , ...)");
             if( ! ldap_bind($this->ds(),$this->user_dn, $this->credentials['password'])) {
-                kohana::log('error',"Failed To Bind to LDAP with user DN[{$this->user_dn}].\n"
+                $this->log->add('error',"Failed To Bind to LDAP with user DN[{$this->user_dn}].\n"
                         ."LDAP error:[".ldap_error($this->ds())."]");
                 $this->successfully_bound = false;
             } else {
                 $this->successfully_bound = true;
-                kohana::log('debug',"Successfully bound as user: [{$this->user_dn}]");
+                $this->log->add('debug',"Successfully bound as user: [{$this->user_dn}]");
             }
         }
         return $bind_successful;
@@ -143,9 +146,9 @@ class Ldap {
     private function init_dn_from_username($username) {
         $success = false;
         if (! $this->user_dn) {
-            kohana::log('debug',"Atempting (anonymous) ldap_bind(\$this->ds(), '{$this->anon_bind}', #password#)");
+            $this->log->add('debug',"Atempting (anonymous) ldap_bind(\$this->ds(), '{$this->anon_bind}', #password#)");
             if( ! ldap_bind($this->ds(), $this->anon_bind, $this->anon_password)) {
-                kohana::log('error',"Failed Anon Bind to LDAP using [".$this->anon_bind."]\n"
+                $this->log->add('error',"Failed Anon Bind to LDAP using [".$this->anon_bind."]\n"
                         ."LDAP error:[".ldap_error($this->ds)."]");
             } else {
                 $search = $this->ldap_search("mail=$username");
@@ -153,7 +156,7 @@ class Ldap {
                 if($search_results['count'] != 1) {
                     $success = false;
                 } else {
-                    kohana::log('debug',"User DN recovered as: [{$search_results[0]['dn']}]");
+                    $this->log->add('debug',"User DN recovered as: [{$search_results[0]['dn']}]");
                     $this->user_dn = $search_results[0]['dn'];
                     $success = true;
                 }
@@ -171,9 +174,9 @@ class Ldap {
         if( ! $this->ds) {
             $this->ds = ldap_connect($this->host);
             if(!$this->ds) {
-                kohana::log('error',"FAILED to connect to LDAP host [{$this->host}]");
+                $this->log->add('error',"FAILED to connect to LDAP host [{$this->host}]");
             }
-            kohana::log('debug', "Successfully connected to LDAP [{$this->host}]");
+            $this->log->add('debug', "Successfully connected to LDAP [{$this->host}]");
         }
         return $this->ds;
     }
@@ -192,7 +195,7 @@ class Ldap {
             $search_results = ldap_get_entries($this->ds(),$search);
             $search_results = $this->flatten_ldap_results($search_results);
         } else {
-            kohana::log('error', "LDAP search failed using [{$this->ds()},{$this->base_dn}, "
+            $this->log->add('error', "LDAP search failed using [{$this->ds()},{$this->base_dn}, "
                     ."(&(objectClass=mozComPerson)(isManager=TRUE))]"
                     ."LDAP error:[".ldap_error($this->ds)."]");
         }
@@ -234,10 +237,10 @@ class Ldap {
      * filtering
      */
     private function ldap_search($search_filter, array $attributes_to_return=null) {
-        kohana::log('debug',"Running LDAP search  [{$this->ds()}, {$this->base_dn}, "
+        $this->log->add('debug',"Running LDAP search  [{$this->ds()}, {$this->base_dn}, "
                     ."{$search_filter}]"
                     ."LDAP error:[".ldap_error($this->ds)."]");
-        kohana::log('debug',"Attempting ldap_search whith dn:'{$this->base_dn}' and filter:'{$search_filter}'");
+        $this->log->add('debug',"Attempting ldap_search whith dn:'{$this->base_dn}' and filter:'{$search_filter}'");
         if($attributes_to_return) {
             $result = ldap_search($this->ds(),$this->base_dn,$search_filter, $attributes_to_return);
         } else {
