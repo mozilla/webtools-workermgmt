@@ -7,7 +7,7 @@
  * @author     skeen@mozilla.org
  * @license    http://www.opensource.org/licenses/mit-license.php
  */
-class Bugzilla_Core {
+class Bugzilla {
     private $error_message;
     private $curler;
 

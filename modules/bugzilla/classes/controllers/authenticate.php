@@ -7,7 +7,7 @@
  *
  *
  */
-class Authenticate_Controller extends Template_Controller {
+class Controller_Authenticate extends Controller_Template {
 
     public function  __construct() {
         $this->bugzilla = Bugzilla::instance(Kohana::config('workermgmt'));

@@ -7,7 +7,7 @@
  * @author     skeen@mozilla.org
  * @license    http://www.opensource.org/licenses/mit-license.php
  */
-class Curler_Core {
+class Curler {
   
   private $cookie_file =null;
   private $response_info = null;

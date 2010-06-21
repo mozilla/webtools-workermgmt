@@ -7,7 +7,7 @@
  * @author     skeen@mozilla.org
  * @license    http://www.opensource.org/licenses/mit-license.php
  */
-class Ldap_Core {
+class Ldap {
 
     private $ds = null;// currently pub, called in newhire
     private $user_dn = null;
