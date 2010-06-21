@@ -14,9 +14,10 @@ class Curler {
   private $config = null;
   private $response_headers = null;
   private $response_content = null;
+  private $log;
 
   public function __construct() {
-    
+      $this->log = Kohana_Log::instance();
   }
   /**
    *
@@ -71,9 +72,9 @@ class Curler {
     }
     $http_response = curl_exec($handle); // run the whole process
     if($http_response===false) {
-      kohana::log('error',"Curl Error Number [".curl_errno($handle)."] : ".curl_error($handle));
+      $this->log->add('error',"Curl Error Number [".curl_errno($handle)."] : ".curl_error($handle));
     }
-    kohana::log('debug',"Return from curl_exec:\n".print_r($http_response,1));
+    $this->log->add('debug',"Return from curl_exec:\n".print_r($http_response,1));
     $this->response_info = curl_getinfo($handle);
     $this->parse_response($http_response);
     curl_close($handle);

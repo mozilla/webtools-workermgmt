@@ -17,6 +17,8 @@ class Bugzilla {
 
     private $config;
 
+    private $log;
+
     /**
      * Bug types we know about, these correspond to the case:'s
      * in $this::newhire_filing()
@@ -36,6 +38,7 @@ class Bugzilla {
         $this->bz_id = Session::instance()->get('bz_id');
         $this->bz_token = Session::instance()->get('bz_token');
         $this->curler = new Curler();
+        $this->log = Kohana_Log::instance();
     }
 
     public function error_message() {
@@ -211,10 +214,10 @@ class Bugzilla {
                 break;
 
             default:
-                Kohana::log('error',"Urecognized Filing reqest type [$request_type]", E_USER_ERROR);
+                $this->log->add('error',"Urecognized Filing reqest type [$request_type]", E_USER_ERROR);
                 break;
         }
-        kohana::log('debug', "\$filing_response:".print_r($filing_response,1));
+        $this->log->add('debug', "\$filing_response:".print_r($filing_response,1));
         $error_code = isset($filing_response['faultCode'])?$filing_response['faultCode']:null;
         $error_message = isset($filing_response['faultString'])?$filing_response['faultString']:null;
         if($error_message) {
@@ -233,7 +236,7 @@ class Bugzilla {
             $result['bug_id'] = isset($filing_response['id'])?$filing_response['id']:null;
             $result['success_message'] = sprintf(
                     $this->bug_filing_types[$request_type]['success_message'],
-                    $this->config('bugzilla_url'), $result['bug_id'], $result['bug_id']
+                    $this->config['bugzilla_url'], $result['bug_id'], $result['bug_id']
             );
         }
         return $result;
@@ -259,7 +262,7 @@ class Bugzilla {
         $response = xmlrpc_decode_request($this->call($request), $request);
         if(empty($response)) {
             $this->error_message = "There was an unexpected error while logging into Bugzilla";
-            kohana::log('error',"Recieved Empty response from bugzilla login request");
+            $this->log->add('error',"Recieved Empty response from bugzilla login request");
         } else if (isset($response['faultString'])) {
             $this->error_message = $response['faultString'];
         } else {
@@ -282,7 +285,7 @@ class Bugzilla {
      * @return
      */
     private function call($xml) {
-        $bugzilla_server = $this->config('bugzilla_url');
+        $bugzilla_server = $this->config['bugzilla_url'];
         $bugzilla_xmlrpc = "/xmlrpc.cgi";
         $additional_headers = array('Content-type: text/xml;charset=UTF-8');
         if ( $this->bz_id && $this->bz_token ) {
@@ -303,7 +306,7 @@ class Bugzilla {
         $set_cookies = $this->curler->response_headers('Set-Cookie');
         $response = $this->curler->response_content();
 
-        kohana::log('debug',"Curl Info from XMLRPC call in [".__METHOD__
+        $this->log->add('debug',"Curl Info from XMLRPC call in [".__METHOD__
                 ."] \n".print_r($this->curler->response_info(),1));
 
         if($set_cookies) {
@@ -320,7 +323,7 @@ class Bugzilla {
                 }
             }
         }
-        kohana::log('debug',"Response from XMLRPC call in [".__METHOD__
+        $this->log->add('debug',"Response from XMLRPC call in [".__METHOD__
                 ."] with \$response = ".print_r($response,1));
         return $response;
     }
@@ -352,7 +355,7 @@ class Bugzilla {
             array_change_key_case($bug_meta)
         );
 
-        kohana::log('debug',"Starting [".__METHOD__."] with \$bug_meta = "
+        $this->log->add('debug',"Starting [".__METHOD__."] with \$bug_meta = "
                 .print_r($bug_meta,1));
 
         $request = xmlrpc_encode_request(
