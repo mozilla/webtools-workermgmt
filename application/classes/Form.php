@@ -23,28 +23,62 @@ class Form extends Kohana_Form {
      *   auto_label('first_name');
      *
      * (and 'first_name' is in self::required_fields), it will render
-     * 
+     *
      *   <label class="required" for="first_name">First Name</label>
      *
-     * @param string/array $for_input label “for” name or an array of HTML attributes
-     * @param string $text_label label text or HTML
-     * @param string $attibutes a string to be attached to the end of the attributes
+     * @param string/array $for_input label for name or an array of HTML attributes
+     * @param string $display_label label text or HTML
+     * @param array $attibutes 
      * @return string The rendered label element
      */
-    public static function auto_label($data, $text = null, $extra = null) {
+    public static function auto_label($data, $display_label = null, array $extra = null) {
         $for_input = $data;
         if(is_array($data)) {
             $for_input = isset($data['for'])?$data['for']:'';
         }
         if(self::field_required($for_input)) {
-            if($extra && strstr($extra, 'class=')) {
-                $extra = str_replace('class="', 'class="required ', $extra);
+            if($extra && key_exists('class', $extra)) {
+                $extra['class'] = "{$extra['class']} required";
             } else {
-                $extra = 'class="required"';
+                $extra['class'] = "required";
             }
         }
-        $text = $text === null ? implode(' ', array_map('ucfirst',explode('_',$for_input))): $text ;
-        return self::label($data, $text, $extra);
+        $display_label = $display_label === null
+            ? implode(' ', array_map('ucfirst',explode('_',$for_input)))
+            : $display_label ;
+        return self::label($data, $display_label, $extra);
+    }
+    /**
+     *
+     * @param <type> $name
+     * @param array $options
+     * @param <type> $selected
+     * @param array $attributes
+     * @return string 
+     */
+    public static function check_group($name, array $options = NULL, $selected = array(), array $attributes = NULL) {
+        // $checkbox = $this->checkbox($name, $value, $checked, $attributes);
+        // Set the input name
+        $checkboxes = array();
+
+        if (empty($options)) {
+            // There are no options
+            $options = array();
+        } else {
+            $selected = is_array($selected)?$selected:array((string)$selected);
+            foreach ($options as $identifier => $label) {
+                $checked = key_exists($identifier, $selected);
+                $checkboxes[] = '<p>'.self::checkbox("{$name}[]", $identifier, $checked, $attributes)." {$label}</p>";
+            }
+            // Compile the options into a single string
+            $checkboxes = "\n".implode("\n", $checkboxes)."\n";
+        }
+
+        return $checkboxes;
+
+
+
+
     }
 
 }

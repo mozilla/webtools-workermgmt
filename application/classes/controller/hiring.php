@@ -139,8 +139,8 @@ class Controller_Hiring extends Controller_Template {
         }
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
-        $this->template->js_extra = html::script(array('media/js/jquery.autocomplete.min.js'),false);
-        $this->template->css_extra = html::stylesheet(array('media/css/jquery.autocomplete.css'),array('screen'));
+        $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
+        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
         $this->template->title = 'Hiring::Employee';
         $this->template->content = new View('pages/hiring_employee');
         $this->template->content->form = $form;
@@ -151,8 +151,8 @@ class Controller_Hiring extends Controller_Template {
      */
     public function action_contractor() {
         $hiring = new Model_Hiring($this->get_ldap());
-        $this->select_lists['manager'] = hiring_forms::format_manager_list($hiring->manager_list());
-        $this->select_lists['buddy'] = hiring_forms::format_manager_list($hiring->buddy_list());
+        $this->select_lists['manager'] = Hiring_Helper::format_manager_list($hiring->manager_list());
+        $this->select_lists['buddy'] = Hiring_Helper::format_manager_list($hiring->buddy_list());
         // allow only hire_type = 'Contractor'
         $this->select_lists['hire_type'] = array('Contractor'=>'Contractor');
         /**
@@ -237,8 +237,8 @@ class Controller_Hiring extends Controller_Template {
         }
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
-        $this->template->js_extra = html::script(array('media/js/jquery.autocomplete.min.js'),false);
-        $this->template->css_extra = html::stylesheet(array('media/css/jquery.autocomplete.css'),array('screen'));
+        $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
+        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
 
         $this->template->title = 'Hiring::Contractor';
         $this->template->content = new View('pages/hiring_contractor');
