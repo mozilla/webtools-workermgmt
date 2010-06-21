@@ -6,7 +6,7 @@
  * @author      additions: Sam Keen
  * @version		v.0.2
  */
-class client {
+class Client {
 
 
     private static $validation_results = null;

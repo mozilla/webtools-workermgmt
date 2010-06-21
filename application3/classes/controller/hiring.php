@@ -4,7 +4,7 @@
  *
  * @author     Sam Keen
  */
-class Hiring_Controller extends Template_Controller {
+class Controller_Hiring extends Controller_Template {
 
     /**
      * No DB for this app, so these are various lookup lists needed for form
@@ -47,7 +47,7 @@ class Hiring_Controller extends Template_Controller {
     /**
      * Landing page
      */
-    public function index() {
+    public function action_index() {
         $this->template->title = 'Hiring::Home';
         $this->template->content = new View('pages/hiring_home');
 
@@ -55,8 +55,8 @@ class Hiring_Controller extends Template_Controller {
     /**
      * Form for hiring Employee and Interns
      */
-    public function employee() {
-        $hiring = new Hiring_Model($this->get_ldap());
+    public function action_employee() {
+        $hiring = new Model_Hiring($this->get_ldap());
         $this->select_lists['manager'] = hiring_forms::format_manager_list($hiring->manager_list());
         $this->select_lists['buddy'] = hiring_forms::format_manager_list($hiring->buddy_list());
         /**
@@ -149,8 +149,8 @@ class Hiring_Controller extends Template_Controller {
     /**
      * Form for submitting Contractor hirings
      */
-    public function contractor() {
-        $hiring = new Hiring_Model($this->get_ldap());
+    public function action_contractor() {
+        $hiring = new Model_Hiring($this->get_ldap());
         $this->select_lists['manager'] = hiring_forms::format_manager_list($hiring->manager_list());
         $this->select_lists['buddy'] = hiring_forms::format_manager_list($hiring->buddy_list());
         // allow only hire_type = 'Contractor'
@@ -271,7 +271,7 @@ class Hiring_Controller extends Template_Controller {
      * @param Manager_Model $hiring
      * @return $form array with additional values
      */
-    private function build_supplemental_form_values(array $form, Hiring_Model $hiring) {
+    private function build_supplemental_form_values(array $form, Model_Hiring $hiring) {
         $first_name = iconv('UTF-8', 'ASCII//TRANSLIT', $form['first_name']);
         $first_initial = iconv('UTF-8', 'ASCII//TRANSLIT', $first_name{0});
         $last_name = iconv('UTF-8', 'ASCII//TRANSLIT', $form['last_name']);
@@ -297,9 +297,9 @@ class Hiring_Controller extends Template_Controller {
      * employee.
      * 
      * @param array $form_input
-     * @param Hiring_Model $hiring
+     * @param Model_Hiring $hiring
      */
-    private function notify_buddy($form_input, Hiring_Model $hiring) {
+    private function notify_buddy($form_input, Model_Hiring $hiring) {
       
       $template = kohana::config('workermgmt.buddy_email_template');
       $email_info['from_address'] = kohana::config('workermgmt.buddy_email_from_address');

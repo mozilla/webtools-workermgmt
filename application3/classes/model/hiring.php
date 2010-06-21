@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Hiring_Model {
+class Model_Hiring {
   /**
    * Class constructor.
    *

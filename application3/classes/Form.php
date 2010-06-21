@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class form extends form_Core {
+class Form extends Kohana_Form {
 
     private static $required_fields = array();
 
