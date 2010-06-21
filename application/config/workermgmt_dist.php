@@ -39,4 +39,16 @@ Dear %email_recipient%,
 THis email is to inform you that...
 XOXO;
 
+$config['mock_ldap_manager_list'] =
+    '{"bob1@somewhere.com":{
+        "cn":"Bob One",
+        "title":"Number One Bob",
+        "bugzilla_email":"bug-bob1@somewhere.com"
+    },
+    {"bob2@somewhere.com":{
+        "cn":"Bob Two",
+        "title":"Number Two Bob",
+        "bugzilla_email":"bug-bob2@somewhere.com"
+    }';
+
 return $config;
