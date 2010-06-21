@@ -7,7 +7,7 @@ class Model_Hiring {
    * @access	public
    * @return	void
    */
-  public function __construct(Ldap_Core $ldap) {
+  public function __construct(Ldap $ldap) {
     $this->ldap = $ldap;
   }
 
