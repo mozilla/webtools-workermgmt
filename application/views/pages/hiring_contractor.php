@@ -25,74 +25,74 @@
 
     <?php
     echo form::auto_label('first_name');
-    echo form::input('first_name', $form['first_name'], array('size'=>'20'));
+    echo form::input('first_name=id', $form['first_name'], array('size'=>'20'));
     client::validation('first_name');
 
     echo form::auto_label('last_name');
-    echo form::input('last_name', $form['last_name'], array('size'=>'20'));
+    echo form::input('last_name=id', $form['last_name'], array('size'=>'20'));
     client::validation('last_name');
 
     echo form::auto_label('org_name', 'Organization name');
-    echo form::input('org_name', $form['org_name'], array('size'=>'20'));
+    echo form::input('org_name=id', $form['org_name'], array('size'=>'20'));
     client::validation('org_name');
 
     echo form::auto_label('address');
-    echo form::input('address', $form['address'], array('size'=>'30'));
+    echo form::input('address=id', $form['address'], array('size'=>'30'));
     client::validation('address');
 
     echo form::auto_label('phone_number');
-    echo form::input('phone_number', $form['phone_number'], array('size'=>'30'));
+    echo form::input('phone_number=id', $form['phone_number'], array('size'=>'30'));
     client::validation('phone_number');
 
     echo form::auto_label('email_address');
-    echo form::input('email_address', $form['email_address'], array('size'=>'30'));
+    echo form::input('email_address=id', $form['email_address'], array('size'=>'30'));
     client::validation('email_address');
 
     echo form::auto_label('start_date');
-    echo form::input('start_date', $form['start_date'], array('size'=>'10'));
+    echo form::input('start_date=id', $form['start_date'], array('size'=>'10'));
     client::validation('start_date');
 
     echo form::auto_label('end_date');
-    echo form::input('end_date', $form['end_date'], array('size'=>'10'));
+    echo form::input('end_date=id', $form['end_date'], array('size'=>'10'));
     client::validation('end_date');
 
     echo form::auto_label('pay_rate', 'Rate of pay');
-    echo form::input('pay_rate', $form['pay_rate'], array('size'=>'10'));
+    echo form::input('pay_rate=id', $form['pay_rate'], array('size'=>'10'));
     client::validation('pay_rate');
 
     echo form::auto_label('payment_limit', 'Total payment limitation');
-    echo form::input('payment_limit', $form['payment_limit'], array('size'=>'10'));
+    echo form::input('payment_limit=id', $form['payment_limit'], array('size'=>'10'));
     client::validation('payment_limit');
 
     echo form::auto_label('manager');
-    echo form::select('manager',$lists['manager'],$form['manager']);
+    echo form::select('manager=id',$lists['manager'],$form['manager']);
     client::validation('manager');
 
     echo form::auto_label('buddy');
-    echo form::select('buddy',$lists['buddy'],$form['buddy']);
+    echo form::select('buddy=id',$lists['buddy'],$form['buddy']);
     client::validation('buddy');
 
     echo form::auto_label('location');
-    echo form::select('location',$lists['location'],$form['location']);
+    echo form::select('location=id',$lists['location'],$form['location']);
     client::validation('location');?>
 
     <div id="location_other_section">
     <?php echo form::auto_label('location_other','Specify other location');
-    echo form::input('location_other', $form['location_other'], array('size'=>'20'));
+    echo form::input('location_other=id', $form['location_other'], array('size'=>'20'));
     client::validation('location_other'); ?>
     </div>
 
     <?php echo form::auto_label('statement_of_work_label');
     client::validation('statement_of_work_label');
     echo form::textarea(
-            'statement_of_work',
+            'statement_of_work=id',
             $form['statement_of_work'],
             array('rows'=>"8", 'cols'=>"60"));
     ?>
 
     <p>
         <?php
-        echo form::checkbox('mail_needed', '1', Arr::get($_POST,'mail_needed')==1);
+        echo form::checkbox('mail_needed=id', '1', Arr::get($_POST,'mail_needed')==1);
         echo form::auto_label('mail_needed','Will this user need a mail account?');
         ?>
     </p>
@@ -108,21 +108,21 @@
                 you want a username in ADDITION to the default.</i></p>
         <?php
         echo form::auto_label('mail_alias','Mailing Alias');
-        echo form::input('mail_alias', $form['mail_alias'], array('size'=>'20')); ?>
+        echo form::input('mail_alias=id', $form['mail_alias'], array('size'=>'20')); ?>
         <?php client::validation('mail_alias'); ?>
 
         <p><i>Besides "all" and any location-based lists, are there any mailing
                 lists should this user be a member of? (optional)</i></p>
         <?php
         echo form::auto_label('mail_lists','Mailing Lists');
-        echo form::input('mail_lists', $form['mail_lists'], array('size'=>'30')); ?>
+        echo form::input('mail_lists=id', $form['mail_lists'], array('size'=>'30')); ?>
         <?php client::validation('mail_lists'); ?>
 
         <?php
         echo form::auto_label('other_comments');
         client::validation('other_comments'); ?>
         <?php echo form::textarea(
-                'other_comments',
+                'other_comments=id',
                 $form['other_comments'],
                 array('rows'=>"5", 'cols'=>"40"));
         ?>

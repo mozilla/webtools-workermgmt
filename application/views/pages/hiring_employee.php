@@ -10,52 +10,52 @@
     echo Form::csrf_token();
 
     echo form::auto_label('hire_type');
-    echo form::select('hire_type',$lists['hire_type'],$form['hire_type']);
+    echo form::select('hire_type=id',$lists['hire_type'],$form['hire_type']);
     client::validation('hire_type');
     
     echo form::auto_label('first_name');
-    echo form::input('first_name', $form['first_name'], array('size'=>'20'));
+    echo form::input('first_name=is', $form['first_name'], array('size'=>'20'));
     client::validation('first_name');
     
     echo form::auto_label('last_name');
-    echo form::input('last_name', $form['last_name'], array('size'=>'20'));
+    echo form::input('last_name=is', $form['last_name'], array('size'=>'20'));
     client::validation('last_name');
 
     echo form::auto_label('email_address','Email Address (<em>an existing email for this person</em>)');
-    echo form::input('email_address', $form['email_address'], array('size'=>'30'));
+    echo form::input('email_address=id', $form['email_address'], array('size'=>'30'));
     client::validation('email_address');
     
     echo form::auto_label('start_date');
-    echo form::input('start_date', $form['start_date'], array('size'=>'10'));
+    echo form::input('start_date=id', $form['start_date'], array('size'=>'10'));
     client::validation('start_date');?>
     
     <div id="end_date_section">
     <?php echo form::auto_label('end_date');
-    echo form::input('end_date', $form['end_date'], array('size'=>'10'));
+    echo form::input('end_date=id', $form['end_date'], array('size'=>'10'));
     client::validation('end_date');?>
     </div>
     
     <?php echo form::auto_label('manager');
-    echo form::select('manager',$lists['manager'],$form['manager']);
+    echo form::select('manager=id',$lists['manager'],$form['manager']);
     client::validation('manager');
 
     echo form::auto_label('buddy');
-    echo form::select('buddy',$lists['buddy'],$form['buddy']);
+    echo form::select('buddy=id',$lists['buddy'],$form['buddy']);
     client::validation('buddy');
 
     echo form::auto_label('location');
-    echo form::select('location',$lists['location'],$form['location']);
+    echo form::select('location=id',$lists['location'],$form['location']);
     client::validation('location');?>
 
     <div id="location_other_section">
     <?php echo form::auto_label('location_other','Specify other location');
-    echo form::input('location_other', $form['location_other'], array('size'=>'20'));
+    echo form::input('location_other=id', $form['location_other'], array('size'=>'20'));
     client::validation('location_other'); ?>
     </div>
 
     <p>
         <?php
-        echo form::checkbox('mail_needed', '1', Arr::get($_POST,'mail_needed')==1);
+        echo form::checkbox('mail_needed=id', '1', Arr::get($_POST,'mail_needed')==1);
         echo form::auto_label('mail_needed','Will this user need a mail account?');
         ?>
     </p>
@@ -72,21 +72,21 @@
                 you want a username in ADDITION to the default.</i></p>
         <?php
         echo form::auto_label('mail_alias','Mailing Alias');
-        echo form::input('mail_alias', $form['mail_alias'], array('size'=>'20')); ?>
+        echo form::input('mail_alias=id', $form['mail_alias'], array('size'=>'20')); ?>
         <?php client::validation('mail_alias'); ?>
 
         <p><i>Besides "all" and any location-based lists, are there any mailing
                 lists should this user be a member of? (optional)</i></p>
         <?php
         echo form::auto_label('mail_lists','Mailing Lists');
-        echo form::input('mail_lists', $form['mail_lists'], array('size'=>'30')); ?>
+        echo form::input('mail_lists=id', $form['mail_lists'], array('size'=>'30')); ?>
         <?php client::validation('mail_lists'); ?>
 
         <?php
         echo form::auto_label('other_comments');
         client::validation('other_comments'); ?>
         <?php echo form::textarea(
-                'other_comments',
+                'other_comments=id',
                 $form['other_comments'],
                 array('rows'=>"5", 'cols'=>"40"));
         ?>
@@ -95,7 +95,7 @@
 
     <p>
         <?php
-        echo form::checkbox('machine_needed', '1', Arr::get($_POST,'machine_needed')==1);
+        echo form::checkbox('machine_needed=id', '1', Arr::get($_POST,'machine_needed')==1);
         echo form::auto_label('machine_needed','Will this user need a machine?');
         ?>
     </p>
@@ -104,14 +104,14 @@
     <div id="machine_box" class="section" style="display: none;">
         <?php
         echo form::auto_label('machine_type','Type of machine needed');
-        echo form::select('machine_type',$lists['machine_type'],$form['machine_type']);
+        echo form::select('machine_type=id',$lists['machine_type'],$form['machine_type']);
         client::validation('machine_type'); ?>
 
         <?php
         echo form::auto_label('machine_special_requests','Special Requests (software/hardware/setup)');
         client::validation('machine_special_requests');
         echo form::textarea(
-                'machine_special_requests',
+                'machine_special_requests=id',
                 $form['machine_special_requests'],
                 array('rows'=>"5", 'cols'=>"40"));
         ?>
