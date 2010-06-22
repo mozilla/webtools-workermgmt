@@ -12,7 +12,7 @@ class Hiring_Controller extends Template_Controller {
      *
      * *REQUIRED: the key for the list needs to be the name for the id used
      * in the form
-     * 
+     *
      */
     private $select_lists = array(
         'hire_type' => array(
@@ -99,15 +99,15 @@ class Hiring_Controller extends Template_Controller {
             }
             if($this->input->post('location')=='other') {
                 array_push($required_fields,'location_other');
-            }          
+            }
             if($this->input->post('machine_needed')=='1') {
                 array_push($required_fields,'machine_type');
-            }         
+            }
             // add all the required fields
             foreach ($required_fields as $required_field) {
                 $post->add_rules($required_field, 'required');
             }
-            
+
             if ($post->validate()) {
                 // check for invilid
                 $form = arr::overwrite($form, $post->as_array());
@@ -120,16 +120,17 @@ class Hiring_Controller extends Template_Controller {
                     $bugs_to_file[] = Bugzilla::BUG_EMAIL_SETUP;
                 }
                 // File the appropriate Bugs
-                $this->file_these($bugs_to_file, $form);
-                // Send Buddy Email
-                if( ! empty($form['buddy']) ) {
-                  $this->notify_buddy($form, $hiring);
+                if($this->file_these($bugs_to_file, $form)) {
+                    // Send Buddy Email
+                    if( ! empty($form['buddy']) ) {
+                      $this->notify_buddy($form, $hiring);
+                    }
                 }
 
                 if( ! client::has_errors()) {
                     url::redirect('hiring/employee');
                 }
-                
+
             } else {
                 $form = arr::overwrite($form, $post->as_array());
                 client::validation_results(arr::overwrite($errors, $post->errors('hiring_employee_form_validations')));
@@ -162,7 +163,7 @@ class Hiring_Controller extends Template_Controller {
         $required_fields = array('contract_type', 'contractor_category', 'first_name','last_name',
             'address', 'phone_number', 'email_address', 'start_date', 'end_date',
             'pay_rate', 'payment_limit', 'manager','location', 'statement_of_work');
-        
+
         $form = array(
             'hire_type' => 'Contractor',
             'contract_type' => '',
@@ -187,7 +188,7 @@ class Hiring_Controller extends Template_Controller {
             'mail_alias' => '',
             'mail_lists' => '',
             'other_comments' => '',
-                
+
         );
         $errors = $form;
 
@@ -219,10 +220,11 @@ class Hiring_Controller extends Template_Controller {
                     $bugs_to_file[] = Bugzilla::BUG_EMAIL_SETUP;
                 }
                 // File the appropriate Bugs
-                $this->file_these($bugs_to_file, $form);
-                // Send Buddy Email
-                if( ! empty($form['buddy']) ) {
-                  $this->notify_buddy($form, $hiring);
+                if($this->file_these($bugs_to_file, $form)) {
+                    // Send Buddy Email
+                    if( ! empty($form['buddy']) ) {
+                      $this->notify_buddy($form, $hiring);
+                    }
                 }
                 if( ! client::has_errors()) {
                     url::redirect('hiring/contractor');
@@ -245,28 +247,32 @@ class Hiring_Controller extends Template_Controller {
         $this->template->content->form = $form;
         $this->template->content->lists = $this->select_lists;
     }
-    
+
     /**
      * Submit these bug types using the validated from data
-     * 
+     *
      * @param array $bugs_to_file Must be known values of Bugzilla
      *      i.e. Bugzilla::BUG_NEWHIRE_SETUP, Bugzilla::BUG_HR_CONTRACTOR, ...
      * @param array $form_input The validated form input
+     * @return boolean Success of filings
      */
     private function file_these(array $bugs_to_file, $form_input) {
         $bugzilla = Bugzilla::instance(kohana::config('workermgmt'));
+        $success = false;
         foreach ($bugs_to_file as $bug_to_file) {
             $filing = $bugzilla->newhire_filing($bug_to_file, $form_input);
             if ($filing['error_message']!==null) {
                 client::messageSend($filing['error_message'], E_USER_ERROR);
             } else {
                 client::messageSend($filing['success_message'], E_USER_NOTICE);
+                $success = true;
             }
         }
+        return $success;
     }
     /**
      * Build needed additional fields for bugzilla submission
-     * 
+     *
      * @param array $form The validated from input
      * @param Manager_Model $hiring
      * @return $form array with additional values
@@ -290,17 +296,17 @@ class Hiring_Controller extends Template_Controller {
         }
         // merge the addtions w/ the current submitted form elements
         return array_merge($form,$additions);
-       
+
     }
     /**
      * Sends the email to notify the current emp that they are a buddy to this new
      * employee.
-     * 
+     *
      * @param array $form_input
      * @param Hiring_Model $hiring
      */
     private function notify_buddy($form_input, Hiring_Model $hiring) {
-      
+
       $template = kohana::config('workermgmt.buddy_email_template');
       $email_info['from_address'] = kohana::config('workermgmt.buddy_email_from_address');
       // make sure label is at least an empty string
@@ -325,6 +331,6 @@ class Hiring_Controller extends Template_Controller {
           client::messageSend("The Buddy Notification Email was not sent due to and error", E_USER_ERROR);
           kohana::log('error', "Requiered fields missing for \$email_info\n".print_r($email_info,true));
       }
-      
+
     }
 }
