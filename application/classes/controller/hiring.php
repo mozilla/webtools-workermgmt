@@ -88,29 +88,31 @@ class Controller_Hiring extends Controller_Template {
         $errors = $form;
 
         if($_POST) {
-            hiring_forms::filter_disallowed_values($this->select_lists);
-            $post = new Validation($_POST);
-            $post->pre_filter('trim', true);
-            $post->add_rules('start_date', 'valid::date');
-            $post->add_rules('end_date', 'valid::date');
-            $post->add_rules('email_address', 'valid::email');
-            if(trim($this->input->post('hire_type'))=='Intern') {
+            Hiring_Helper::filter_disallowed_values($this->select_lists);
+            $post = new Validate($_POST);
+            $post->filter(true, 'trim');
+            $post
+                ->rule('start_date', 'valid::date')
+                ->rule('end_date', 'valid::date')
+                ->rule('email_address', 'valid::email');
+            
+            if(trim(Arr::get($_POST, 'hire_type'))=='Intern') {
                 array_push($required_fields,'end_date');
             }
-            if($this->input->post('location')=='other') {
+            if(Arr::get($_POST, 'location')=='other') {
                 array_push($required_fields,'location_other');
             }          
-            if($this->input->post('machine_needed')=='1') {
+            if(Arr::get($_POST, 'machine_needed')=='1') {
                 array_push($required_fields,'machine_type');
             }         
             // add all the required fields
             foreach ($required_fields as $required_field) {
-                $post->add_rules($required_field, 'required');
+                $post->rule($required_field, 'not_empty');
             }
             
-            if ($post->validate()) {
+            if ($post->check()) {
                 // check for invilid
-                $form = arr::overwrite($form, $post->as_array());
+                $form = Arr::overwrite($form, $post->as_array());
                 $form = $this->build_supplemental_form_values($form, $hiring);
                 $bugs_to_file = array(Bugzilla::BUG_NEWHIRE_SETUP);
                 if($form['machine_needed']) {
@@ -125,7 +127,6 @@ class Controller_Hiring extends Controller_Template {
                 if( ! empty($form['buddy']) ) {
                   $this->notify_buddy($form, $hiring);
                 }
-
                 if( ! client::has_errors()) {
                     url::redirect('hiring/employee');
                 }
@@ -144,7 +145,7 @@ class Controller_Hiring extends Controller_Template {
         $this->template->title = 'Hiring::Employee';
         $this->template->content = new View('pages/hiring_employee');
         $this->template->content->form = $form;
-	$this->template->content->lists = $this->select_lists;
+        $this->template->content->lists = $this->select_lists;
     }
     /**
      * Form for submitting Contractor hirings
@@ -192,24 +193,26 @@ class Controller_Hiring extends Controller_Template {
         $errors = $form;
 
         if($_POST) {
-            hiring_forms::filter_disallowed_values($this->select_lists);
-            $post = new Validation($_POST);
-            $post->pre_filter('trim', true);
-            $post->add_rules('start_date', 'valid::date');
-            $post->add_rules('end_date', 'valid::date');
-            $post->add_rules('email_address', 'valid::email');
-            if($this->input->post('mail_needed')=='1') {
+            Hiring_Helper::filter_disallowed_values($this->select_lists);
+            $post = new Validate($_POST);
+            $post->filter(true, 'trim');
+            $post
+                ->rule('start_date', 'valid::date')
+                ->rule('end_date', 'valid::date')
+                ->rule('email_address', 'valid::email');
+            
+            if(Arr::get($_POST, 'mail_needed')=='1') {
                 array_push($required_fields,'location');
             }
-            if($this->input->post('location')=='other') {
+            if(Arr::get($_POST, 'location')=='other') {
                 array_push($required_fields,'location_other');
             }
             // add all the required fields
             foreach ($required_fields as $required_field) {
-                $post->add_rules($required_field, 'required');
+                $post->rule($required_field, 'not_empty');
             }
 
-            if ($post->validate()) {
+            if ($post->check()) {
                 // check for invilid
                 $form = arr::overwrite($form, $post->as_array());
                 $form = $this->build_supplemental_form_values($form, $hiring);
