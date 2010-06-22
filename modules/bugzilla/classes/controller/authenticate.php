@@ -22,7 +22,7 @@ class Controller_Authenticate extends Controller_Template {
         $password = Arr::get($_POST,'bz_password');
         if($_POST) {
             $post = new Validate($_POST);
-            $post->filter(TRUE, 'trim');
+            $post->filter(true, 'trim');
             $post
                 ->rule('bz_username', 'not_empty')
                 ->rule('bz_password', 'not_empty');
