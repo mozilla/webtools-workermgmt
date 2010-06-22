@@ -24,11 +24,13 @@ class Mock_Ldap_Core extends Ldap_Core {
 
   public function  __construct($config, $credentials) {
     kohana::log('debug',"**USING MockLdap**");
-    $this->manager_list = $config['mock_ldap_manager_list'];
+    $this->manager_list = $config['mock_ldap_manager_list']
+            ? $config['mock_ldap_manager_list']
+            : $this->manager_list;
     return parent::__construct($config, $credentials);
   }
 
-  public function manager_list() {
+  public function employee_list($type) {
     kohana::log('debug',"Called MOCK ".__METHOD__);
     return json_decode($this->manager_list, true);
   }
