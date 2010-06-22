@@ -65,6 +65,9 @@ class Controller_Hiring extends Controller_Template {
          */
         $required_fields = array('hire_type','first_name','last_name','email_address',
                                  'start_date' ,'manager','buddy','location');
+        /**
+         * This should contain every field in the form
+         */
         $form = array(
             'hire_type' => '',
             'first_name' => '',
@@ -93,6 +96,10 @@ class Controller_Hiring extends Controller_Template {
             }
             Hiring_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
+            // hack to have Validate keep psot key/values after ->check()
+            // that did not have validation rules set (this is only needed
+            // since we are not using models
+            $post->labels(array_combine(array_keys($form), array_keys($form)));
             $post->filter(true, 'trim');
             $post
                 ->rule('start_date', 'date')
@@ -166,7 +173,9 @@ class Controller_Hiring extends Controller_Template {
         $required_fields = array('contract_type', 'contractor_category', 'first_name','last_name',
             'address', 'phone_number', 'email_address', 'start_date', 'end_date',
             'pay_rate', 'payment_limit', 'manager','location', 'statement_of_work');
-        
+        /**
+         * This should contain every field in the form
+         */
         $form = array(
             'hire_type' => 'Contractor',
             'contract_type' => '',
@@ -201,6 +210,10 @@ class Controller_Hiring extends Controller_Template {
             }
             Hiring_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
+            // hack to have Validate keep psot key/values after ->check()
+            // that did not have validation rules set (this is only needed
+            // since we are not using models
+            $post->labels(array_combine(array_keys($form), array_keys($form)));
             $post->filter(true, 'trim');
             $post
                 ->rule('start_date', 'date')
