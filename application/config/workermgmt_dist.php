@@ -21,7 +21,15 @@ $config['ldap_base_dn'] = '';
  * The app will NOT allow 'use_mock_ldap' to be turned on for IN_PRODUCTION
  */
 $config['use_mock_ldap'] = false;
-
+$config['mock_ldap_manager_list'] =
+    '{
+        "bob1@somewhere.com":{
+            "cn":"Bob One", "title":"Number One Bob", "bugzilla_email":"bug-bob1@somewhere.com"
+        },
+        "bob2@somewhere.com":{
+            "cn":"Bob Two", "title":"Number Two Bob", "bugzilla_email":"bug-bob2@somewhere.com"
+        }
+    }';
 /**
  * For the desired from address: "Somebody" <somebody@somewhere.com>
  *   $config['email_from_address'] = 'somebody@somewhere.com'
@@ -38,17 +46,5 @@ Dear %email_recipient%,
 
 THis email is to inform you that...
 XOXO;
-
-$config['mock_ldap_manager_list'] =
-    '{"bob1@somewhere.com":{
-        "cn":"Bob One",
-        "title":"Number One Bob",
-        "bugzilla_email":"bug-bob1@somewhere.com"
-    },
-    {"bob2@somewhere.com":{
-        "cn":"Bob Two",
-        "title":"Number Two Bob",
-        "bugzilla_email":"bug-bob2@somewhere.com"
-    }';
 
 return $config;

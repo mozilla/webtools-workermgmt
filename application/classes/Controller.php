@@ -23,7 +23,7 @@ class Controller extends Kohana_Controller {
     }
     protected function get_ldap() {
         if( IN_DEV_MODE && kohana::config('workermgmt.use_mock_ldap')) {
-          $ldap = new Mock_Ldap(kohana::config('workermgmt'), $this->ldap_credentials());
+          $ldap = new Ldap_Mock(kohana::config('workermgmt'), $this->ldap_credentials());
         } else {
           $ldap = new Ldap(kohana::config('workermgmt'), $this->ldap_credentials());
         }
