@@ -17,7 +17,7 @@ $config['ldap_base_dn'] = '';
  *  - manager_attributes() At this point only used in hiring forms to get the
  *    cn and bugzilla email for a given managers email
  *
- * @see lib/MockLdap
+ * @see Ldap_Mock
  * The app will NOT allow 'use_mock_ldap' to be turned on for IN_PRODUCTION
  */
 $config['use_mock_ldap'] = false;
