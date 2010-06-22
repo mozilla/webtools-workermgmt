@@ -14,11 +14,11 @@
     client::validation('hire_type');
     
     echo form::auto_label('first_name');
-    echo form::input('first_name=is', $form['first_name'], array('size'=>'20'));
+    echo form::input('first_name=id', $form['first_name'], array('size'=>'20'));
     client::validation('first_name');
     
     echo form::auto_label('last_name');
-    echo form::input('last_name=is', $form['last_name'], array('size'=>'20'));
+    echo form::input('last_name=id', $form['last_name'], array('size'=>'20'));
     client::validation('last_name');
 
     echo form::auto_label('email_address','Email Address (<em>an existing email for this person</em>)');
