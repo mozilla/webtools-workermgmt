@@ -2,6 +2,15 @@
 
 class Form extends Kohana_Form {
 
+    /**
+     * Keep the required fields ('not_empty') as a list so the Form class
+     * can decorate them in the UI (adds class='required ..')
+     *
+     * Usage in Controller:
+     * form::required_fields(array('hire_type','first_name','last_name',...)
+     *
+     * @todo Make this more automagic, so dont have to maintain a seperate array
+     */
     private static $required_fields = array();
 
     /**
@@ -13,14 +22,21 @@ class Form extends Kohana_Form {
     public static function required_fields(array $fields) {
         self::$required_fields = $fields;
     }
-
+    /**
+     *
+     * @param string $field_name
+     * @return boolean If this field is considered required or not
+     */
     public static function field_required($field_name) {
         return in_array($field_name, self::$required_fields);
     }
+    
     /**
-     * For example, if called thusly:
+     * Helper method for rendering lables.  Support the self::required_fields array
+     * so req fields are rendered with class="required ..."
      *
-     *   auto_label('first_name');
+     * Usage:
+     *   echo auto_label('first_name');
      *
      * (and 'first_name' is in self::required_fields), it will render
      *
@@ -49,20 +65,62 @@ class Form extends Kohana_Form {
         return self::label($data, $display_label, $extra);
     }
 
+    /**
+     * Helper to render csrf tokens for forms
+     * @return string Rendered hidden field
+     */
     public static function csrf_token() {
         return self::hidden('csrf_token',$_SESSION['csrf_token'] = uniqid());
     }
-
+    /**
+     * Does the csrf check
+     * @return boolean If token submitted matches the one in Session
+     */
     public static function valid_token() {
         return Arr::get($_POST,'csrf_token')
             && (Arr::get($_POST,'csrf_token') == Arr::get($_SESSION,'csrf_token'));
     }
 
     /**
+	 * Since K3 does not render id="$name" to match name="$name" (K2 did),
+     * we override these methods to support the syntax:
      *
-     * @param <type> $name
+     *  form::input('first_name=id',...
+     *
+     * When =id is seen, in this case we would set $name = 'first_name', and
+     * $attributes['id']='first_name' then call the return the parent method
+     *
+	 */
+	public static function input($name, $value = NULL, array $attributes = NULL) {
+		self::set_id_name($name, $attributes);
+        return parent::input($name, $value, $attributes);
+	}
+    public static function label($input, $text = NULL, array $attributes = NULL) {
+        self::set_id_name($name, $attributes);
+        return parent::label($input, $text, $attributes);
+    }
+    public static function select($name, array $options = NULL, $selected = NULL, array $attributes = NULL) {
+        self::set_id_name($name, $attributes);
+        return parent::select($name, $options, $selected, $attributes);
+    }
+    public static function textarea($name, $body = '', array $attributes = NULL, $double_encode = TRUE) {
+        self::set_id_name($name, $attributes);
+        return parent::textarea($name, $body, $attributes, $double_encode);
+    }
+    private static function set_id_name(&$name, &$attributes) {
+        if(substr($name,-3,3)=='=id') {
+            $attributes['id'] = substr($name,0,-3);
+            $name = substr($name,0,-3);
+        }
+    }
+
+    /**
+     * Create a Check box group.  Alternative UI widget to the Muti-select
+     * <select> element
+     * 
+     * @param string $name
      * @param array $options
-     * @param <type> $selected
+     * @param array $selected
      * @param array $attributes
      * @return string 
      */
@@ -83,12 +141,7 @@ class Form extends Kohana_Form {
             // Compile the options into a single string
             $checkboxes = "\n".implode("\n", $checkboxes)."\n";
         }
-
         return $checkboxes;
-
-
-
-
     }
 
 }
