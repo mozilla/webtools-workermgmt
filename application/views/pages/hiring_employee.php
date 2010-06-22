@@ -7,6 +7,8 @@
 <form method="post" action="" id="newHireForm" accept-charset="utf-8">
 
     <?php
+    echo Form::csrf_token();
+
     echo form::auto_label('hire_type');
     echo form::select('hire_type',$lists['hire_type'],$form['hire_type']);
     client::validation('hire_type');

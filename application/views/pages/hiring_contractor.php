@@ -7,6 +7,8 @@
 <form method="post" action="" id="newHireForm" accept-charset="utf-8">
 
     <?php
+    echo Form::csrf_token();
+    
     echo form::hidden('hire_type','Contractor');
 
     echo form::auto_label('contract_type','New/Extension');

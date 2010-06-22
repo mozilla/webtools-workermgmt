@@ -48,6 +48,16 @@ class Form extends Kohana_Form {
             : $display_label ;
         return self::label($data, $display_label, $extra);
     }
+
+    public static function csrf_token() {
+        return self::hidden('csrf_token',$_SESSION['csrf_token'] = uniqid());
+    }
+
+    public static function valid_token() {
+        return Arr::get($_POST,'csrf_token')
+            && (Arr::get($_POST,'csrf_token') == Arr::get($_SESSION,'csrf_token'));
+    }
+
     /**
      *
      * @param <type> $name
