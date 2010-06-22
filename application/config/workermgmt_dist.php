@@ -12,15 +12,24 @@ $config['ldap_base_dn'] = '';
  * If you are testing and not behind this sort of setup, use MockLdap
  * to proxy the 2 LDAP calls and return test data.
  *
- *  - manager_list() Returns the list of manager to populatet the manager
+ *  - employee_list() Returns the list of manager to populatet the manager
  *    select list in the hiring forms
- *  - manager_attributes() At this point only used in hiring forms to get the
+ *  - employee_attributes() At this point only used in hiring forms to get the
  *    cn and bugzilla email for a given managers email
  *
  * @see lib/MockLdap
  * The app will NOT allow 'use_mock_ldap' to be turned on for IN_PRODUCTION
  */
 $config['use_mock_ldap'] = false;
+$config['mock_ldap_manager_list'] =
+    '{
+        "bob1@somewhere.com":{
+            "cn":"Bob One", "title":"Number One Bob", "bugzilla_email":"bug-bob1@somewhere.com"
+        },
+        "bob2@somewhere.com":{
+            "cn":"Bob Two", "title":"Number Two Bob", "bugzilla_email":"bug-bob2@somewhere.com"
+        }
+    }';
 
 /**
  * For the desired from address: "Somebody" <somebody@somewhere.com>
