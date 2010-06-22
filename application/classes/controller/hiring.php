@@ -95,9 +95,9 @@ class Controller_Hiring extends Controller_Template {
             $post = new Validate($_POST);
             $post->filter(true, 'trim');
             $post
-                ->rule('start_date', 'valid::date')
-                ->rule('end_date', 'valid::date')
-                ->rule('email_address', 'valid::email');
+                ->rule('start_date', 'date')
+                ->rule('end_date', 'date')
+                ->rule('email_address', 'email');
             
             if(trim(Arr::get($_POST, 'hire_type'))=='Intern') {
                 array_push($required_fields,'end_date');
@@ -131,7 +131,7 @@ class Controller_Hiring extends Controller_Template {
                   $this->notify_buddy($form, $hiring);
                 }
                 if( ! client::has_errors()) {
-                    url::redirect('hiring/employee');
+                    $this->request->redirect('hiring/employee');
                 }
                 
             } else {
@@ -203,9 +203,9 @@ class Controller_Hiring extends Controller_Template {
             $post = new Validate($_POST);
             $post->filter(true, 'trim');
             $post
-                ->rule('start_date', 'valid::date')
-                ->rule('end_date', 'valid::date')
-                ->rule('email_address', 'valid::email');
+                ->rule('start_date', 'date')
+                ->rule('end_date', 'date')
+                ->rule('email_address', 'email');
             
             if(Arr::get($_POST, 'mail_needed')=='1') {
                 array_push($required_fields,'location');
@@ -234,7 +234,7 @@ class Controller_Hiring extends Controller_Template {
                   $this->notify_buddy($form, $hiring);
                 }
                 if( ! client::has_errors()) {
-                    url::redirect('hiring/contractor');
+                    $this->request->redirect('hiring/contractor');
                 }
 
             } else {
