@@ -1,107 +1,113 @@
 <?php
+
 /**
- * This file acts as the "front controller" to your application. You can
- * configure your application, modules, and system directories here.
- * PHP error_reporting level may also be changed.
+ * if IN_DEV_MODE is true
+ *  - Allowes the use of 'use_mock_ldap'
+ *  - Turns off ssl verification for curl calls to bugzilla
+ *  - Turns on the Kohana Profiler
+ */
+define('IN_DEV_MODE',true);
+// if true, will send email to buddy specified in hiring form
+define('SEND_EMAIL',true);
+
+/**
+ * The directory in which your application specific resources are located.
+ * The application directory must contain the bootstrap.php file.
  *
- * @see http://kohanaphp.com
+ * @see  http://kohanaframework.org/guide/about.install#application
  */
+$application = '../application';
 
 /**
- * Define the website environment status. When this flag is set to TRUE, some
- * module demonstration controllers will result in 404 errors. For more information
- * about this option, read the documentation about deploying Kohana.
+ * The directory in which your modules are located.
  *
- * @see http://docs.kohanaphp.com/installation/deployment
+ * @see  http://kohanaframework.org/guide/about.install#modules
  */
-define('IN_PRODUCTION', TRUE);
+$modules = '../modules';
 
 /**
- * Website application directory. This directory should contain your application
- * configuration, controllers, models, views, and other resources.
+ * The directory in which the Kohana resources are located. The system
+ * directory must contain the classes/kohana.php file.
  *
- * This path can be absolute or relative to this file.
+ * @see  http://kohanaframework.org/guide/about.install#system
  */
-$kohana_application = '../application';
+$system = '../system';
 
 /**
- * Kohana modules directory. This directory should contain all the modules used
- * by your application. Modules are enabled and disabled by the application
- * configuration file.
+ * The default extension of resource files. If you change this, all resources
+ * must be renamed to use the new extension.
  *
- * This path can be absolute or relative to this file.
- */
-$kohana_modules = '../modules';
-
-/**
- * Kohana system directory. This directory should contain the core/ directory,
- * and the resources you included in your download of Kohana.
- *
- * This path can be absolute or relative to this file.
- */
-$kohana_system = '../system';
-
-/**
- * Test to make sure that Kohana is running on PHP 5.2 or newer. Once you are
- * sure that your environment is compatible with Kohana, you can comment this
- * line out. When running an application on a new server, uncomment this line
- * to check the PHP version quickly.
- */
-version_compare(PHP_VERSION, '5.2', '<') and exit('Kohana requires PHP 5.2 or newer.');
-
-/**
- * Set the error reporting level. Unless you have a special need, E_ALL is a
- * good level for error reporting.
- */
-error_reporting(E_ALL & ~E_STRICT);
-
-/**
- * Turning off display_errors will effectively disable Kohana error display
- * and logging. You can turn off Kohana errors in application/config/config.php
- */
-ini_set('display_errors', TRUE);
-
-/**
- * If you rename all of your .php files to a different extension, set the new
- * extension here. This option can left to .php, even if this file has a
- * different extension.
+ * @see  http://kohanaframework.org/guide/about.install#ext
  */
 define('EXT', '.php');
 
-//
-// DO NOT EDIT BELOW THIS LINE, UNLESS YOU FULLY UNDERSTAND THE IMPLICATIONS.
-// ----------------------------------------------------------------------------
-// $Id: index.php 3915 2009-01-20 20:52:20Z zombor $
-//
+/**
+ * Set the PHP error reporting level. If you set this in php.ini, you remove this.
+ * @see  http://php.net/error_reporting
+ *
+ * When developing your application, it is highly recommended to enable notices
+ * and strict warnings. Enable them by using: E_ALL | E_STRICT
+ *
+ * In a production environment, it is safe to ignore notices and strict warnings.
+ * Disable them by using: E_ALL ^ E_NOTICE
+ *
+ * When using a legacy application with PHP >= 5.3, it is recommended to disable
+ * deprecated notices. Disable with: E_ALL & ~E_DEPRECATED
+ */
+error_reporting(E_ALL | E_STRICT);
 
-$kohana_pathinfo = pathinfo(__FILE__);
-// Define the front controller name and docroot
-define('DOCROOT', $kohana_pathinfo['dirname'].DIRECTORY_SEPARATOR);
-define('KOHANA',  $kohana_pathinfo['basename']);
+/**
+ * End of standard configuration! Changing any of the code below should only be
+ * attempted by those with a working knowledge of Kohana internals.
+ *
+ * @see  http://kohanaframework.org/guide/using.configuration
+ */
 
-// If the front controller is a symlink, change to the real docroot
-is_link(KOHANA) and chdir(dirname(realpath(__FILE__)));
+// Set the full path to the docroot
+define('DOCROOT', realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
 
-// If kohana folders are relative paths, make them absolute.
-$kohana_application = file_exists($kohana_application) ? $kohana_application : DOCROOT.$kohana_application;
-$kohana_modules = file_exists($kohana_modules) ? $kohana_modules : DOCROOT.$kohana_modules;
-$kohana_system = file_exists($kohana_system) ? $kohana_system : DOCROOT.$kohana_system;
+// Make the application relative to the docroot
+if ( ! is_dir($application) AND is_dir(DOCROOT.$application))
+	$application = DOCROOT.$application;
 
-// Define application and system paths
-define('APPPATH', str_replace('\\', '/', realpath($kohana_application)).'/');
-define('MODPATH', str_replace('\\', '/', realpath($kohana_modules)).'/');
-define('SYSPATH', str_replace('\\', '/', realpath($kohana_system)).'/');
+// Make the modules relative to the docroot
+if ( ! is_dir($modules) AND is_dir(DOCROOT.$modules))
+	$modules = DOCROOT.$modules;
 
-// Clean up
-unset($kohana_application, $kohana_modules, $kohana_system);
+// Make the system relative to the docroot
+if ( ! is_dir($system) AND is_dir(DOCROOT.$system))
+	$system = DOCROOT.$system;
 
-if (file_exists(DOCROOT.'install'.EXT))
+// Define the absolute paths for configured directories
+define('APPPATH', realpath($application).DIRECTORY_SEPARATOR);
+define('MODPATH', realpath($modules).DIRECTORY_SEPARATOR);
+define('SYSPATH', realpath($system).DIRECTORY_SEPARATOR);
+
+// Clean up the configuration vars
+unset($application, $modules, $system);
+
+if (file_exists('install'.EXT))
 {
-	// Load the installation tests
-	include DOCROOT.'install'.EXT;
+	// Load the installation check
+	return include 'install'.EXT;
+}
+
+// Load the base, low-level functions
+require SYSPATH.'base'.EXT;
+
+// Load the core Kohana class
+require SYSPATH.'classes/kohana/core'.EXT;
+
+if (is_file(APPPATH.'classes/kohana'.EXT))
+{
+	// Application extends the core
+	require APPPATH.'classes/kohana'.EXT;
 }
 else
 {
-	// Initialize Kohana
-	require SYSPATH.'core/Bootstrap'.EXT;
+	// Load empty core extension
+	require SYSPATH.'classes/kohana'.EXT;
 }
+
+// Bootstrap the application
+require APPPATH.'bootstrap'.EXT;
