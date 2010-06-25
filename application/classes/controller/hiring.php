@@ -278,6 +278,7 @@ class Controller_Hiring extends Controller_Template {
      * @param array $form_input The validated form input
      */
     private function file_these(array $bugs_to_file, $form_input) {
+        $success = false;
         $bugzilla = Bugzilla::instance(kohana::config('workermgmt'));
         foreach ($bugs_to_file as $bug_to_file) {
             $filing = $bugzilla->newhire_filing($bug_to_file, $form_input);
@@ -285,8 +286,10 @@ class Controller_Hiring extends Controller_Template {
                 client::messageSend($filing['error_message'], E_USER_ERROR);
             } else {
                 client::messageSend($filing['success_message'], E_USER_NOTICE);
+                $success = true;
             }
         }
+        return $success;
     }
     /**
      * Build needed additional fields for bugzilla submission
