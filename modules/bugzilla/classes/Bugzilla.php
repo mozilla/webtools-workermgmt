@@ -300,7 +300,7 @@ class Bugzilla {
                 'headers' => $additional_headers,
                 // when not in production have curl ignore ssl warings which are
                 // most ofter due to self signed certs
-                'ssl_verify_peer' => ! IN_DEV_MODE
+                'ssl_verify_peer' => ! kohana::config('workermgmt.in_dev_mode')
                 )
         );
         $set_cookies = $this->curler->response_headers('Set-Cookie');

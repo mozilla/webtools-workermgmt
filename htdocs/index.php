@@ -1,16 +1,6 @@
 <?php
 
 /**
- * if IN_DEV_MODE is true
- *  - Allowes the use of 'use_mock_ldap'
- *  - Turns off ssl verification for curl calls to bugzilla
- *  - Turns on the Kohana Profiler
- */
-define('IN_DEV_MODE',true);
-// if true, will send email to buddy specified in hiring form
-define('SEND_EMAIL',true);
-
-/**
  * The directory in which your application specific resources are located.
  * The application directory must contain the bootstrap.php file.
  *

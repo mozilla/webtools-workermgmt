@@ -49,7 +49,7 @@ class Model_Hiring {
    */
   public function notify_buddy($email_template, $email_info) {
     $mail_sent = false;
-    if(SEND_EMAIL) {
+    if(kohana::config('workermgmt.send_email')) {
       // filter what will be the from and to emails for the mail() function
       if(filter_var($email_info['from_address'], FILTER_VALIDATE_EMAIL)
          && filter_var($email_info['buddy_email'], FILTER_VALIDATE_EMAIL)) {
@@ -67,7 +67,7 @@ class Model_Hiring {
                 ."To: {$email_info['buddy email']}\nFrom:{$from}");
       }
     } else {
-      $this->log->add('debug', "SEND_EMAIL is false so Buddy notification email not sent");
+      $this->log->add('debug', "config('workermgmt.send_email') is false so Buddy notification email not sent");
     }
     return $mail_sent;
   }

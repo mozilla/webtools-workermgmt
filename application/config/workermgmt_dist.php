@@ -1,5 +1,14 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 
+/**
+ * if in_dev_mode is true
+ *  - Allowes the use of $config['use_mock_ldap'] = true;
+ *  - Turns off ssl verification for curl calls to bugzilla
+ */
+$config['in_dev_mode'] = true;
+// if true, will send email to buddy specified in hiring form
+$config['send_email'] = true;
+
 $config['bugzilla_url'] = 'BUGZILLA DEV or PROD URL';
 $config['ldap_anon_bind'] = '';
 $config['ldap_anon_password'] = '';

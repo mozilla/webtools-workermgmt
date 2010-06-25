@@ -10,8 +10,6 @@ class Controller extends Kohana_Controller {
     public function __construct(Kohana_Request $request) {
         parent::__construct($request);
         
-//        $this->profiler = IN_DEV_MODE ? new Profiler : null;
-        
         $requested_area = strtolower($this->request->controller."::".$this->request->action);
         if( ! in_array($requested_area, $this->non_authed_areas)) {
             // run authentication
@@ -22,7 +20,7 @@ class Controller extends Kohana_Controller {
 
     }
     protected function get_ldap() {
-        if( IN_DEV_MODE && kohana::config('workermgmt.use_mock_ldap')) {
+        if( kohana::config('workermgmt.in_dev_mode') && kohana::config('workermgmt.use_mock_ldap')) {
           $ldap = new Ldap_Mock(kohana::config('workermgmt'), $this->ldap_credentials());
         } else {
           $ldap = new Ldap(kohana::config('workermgmt'), $this->ldap_credentials());
