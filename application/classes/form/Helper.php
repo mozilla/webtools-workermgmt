@@ -6,7 +6,7 @@
  * @version		v.0.1
  * @license    http://www.opensource.org/licenses/mit-license.php
  */
-class Hiring_Helper {
+class Form_Helper {
 
 
     /**

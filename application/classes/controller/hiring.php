@@ -57,8 +57,8 @@ class Controller_Hiring extends Controller_Template {
      */
     public function action_employee() {
         $hiring = new Model_Hiring($this->get_ldap());
-        $this->select_lists['manager'] = Hiring_Helper::format_manager_list($hiring->manager_list());
-        $this->select_lists['buddy'] = Hiring_Helper::format_manager_list($hiring->buddy_list());
+        $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
+        $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->buddy_list());
         /**
          * track required fields with this array, Validator uses it and form helper
          * uses it to determine which fields to decorate as 'required' in the UI
@@ -94,7 +94,7 @@ class Controller_Hiring extends Controller_Template {
             if( ! Form::valid_token()) {
                 $this->request->redirect('hiring/');
             }
-            Hiring_Helper::filter_disallowed_values($this->select_lists);
+            Form_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
             // hack to have Validate keep psot key/values after ->check()
             // that did not have validation rules set (this is only needed
@@ -163,8 +163,8 @@ class Controller_Hiring extends Controller_Template {
      */
     public function action_contractor() {
         $hiring = new Model_Hiring($this->get_ldap());
-        $this->select_lists['manager'] = Hiring_Helper::format_manager_list($hiring->manager_list());
-        $this->select_lists['buddy'] = Hiring_Helper::format_manager_list($hiring->buddy_list());
+        $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
+        $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->buddy_list());
         // allow only hire_type = 'Contractor'
         $this->select_lists['hire_type'] = array('Contractor'=>'Contractor');
         /**
@@ -209,7 +209,7 @@ class Controller_Hiring extends Controller_Template {
             if( ! Form::valid_token()) {
                 $this->request->redirect('hiring/');
             }
-            Hiring_Helper::filter_disallowed_values($this->select_lists);
+            Form_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
             // hack to have Validate keep psot key/values after ->check()
             // that did not have validation rules set (this is only needed
