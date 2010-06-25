@@ -45,14 +45,6 @@ class Controller_Hiring extends Controller_Template {
     );
 
     /**
-     * Landing page
-     */
-    public function action_index() {
-        $this->template->title = 'Hiring::Home';
-        $this->template->content = new View('pages/hiring_home');
-
-    }
-    /**
      * Form for hiring Employee and Interns
      */
     public function action_employee() {
@@ -154,7 +146,7 @@ class Controller_Hiring extends Controller_Template {
         $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
         $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
         $this->template->title = 'Hiring::Employee';
-        $this->template->content = new View('pages/hiring_employee');
+        $this->template->content = new View('pages/hiring/employee');
         $this->template->content->form = $form;
         $this->template->content->lists = $this->select_lists;
     }
@@ -265,7 +257,7 @@ class Controller_Hiring extends Controller_Template {
         $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
 
         $this->template->title = 'Hiring::Contractor';
-        $this->template->content = new View('pages/hiring_contractor');
+        $this->template->content = new View('pages/hiring/contractor');
         $this->template->content->form = $form;
         $this->template->content->lists = $this->select_lists;
     }

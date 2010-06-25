@@ -85,16 +85,16 @@ Kohana::modules(array(
  */
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
-		'controller' => 'hiring',
+		'controller' => 'home',
 		'action'     => 'index',
 	)
 );
-Route::set('default', '(<controller>(/<action>(/<id>)))')
-	->defaults(array(
-		'controller' => 'hiring',
-		'action'     => 'index',
-	)
-);
+//Route::set('default', '(<controller>(/<action>(/<id>)))')
+//	->defaults(array(
+//		'controller' => 'hiring',
+//		'action'     => 'index',
+//	)
+//);
 
 /**
  * Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
