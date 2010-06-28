@@ -12,26 +12,30 @@
 	background : url(/media/img/webdev_mozilla.png) no-repeat 0 0;
 }
 
-form label {
+.app_form label {
   margin: 8px 0 0 0;
   display:block;
   font-weight: 600;
 }
 
-form input[type='checkbox'] {
+.app_form .error {
+    display: block;
+}
+
+.app_form input[type='checkbox'] {
     float:left;
     margin-right: 5px;
 }
 
-form input[type='submit'] {
+.app_form input[type='submit'] {
   margin: 7px 0;
 }
 
-form .section {
+.app_form .section {
     margin-left: 30px;
 }
 
-form label.required:after { content: "*"; }
+.app_form label.required:after { content: "*"; }
 
 .ac_input {
     font-size: 95%;

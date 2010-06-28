@@ -96,7 +96,7 @@ class Controller_Hiring extends Controller_Template {
 
         if($_POST) {
             if( ! Form::valid_token()) {
-                $this->request->redirect('hiring/');
+                $this->request->redirect('hiring/employee');
             }
             Form_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
@@ -211,7 +211,7 @@ class Controller_Hiring extends Controller_Template {
 
         if($_POST) {
             if( ! Form::valid_token()) {
-                $this->request->redirect('hiring/');
+                $this->request->redirect('hiring/contractor');
             }
             Form_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
