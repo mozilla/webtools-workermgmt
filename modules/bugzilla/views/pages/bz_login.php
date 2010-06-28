@@ -1,5 +1,5 @@
 
-    <?php echo form::open('/authenticate/login',array('accept-charset'=>'utf-8')); ?>
+    <?php echo form::open('/authenticate/login',array('class'=>'app_form', 'accept-charset'=>'utf-8')); ?>
 
       <?php echo form::hidden('form_token', $_SESSION['form_token'] = uniqid()); ?>
       <div class="input">

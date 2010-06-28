@@ -9,7 +9,8 @@ class Controller_Home extends Controller_Template {
 
     public function  before() {
         parent::before();
-        $this->template->main_title = "Mozilla Corporation - Forms";
+        $this->template->breadcrumbs = array(array('web forms'));
+        $this->template->main_title = "Mozilla Corporation - WebTools";
     }
 
     /**

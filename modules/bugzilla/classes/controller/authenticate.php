@@ -41,7 +41,8 @@ class Controller_Authenticate extends Controller_Template {
         $this->template->content = View::factory('pages/bz_login');
         $this->template->content->bz_username = $username;
         $this->template->content->bz_password = $password;
-        $this->template->title = 'Worker Managment :: Login';
+        $this->template->logout_link = '';
+        $this->template->title = 'WebTools :: Login';
 
     }
     /**

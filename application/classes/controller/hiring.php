@@ -8,12 +8,13 @@ class Controller_Hiring extends Controller_Template {
 
     public function  before() {
         parent::before();
+        $this->template->breadcrumbs = $this->auto_crumb();
         $this->template->main_title = "Mozilla Corporation - Hiring Forms";
     }
 
     public function action_index() {
 
-        $this->template->title = 'WebTools::Home';
+        $this->template->title = 'WebTools::New Hire Home';
         $this->template->content = new View('pages/hiring/index');
 
     }
@@ -157,7 +158,7 @@ class Controller_Hiring extends Controller_Template {
         form::required_fields($required_fields);
         $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
         $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
-        $this->template->title = 'Hiring::Employee';
+        $this->template->title = 'WebTools::Employee New Hire';
         $this->template->content = new View('pages/hiring/employee');
         $this->template->content->form = $form;
         $this->template->content->lists = $this->select_lists;
@@ -268,7 +269,7 @@ class Controller_Hiring extends Controller_Template {
         $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
         $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
 
-        $this->template->title = 'Hiring::Contractor';
+        $this->template->title = 'WebTools::Contractor New Hire';
         $this->template->content = new View('pages/hiring/contractor');
         $this->template->content->form = $form;
         $this->template->content->lists = $this->select_lists;

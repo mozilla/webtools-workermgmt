@@ -1,3 +1,7 @@
+<?php
+$breadcrumbs = isset($breadcrumbs)?$breadcrumbs:array(array('home'));
+$logout_link = isset ($logout_link) ? $logout_link : HTML::anchor('authenticate/logout', "Logout");
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
@@ -18,6 +22,14 @@
             <div id="mozilla-org"><a href="http://www.mozilla.org/" title="Visit mozilla.org">Visit mozilla.org</a></div>
             <div id="header">
                 <h1><?php echo isset($main_title) ? HTML::chars($main_title) : "Mozilla Corporation - Forms" ?></h1>
+            </div>
+            <div id="sub_header">
+                <ul class="breadcrumb">
+                <?php while ($crumb = array_shift($breadcrumbs)) { ?>
+                    <li><?php echo isset($crumb[0]) ? $crumb[0] : HTML::anchor(current($crumb), key($crumb)) ?></li>
+                <?php } ?>
+                </ul>
+                <div id="site_nav"><?php echo $logout_link; ?></div>
             </div>
             <?php echo client::messageFetchHtml(); ?>
             <?php echo $content ?>

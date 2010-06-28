@@ -1,7 +1,6 @@
 
-<p><a href="/">Home</a></p>
 <h2>
-    <?php echo html::image('media/img/contractor.png'); ?>Contractor New Hire Request
+    <?php echo html::image('media/img/app_person.png'); ?>Contractor New Hire Request
 </h2>
 <p><strong>*</strong> denotes a required field</p>
 <form class="app_form" method="post" action="" id="newHireForm" accept-charset="utf-8">

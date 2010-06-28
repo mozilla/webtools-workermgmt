@@ -12,6 +12,15 @@ a img {
     border: 0px;
 }
 
+#sub_header {
+    margin-bottom: 2em;
+}
+
+#site_nav {
+    display: inline;
+    float: right;
+}
+
 #new_hire_banner {
     padding: 5px 0px 0px 50px;
     height: 50px;
@@ -155,3 +164,24 @@ textarea.resizable {
     height: 4em;
 }
 /** END Styles for resizable textareas **/
+
+/** Bread crumbs nav in header section **/
+ul.breadcrumb {
+	margin-left: 0;
+	padding-left: 0;
+	display: inline;
+	border: none;
+    font-weight: 600;
+}
+
+ul.breadcrumb li {
+    font-style: oblique;
+	margin-left: 0;
+	padding-left: 2px;
+	border: none;
+	list-style: none;
+	display: inline;
+}
+
+ul.breadcrumb a:after { content: " » "; }
+/** END Bread crumbs nav in header section **/

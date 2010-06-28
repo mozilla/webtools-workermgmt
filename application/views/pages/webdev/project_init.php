@@ -1,5 +1,3 @@
-
-<p><a href="/">Home</a></p>
 <h2>
     Project Initialization Form
 </h2>

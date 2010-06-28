@@ -8,12 +8,13 @@ class Controller_Webdev extends Controller_Template {
 
     public function  before() {
         parent::before();
-        $this->template->main_title = "Mozilla Corporation - Web Dev Forms";
+        $this->template->breadcrumbs = $this->auto_crumb();
+        $this->template->main_title = "WebTools - Web Dev Forms";
     }
 
     public function action_index() {
 
-        $this->template->title = 'WebDev::Home';
+        $this->template->title = 'WebTools::Webdev Home';
         $this->template->content = new View('pages/webdev/index');
 
     }
@@ -132,7 +133,7 @@ class Controller_Webdev extends Controller_Template {
 //        $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
 //        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
         $this->template->js_extra = HTML::script('media/js/jquery.textarearesizer.compressed.js');
-        $this->template->title = 'WebDev::Project Init';
+        $this->template->title = 'WebTools::Webdev Project Init';
         $this->template->content = new View('pages/webdev/project_init');
         $this->template->content->form = $form;
 //        $this->template->content->lists = $this->select_lists;
