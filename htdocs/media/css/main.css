@@ -1,16 +1,35 @@
-/*#new_hire_banner h2 {
-    background: url("/media/img/app_personal.png") no-repeat 0 0;
-}*/
+h1 {
+    color: #000;
+    margin: 5px;
+    text-shadow: 2px 2px 3px #999;
+    margin-bottom: 15px;
+}
+
+a {
+    text-decoration: none;
+}
+a img {
+    border: 0px;
+}
+
 #new_hire_banner {
     padding: 5px 0px 0px 50px;
     height: 50px;
-	background : url(/media/img/app_personal.png) no-repeat 0 0;
+	background : url(/media/img/app_emps.png) no-repeat 0 0;
 }
 #webdev_banner {
     padding: 5px 0px 0px 50px;
     height: 50px;
 	background : url(/media/img/webdev_mozilla.png) no-repeat 0 0;
 }
+
+#project_init_banner {
+    padding: 5px 0px 0px 50px;
+    height: 50px;
+	background : url(/media/img/action_forward.png) no-repeat 0 0;
+}
+
+/** Styles for the Application Forms **/
 
 .app_form label {
   margin: 8px 0 0 0;
@@ -47,21 +66,24 @@
     font-weight: 600;
 }
 
+/** tweak for jquery autocomplete **/
 .ac_input {
     font-size: 95%;
 }
+/** END Application Form styles **/
 
+
+/** Notification styles used by Client helper Class **/
 #notifications .negative,  #notifications .positive {
-  margin-top:-9px;
-  font-weight: bold;
-  width:100%;
-  padding: 6px 9px;
-  background-color:#6176a0;
-  margin-bottom:18px;
-  margin-left:-9px;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
-
+    margin-top:-9px;
+    font-weight: bold;
+    width:100%;
+    padding: 6px 9px;
+    background-color:#6176a0;
+    margin-bottom:18px;
+    margin-left:-9px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
 }
 
 #notifications ul {
@@ -93,43 +115,29 @@
   background-color:#ff9d9f;
 }
 
+/** END Notification Styles **/
+
+/** Styles for centered landing page boxes **/
+#landing_content {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+}
+
+#landing_content .item {
+    width: 245px;
+    float: left;
+}
+#landing_content .item h2 {
+    text-align: center;
+}
+/** END landing page styles **/
 
 
-
-
-#ErrorExplanation { border: 2px solid #red; width:500px; padding: 7px; padding-bottom: 12px;
-		  margin-bottom: 20px; background-color: #f0f0f0; }
-
-#ErrorExplanation h2 { text-align: left; font-weight: bold; padding: 5px 5px 5px 27px;
-	font-size: 12px; margin: -7px; 
-	background: url(../../media/img/alertbad_icon.gif) #c00 left no-repeat; color: #fff; }
-
-#ErrorExplanation p { color: #333; margin-bottom: 0; padding: 5px; }
-
-#ErrorExplanation ul { margin-left: 30px; }
-
-#ErrorExplanation ul li { font-size: 12px; list-style: square; }
-
-.ErrorHighlight, form .error { background: url(../../media/img/exclamation.png) left no-repeat;
-		padding: 0px 0px 0px 20px; }
-h1 { color: #000; margin: 5px; text-shadow: 2px 2px 3px #999; margin-bottom: 15px; }
-.intern,.employee,.contractor { visibility: collapse; }
-body[hire_type="intern"] .intern { visibility: visible; }
-body[hire_type="employee"] .employee { visibility: visible; }
-body[hire_type="contractor"] .contractor { visibility: visible; }
-
-#employee-selector { width: 500px; margin-left: auto; margin-right: auto; padding: 10px; }
-.employee-type { font-size: 1.5em; text-decoration: none; text-align: center; }
-img.employee-type { border: 0px; }
-.employee-type:hover { background: #eeeeff; color: #fff; text-decoration: bold; }
-.employee-description { text-decoration: italics; }
-a.employee-type { text-decoration: none; }
-a { text-decoration: none; }
-a img { border: 0px; }
-
-
+/** Styles for resizable textareas **/
 div.grippie {
-    background:#EEEEEE url("../../media/img/grippie.png") no-repeat scroll center 2px;
+    background:#EEEEEE url("../../media/img/grippie.png") no-repeat scroll center;
     border-color:#DDDDDD;
     border-style:solid;
     border-width:0pt 1px 1px;
@@ -146,3 +154,4 @@ div.grippie {
 textarea.resizable {
     height: 4em;
 }
+/** END Styles for resizable textareas **/
