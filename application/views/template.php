@@ -11,14 +11,13 @@
         ?>
         <?php echo isset($css_extra)?$css_extra:''; ?>
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-        <link rel="Top" href="https://bugzilla.mozilla.org/" />
-        
+        <link rel="Top" href="https://bugzilla.mozilla.org/" />     
     </head>
     <body>
         <div id="container">
             <div id="mozilla-org"><a href="http://www.mozilla.org/" title="Visit mozilla.org">Visit mozilla.org</a></div>
             <div id="header">
-                <h1>Mozilla Corporation - Worker Management</h1>
+                <h1><?php echo isset($main_title) ? HTML::chars($main_title) : "Mozilla Corporation - Forms" ?></h1>
             </div>
             <?php echo client::messageFetchHtml(); ?>
             <?php echo $content ?>

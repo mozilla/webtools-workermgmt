@@ -6,5 +6,15 @@
  */
 class Controller_Webdev extends Controller_Template {
 
-    
+    public function  before() {
+        parent::before();
+        $this->template->main_title = "Mozilla Corporation - Web Dev Forms";
+    }
+
+    public function action_index() {
+
+        $this->template->title = 'WebDev::Home';
+        $this->template->content = new View('pages/webdev/index');
+
+    }
 }

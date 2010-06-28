@@ -6,6 +6,18 @@
  */
 class Controller_Hiring extends Controller_Template {
 
+    public function  before() {
+        parent::before();
+        $this->template->main_title = "Mozilla Corporation - Hiring Forms";
+    }
+
+    public function action_index() {
+
+        $this->template->title = 'WebTools::Home';
+        $this->template->content = new View('pages/hiring/index');
+
+    }
+
     /**
      * No DB for this app, so these are various lookup lists needed for form
      * select list, radio groups and such

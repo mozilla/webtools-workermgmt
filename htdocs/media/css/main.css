@@ -1,3 +1,17 @@
+/*#new_hire_banner h2 {
+    background: url("/media/img/app_personal.png") no-repeat 0 0;
+}*/
+#new_hire_banner {
+    padding: 5px 0px 0px 50px;
+    height: 50px;
+	background : url(/media/img/app_personal.png) no-repeat 0 0;
+}
+#webdev_banner {
+    padding: 5px 0px 0px 50px;
+    height: 50px;
+	background : url(/media/img/webdev_mozilla.png) no-repeat 0 0;
+}
+
 form label {
   margin: 8px 0 0 0;
   display:block;
