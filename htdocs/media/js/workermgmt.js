@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+
+  if($().TextAreaResizer)  {
+    $('textarea.resizable:not(.processed)').TextAreaResizer();
+  }
+  
   $("#start_date, #end_date").datepicker();
 
   /**

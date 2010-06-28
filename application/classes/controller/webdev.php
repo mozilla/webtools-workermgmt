@@ -43,13 +43,24 @@ class Controller_Webdev extends Controller_Template {
         $form = array(
             'name' => '',
 
-//            'members' => '',
+            'members.it' => '',
+            'members.product_driver' => '',
+            'members.l10n' => '',
+            'members.marketing' => '',
+            'members.qa' => '',
+            'members.security' => '',
+            'members.webdev' => '',
+            'members.other' => '',
 
             'overview' => '',
             'scope' => '',
 
-//            'dependencies' => '',
-
+            'dependencies.legal' => '',
+            'dependencies.security' => '',
+            'dependencies.analytics' => '',
+            'dependencies.finance' => '',
+            'dependencies.app' => '',
+            'dependencies.other' => '',
 
             'assumptions' => '',
             'deliverables' => ''
@@ -118,8 +129,9 @@ class Controller_Webdev extends Controller_Template {
         }
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
-        $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
-        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
+//        $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
+//        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
+        $this->template->js_extra = HTML::script('media/js/jquery.textarearesizer.compressed.js');
         $this->template->title = 'WebDev::Project Init';
         $this->template->content = new View('pages/webdev/project_init');
         $this->template->content->form = $form;
