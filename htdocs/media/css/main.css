@@ -24,18 +24,18 @@ a img {
 #new_hire_banner {
     padding: 5px 0px 0px 50px;
     height: 50px;
-	background : url(/media/img/app_emps.png) no-repeat 0 0;
+	background : url(../../media/img/app_emps.png) no-repeat 0 0;
 }
 #webdev_banner {
     padding: 5px 0px 0px 50px;
     height: 50px;
-	background : url(/media/img/webdev_mozilla.png) no-repeat 0 0;
+	background : url(../../media/img/webdev_mozilla.png) no-repeat 0 0;
 }
 
 #project_init_banner {
     padding: 5px 0px 0px 50px;
     height: 50px;
-	background : url(/media/img/action_forward.png) no-repeat 0 0;
+	background : url(../../media/img/action_forward.png) no-repeat 0 0;
 }
 
 /** Styles for the Application Forms **/
@@ -53,6 +53,10 @@ a img {
 .app_form input[type='checkbox'] {
     float:left;
     margin-right: 5px;
+}
+
+.app_form input[type='text'] {
+    width: 30em;
 }
 
 .app_form input[type='submit'] {
@@ -75,10 +79,28 @@ a img {
     font-weight: 600;
 }
 
+.app_form .multi-lookup {
+    margin: 0 0 1em 1em;
+}
+
+.app_form .multi-lookup label {
+    display: inline;
+}
+
+
+
+
 /** tweak for jquery autocomplete **/
 .ac_input {
     font-size: 95%;
 }
+
+button {
+    background: #ffffff;
+    border: none;
+    padding: 0;
+}
+
 /** END Application Form styles **/
 
 
@@ -185,3 +207,4 @@ ul.breadcrumb li {
 
 ul.breadcrumb a:after { content: " » "; }
 /** END Bread crumbs nav in header section **/
+

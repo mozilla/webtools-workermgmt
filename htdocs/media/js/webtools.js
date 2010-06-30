@@ -52,7 +52,16 @@ $(document).ready(function(){
   select_to_autocomplete('buddy',{extra_attribs: 'size="60"'});
 
 });
-
+/**
+ * Wrote some wrapper code that allows Jquery Auto complete to
+ * switch out select elements with auto-complete text elements
+ *
+ * @see http://docs.jquery.com/Plugins/Autocomplete
+ *
+ * @param element_id
+ * @param config
+ *
+ */
 function select_to_autocomplete(element_id, config) {
   element_id = element_id.replace(/^#/,'');
   var jq_element_id = '#'+element_id;
@@ -61,7 +70,6 @@ function select_to_autocomplete(element_id, config) {
     config.ignore_first = config.ignore_first == undefined ? true : config.ignore_first;
     config.extra_attribs = config.extra_attribs == undefined ? '' : config.extra_attribs;
 
-    var list_items = new Array();
     // replace the select with a text box
     $(jq_element_id).hide();
     $(jq_element_id).before('<input type="text" id="'+element_id+'_autocomplete" '+config.extra_attribs+' />');
@@ -72,9 +80,7 @@ function select_to_autocomplete(element_id, config) {
         $(jq_element_id+'_autocomplete').val($(jq_element_id+' :selected').text()+' ('+$(jq_element_id+' :selected').val()+')');
     }
     // read all the select options into an array
-    $(jq_element_id+" option").each(function(index) {
-        list_items.push($(this).text()+' ('+$(this).val()+')');
-    });
+    var list_items = select_as_array(jq_element_id);
     if(config.ignore_first) {list_items[0]='';}
     // attach the autocomplete to the textbox
     $(jq_element_id+'_autocomplete').autocomplete(
@@ -89,6 +95,20 @@ function select_to_autocomplete(element_id, config) {
     });
     
   }
+}
+
+function select_as_array(select_id) {
+    select_id = '#'+select_id.replace(/^#/,'');
+    var select_items = new Array();
+    // read all the select options into an array
+    $(select_id+" option").each(function(index) {
+        select_items.push($(this).text()+' ('+$(this).val()+')');
+    });
+    return select_items;
+}
+
+function auto_complete_multi_select() {
+
 }
 
 function toggle_section(section_id, change_to_show) {

@@ -13,26 +13,19 @@ class Controller_Webdev extends Controller_Template {
     }
 
     public function action_index() {
-
         $this->template->title = 'WebTools::Webdev Home';
         $this->template->content = new View('pages/webdev/index');
-
     }
 
     private $select_lists = array(
-        'hire_type' => array(
-            ""  => "Select ...",
-            "Employee" => "Employee",
-            "Intern" =>  "Intern"
-        ),
         // this is retrieved from Manager_Model in actions that need it
-        'manager' => array(),
-        );
+        'all_employees' => array(),
+    );
 
     public function action_project_init() {
-//        $hiring = new Model_Hiring($this->get_ldap());
+        $hiring = new Model_Hiring($this->get_ldap());
 //        $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
-//        $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->buddy_list());
+        $this->select_lists['all_employees'] = Form_Helper::format_manager_list($hiring->buddy_list());
         /**
          * track required fields with this array, Validator uses it and form helper
          * uses it to determine which fields to decorate as 'required' in the UI
@@ -44,24 +37,24 @@ class Controller_Webdev extends Controller_Template {
         $form = array(
             'name' => '',
 
-            'members.it' => '',
-            'members.product_driver' => '',
-            'members.l10n' => '',
-            'members.marketing' => '',
-            'members.qa' => '',
-            'members.security' => '',
-            'members.webdev' => '',
-            'members.other' => '',
+            'members_it' => '',
+            'members_product_driver' => '',
+            'members_l10n' => '',
+            'members_marketing' => '',
+            'members_qa' => '',
+            'members_security' => '',
+            'members_webdev' => '',
+            'members_other' => '',
 
             'overview' => '',
             'scope' => '',
 
-            'dependencies.legal' => '',
-            'dependencies.security' => '',
-            'dependencies.analytics' => '',
-            'dependencies.finance' => '',
-            'dependencies.app' => '',
-            'dependencies.other' => '',
+            'dependencies_legal' => '',
+            'dependencies_security' => '',
+            'dependencies_analytics' => '',
+            'dependencies_finance' => '',
+            'dependencies_app' => '',
+            'dependencies_other' => '',
 
             'assumptions' => '',
             'deliverables' => ''
@@ -130,12 +123,16 @@ class Controller_Webdev extends Controller_Template {
         }
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
-//        $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
-//        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
-        $this->template->js_extra = HTML::script('media/js/jquery.textarearesizer.compressed.js');
+        $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
+        $this->template->js_extra .= HTML::script('media/js/webdev.js');
+        $this->template->js_extra .= HTML::script('media/js/jquery.textarearesizer.compressed.js');
+        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
+
+//        $this->template->css_extra = HTML::style('media/css/content-assist.css');
+        
         $this->template->title = 'WebTools::Webdev Project Init';
         $this->template->content = new View('pages/webdev/project_init');
         $this->template->content->form = $form;
-//        $this->template->content->lists = $this->select_lists;
+        $this->template->content->lists = $this->select_lists;
     }
 }

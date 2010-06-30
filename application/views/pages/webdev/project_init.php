@@ -14,65 +14,48 @@
 
     <fieldset>
         <legend>Team Members</legend>
+
+        <div class="multi-lookup">
         <?php
-        echo form::auto_label('members.it','IT');
-        client::validation('members.it');
-        echo form::textarea(
-                'members.it=id',
-                $form['members.it'],
-                array('class' => 'resizable'));
-
-        echo form::auto_label('members.product_driver', 'Product/Driver (you)?');
-        client::validation('members.product_driver');
-        echo form::textarea(
-                'members.product_driver=id',
-                $form['members.product_driver'],
-                array('class' => 'resizable'));
-
-        echo form::auto_label('members.l10n', 'L10n');
-        client::validation('members.l10n');
-        echo form::textarea(
-                'members.it=l10n',
-                $form['members.l10n'],
-                array('class' => 'resizable'));
-
-        echo form::auto_label('members.marketing', 'Marketing');
-        client::validation('members.marketing');
-        echo form::textarea(
-                'members.marketing=id',
-                $form['members.marketing'],
-                array('class' => 'resizable'));
-
-        echo form::auto_label('members.qa', 'QA');
-        client::validation('members.qa');
-        echo form::textarea(
-                'members.qa=id',
-                $form['members.qa'],
-                array('class' => 'resizable'));
-
-        echo form::auto_label('members.security', 'Security');
-        client::validation('members.security');
-        echo form::textarea(
-                'members.security=id',
-                $form['members.security'],
-                array('class' => 'resizable'));
-
-        echo form::auto_label('members.webdev', 'Webdev');
-        client::validation('members.webdev');
-        echo form::textarea(
-                'members.webdev=id',
-                $form['members.webdev'],
-                array('class' => 'resizable'));
-
-        echo form::auto_label('members.other', 'Other');
-        client::validation('members.other');
-        echo form::textarea(
-                'members.other=id',
-                $form['members.other'],
-                array('class' => 'resizable'));
-        ?>
-
-
+        echo form::auto_label('members_it', 'IT', array('id'=>'members_it_group'));
+        client::validation('members_it');?>
+        </div>
+        <div class="multi-lookup">
+        <?php
+        echo form::auto_label('members_product_driver', 'Product/Driver (you)?', array('id'=>'members_product_driver_group'));
+        client::validation('members_product_driver');?>
+        </div>
+        <div class="multi-lookup">
+        <?php
+        echo form::auto_label('members_l10n', 'L10n', array('id'=>'members_l10n_group'));
+        client::validation('members_l10n');?>
+        </div>
+        <div class="multi-lookup">
+        <?php
+        echo form::auto_label('members_marketing', 'Marketing', array('id'=>'members_marketing_group'));
+        client::validation('members_marketing');?>
+        </div>
+        <div class="multi-lookup">
+        <?php
+        echo form::auto_label('members_qa', 'QA', array('id'=>'members_qa_group'));
+        client::validation('members_qa');?>
+        </div>
+        <div class="multi-lookup">
+        <?php
+        echo form::auto_label('members_security', 'Security', array('id'=>'members_security_group'));
+        client::validation('members_security');?>
+        </div>
+        <div class="multi-lookup">
+        <?php
+        echo form::auto_label('members_webdev', 'Webdev', array('id'=>'members_webdev_group'));
+        client::validation('members_webdev');?>
+        </div>
+        <div class="multi-lookup">
+        <?php
+        echo form::auto_label('members_other', 'Other', array('id'=>'members_other_group'));
+        client::validation('members_other');?>
+        </div>
+        
     </fieldset>
     
     <?php
@@ -95,47 +78,48 @@
 
     <fieldset>
         <legend>Dependencies</legend>
+        
         <?php
-        echo form::auto_label('dependencies.legal','Legal');
-        client::validation('dependencies.legal');
+        echo form::auto_label('dependencies_legal','Legal');
+        client::validation('dependencies_legal');
         echo form::textarea(
-                'dependencies.legal=id',
-                $form['dependencies.legal'],
+                'dependencies_legal=id',
+                $form['dependencies_legal'],
                 array('class' => 'resizable'));
 
-        echo form::auto_label('dependencies.security', 'Security (infra and/or client)');
-        client::validation('dependencies.security');
+        echo form::auto_label('dependencies_security', 'Security (infra and/or client)');
+        client::validation('dependencies_security');
         echo form::textarea(
-                'dependencies.security=id',
-                $form['dependencies.security'],
+                'dependencies_security=id',
+                $form['dependencies_security'],
                 array('class' => 'resizable'));
 
-        echo form::auto_label('dependencies.analytics', 'Analytics');
-        client::validation('dependencies.analytics');
+        echo form::auto_label('dependencies_analytics', 'Analytics');
+        client::validation('dependencies_analytics');
         echo form::textarea(
-                'dependencies.it=analytics',
-                $form['dependencies.analytics'],
+                'dependencies_it=analytics',
+                $form['dependencies_analytics'],
                 array('class' => 'resizable'));
 
-        echo form::auto_label('dependencies.finance', 'Finance/Payments');
-        client::validation('dependencies.finance');
+        echo form::auto_label('dependencies_finance', 'Finance/Payments');
+        client::validation('dependencies_finance');
         echo form::textarea(
-                'dependencies.finance=id',
-                $form['dependencies.finance'],
+                'dependencies_finance=id',
+                $form['dependencies_finance'],
                 array('class' => 'resizable'));
 
-        echo form::auto_label('dependencies.app', 'App');
-        client::validation('dependencies.app');
+        echo form::auto_label('dependencies_app', 'App');
+        client::validation('dependencies_app');
         echo form::textarea(
-                'dependencies.app=id',
-                $form['dependencies.app'],
+                'dependencies_app=id',
+                $form['dependencies_app'],
                 array('class' => 'resizable'));
 
-        echo form::auto_label('dependencies.other', 'Other');
-        client::validation('dependencies.other');
+        echo form::auto_label('dependencies_other', 'Other');
+        client::validation('dependencies_other');
         echo form::textarea(
-                'dependencies.other=id',
-                $form['dependencies.other'],
+                'dependencies_other=id',
+                $form['dependencies_other'],
                 array('class' => 'resizable'));
 
         ?>

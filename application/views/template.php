@@ -35,10 +35,11 @@ $logout_link = isset ($logout_link) ? $logout_link : HTML::anchor('authenticate/
             <?php echo $content ?>
 
         </div>
+        <script type="text/javascript">var URL_BASE = "<?php echo URL::base(); ?>";</script>
         <?php
             echo HTML::script('media/js/jquery-1.4.2.min.js');
             echo HTML::script('media/js/jquery-ui-1.7.2.custom.min.js');
-            echo HTML::script('media/js/workermgmt.js');
+            echo HTML::script('media/js/webtools.js');
         ?>
         <?php echo isset($js_extra)?$js_extra:''; ?>
     </body>
