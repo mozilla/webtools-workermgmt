@@ -5,7 +5,6 @@
  *
  * @package    Bugzilla
  * @author     skeen@mozilla.org
- * @license    http://www.opensource.org/licenses/mit-license.php
  */
 class Bugzilla {
     private $error_message;

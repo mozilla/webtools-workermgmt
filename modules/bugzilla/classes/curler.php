@@ -5,7 +5,6 @@
  *
  * @package    Curler
  * @author     skeen@mozilla.org
- * @license    http://www.opensource.org/licenses/mit-license.php
  */
 class Curler {
   
