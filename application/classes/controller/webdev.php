@@ -63,20 +63,29 @@ class Controller_Webdev extends Controller_Template {
         $errors = $form;
 
         if($_POST) {
-            if( ! Form::valid_token()) {
-                $this->request->redirect('webdev/project_init');
-            }
+//            echo "<pre>";print_r($_POST);die;
+
+
+//            if( ! Form::valid_token()) {
+//                $this->request->redirect('webdev/project_init');
+//            }
+
+
+
+
             Form_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
             // hack to have Validate keep psot key/values after ->check()
             // that did not have validation rules set (this is only needed
             // since we are not using models
             $post->labels(array_combine(array_keys($form), array_keys($form)));
-            $post->filter(true, 'trim');
-            $post
-                ->rule('start_date', 'date')
-                ->rule('end_date', 'date')
-                ->rule('email_address', 'email');
+            // $post->filter(true, 'trim'); //K3 filter cannot handle arrays
+            $_POST = array_walk_recursive($_POST, 'trim');
+            
+//            $post
+//                ->rule('start_date', 'date')
+//                ->rule('end_date', 'date')
+//                ->rule('email_address', 'email');
 
 //            if(trim(Arr::get($_POST, 'hire_type'))=='Intern') {
 //                array_push($required_fields,'end_date');
@@ -93,6 +102,7 @@ class Controller_Webdev extends Controller_Template {
             }
 
             if ($post->check()) {
+                die('made it');
                 // check for invilid
                 $form = Arr::overwrite($form, $post->as_array());
                 $form = $this->build_supplemental_form_values($form, $hiring);
@@ -121,9 +131,21 @@ class Controller_Webdev extends Controller_Template {
             }
 
         }
+        $memebers_autobox_groups = array(
+            'members_it','members_product_driver','members_l10n',
+            'members_marketing','members_qa', 'members_security',
+            'members_webdev', 'members_other');
+        $memebers_groups_posted = array();
+        foreach ($memebers_autobox_groups as $members_group) {
+            if(Arr::get($form, $members_group)) {
+                $memebers_groups_posted[$members_group] = $form[$members_group];
+            }
+        }
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
         $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
+        $this->template->js_extra .= '<script type="text/javascript">var memebers_autobox_groups = '.  json_encode($memebers_autobox_groups).'; </script>';
+        $this->template->js_extra .= '<script type="text/javascript">var memebers_groups_posted = '.  json_encode($memebers_groups_posted).'; </script>';
         $this->template->js_extra .= HTML::script('media/js/webdev.js');
         $this->template->js_extra .= HTML::script('media/js/jquery.textarearesizer.compressed.js');
         $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');

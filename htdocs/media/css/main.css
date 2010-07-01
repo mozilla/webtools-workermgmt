@@ -50,6 +50,11 @@ a img {
     display: block;
 }
 
+form .error {
+    background: url(../../media/img/exclamation.png) left no-repeat;
+	padding: 0px 0px 0px 20px;
+}
+
 .app_form input[type='checkbox'] {
     float:left;
     margin-right: 5px;
@@ -87,8 +92,9 @@ a img {
     display: inline;
 }
 
-
-
+.app_form .multi-lookup .remove {
+    margin-left: 1em;
+}
 
 /** tweak for jquery autocomplete **/
 .ac_input {
