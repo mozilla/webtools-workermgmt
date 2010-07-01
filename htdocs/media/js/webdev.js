@@ -42,7 +42,6 @@ function load_selectors(all_employees) {
         $("label[for="+group_id+"]").before(element);
         if(typeof MultiSelectAutoComplete.groups_posted[group_id]!='undefined') {
             if(MultiSelectAutoComplete.groups_posted[group_id].length > 0) {
-                console.debug(MultiSelectAutoComplete.groups_posted[group_id]);
                 $.each(MultiSelectAutoComplete.groups_posted[group_id], function(index, value){
                     add_autobox(group_id, value);
                 });
