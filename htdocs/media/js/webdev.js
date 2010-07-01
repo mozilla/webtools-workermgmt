@@ -35,7 +35,7 @@ function load_selectors(all_employees) {
      */
     $.each(MultiSelectAutoComplete.look_up_groups, function(index, group_id){
         // insert 'add element' icons to sections
-        var element = $('<img tite="add recipient" alt="add recipient" src="/htdocs/media/img/action_edit_add.png" />')
+        var element = $('<img tite="add recipient" alt="add recipient" src="'+URL_BASE+'media/img/action_edit_add.png" />')
             .click(function(){
                 add_autobox(group_id);
             });
@@ -100,7 +100,7 @@ function create_employee_selector(group, append_to, value) {
 
     });
     $(append_to).after(auto_box);
-    var closer = $('<img class="remove" title="remove" alt="remove" src="/htdocs/media/img/action_edit_remove.png" />')
+    var closer = $('<img class="remove" title="remove" alt="remove" src="'+URL_BASE+'media/img/action_edit_remove.png" />')
         .click(function(){
             $(this).parent().remove();
         });
