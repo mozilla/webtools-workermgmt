@@ -17,15 +17,11 @@ class Controller_Webdev extends Controller_Template {
         $this->template->content = new View('pages/webdev/index');
     }
 
-    private $select_lists = array(
-        // this is retrieved from Manager_Model in actions that need it
-        'all_employees' => array(),
-    );
+    private $select_lists = null;
 
     public function action_project_init() {
         $hiring = new Model_Hiring($this->get_ldap());
-//        $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
-        $this->select_lists['all_employees'] = Form_Helper::format_manager_list($hiring->buddy_list());
+        
         /**
          * track required fields with this array, Validator uses it and form helper
          * uses it to determine which fields to decorate as 'required' in the UI
@@ -63,14 +59,11 @@ class Controller_Webdev extends Controller_Template {
         $errors = $form;
 
         if($_POST) {
-//            echo "<pre>";print_r($_POST);die;
 
 
 //            if( ! Form::valid_token()) {
 //                $this->request->redirect('webdev/project_init');
 //            }
-
-
 
 
             Form_Helper::filter_disallowed_values($this->select_lists);
@@ -81,31 +74,22 @@ class Controller_Webdev extends Controller_Template {
             $post->labels(array_combine(array_keys($form), array_keys($form)));
             // $post->filter(true, 'trim'); //K3 filter cannot handle arrays
             $_POST = array_walk_recursive($_POST, 'trim');
-            
-//            $post
-//                ->rule('start_date', 'date')
-//                ->rule('end_date', 'date')
-//                ->rule('email_address', 'email');
 
-//            if(trim(Arr::get($_POST, 'hire_type'))=='Intern') {
-//                array_push($required_fields,'end_date');
-//            }
-//            if(Arr::get($_POST, 'location')=='other') {
-//                array_push($required_fields,'location_other');
-//            }
-//            if(Arr::get($_POST, 'machine_needed')=='1') {
-//                array_push($required_fields,'machine_type');
-//            }
+            // add post rules
+            // $post
+            //    ->rule('start_date', 'date')
+            //    ->rule('end_date', 'date')
+            //      ->rule('email_address', 'email');
+
             // add all the required fields
             foreach ($required_fields as $required_field) {
                 $post->rule($required_field, 'not_empty');
             }
 
             if ($post->check()) {
-                die('made it');
                 // check for invilid
                 $form = Arr::overwrite($form, $post->as_array());
-                $form = $this->build_supplemental_form_values($form, $hiring);
+//                $form = $this->build_supplemental_form_values($form, $hiring);
                 $bugs_to_file = array(Bugzilla::BUG_NEWHIRE_SETUP);
                 if($form['machine_needed']) {
                     $bugs_to_file[] = Bugzilla::BUG_HARDWARE_REQUEST;
@@ -115,13 +99,10 @@ class Controller_Webdev extends Controller_Template {
                 }
                 // File the appropriate Bugs
                 if($this->file_these($bugs_to_file, $form)) {
-                    // Send Buddy Email
-                    if( ! empty($form['buddy']) ) {
-                      $this->notify_buddy($form, $hiring);
-                    }
+                    // do anything ???
                 }
                 if( ! client::has_errors()) {
-                    $this->request->redirect('hiring/employee');
+                    $this->request->redirect('webdev/project_init');
                 }
 
             } else {
@@ -131,6 +112,7 @@ class Controller_Webdev extends Controller_Template {
             }
 
         }
+
         $memebers_autobox_groups = array(
             'members_it','members_product_driver','members_l10n',
             'members_marketing','members_qa', 'members_security',
@@ -144,8 +126,8 @@ class Controller_Webdev extends Controller_Template {
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
         $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
-        $this->template->js_extra .= '<script type="text/javascript">var memebers_autobox_groups = '.  json_encode($memebers_autobox_groups).'; </script>';
-        $this->template->js_extra .= '<script type="text/javascript">var memebers_groups_posted = '.  json_encode($memebers_groups_posted).'; </script>';
+        $this->template->js_extra .= '<script type="text/javascript">var memebers_autobox_groups = '.  json_encode($memebers_autobox_groups).";\n"
+                .'var memebers_groups_posted = '.  json_encode($memebers_groups_posted).'; </script>';
         $this->template->js_extra .= HTML::script('media/js/webdev.js');
         $this->template->js_extra .= HTML::script('media/js/jquery.textarearesizer.compressed.js');
         $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
