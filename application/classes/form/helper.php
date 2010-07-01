@@ -16,13 +16,16 @@ class Form_Helper {
      * @param array $managers
      * @return array
      */
-    public static function format_manager_list(array $managers) {
+    public static function format_manager_list(array $managers, $add_empty_first='Select...') {
         foreach($managers as $manager_email => &$manager_info) {
             $manager_info = !empty($manager_info['title'])
                     ? "{$manager_info['cn']} - {$manager_info['title']}"
                     : $manager_info['cn'];
         }
-        return array(''=>'Select...')+$managers;
+        if($add_empty_first) {
+            $managers = array(''=>$add_empty_first)+$managers;
+        }
+        return $managers;
     }
     /**
      * For non DB backed lookup lists used to populate UI elements like selects
@@ -41,11 +44,13 @@ class Form_Helper {
      * @return void
      */
     public static function filter_disallowed_values($select_lists) {
-        foreach ($select_lists as $post_key => $select_list) {
-            $submitted_value = isset($_POST[$post_key]) ? trim($_POST[$post_key]) : null;
-            $_POST[$post_key]= key_exists($post_key, $select_lists) && key_exists($submitted_value, $select_lists[$post_key])
-                ? $submitted_value
-                : null;
+        if(is_array($select_lists) && $select_lists) {
+            foreach ($select_lists as $post_key => $select_list) {
+                $submitted_value = isset($_POST[$post_key]) ? trim($_POST[$post_key]) : null;
+                $_POST[$post_key]= key_exists($post_key, $select_lists) && key_exists($submitted_value, $select_lists[$post_key])
+                    ? $submitted_value
+                    : null;
+            }
         }
     }
 }
