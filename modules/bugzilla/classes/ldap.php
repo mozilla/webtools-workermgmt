@@ -47,12 +47,12 @@ class Ldap {
      *
      * @return array in the form:
      * Array(
-     *  [morgamic@mozilla.com] => Array
-     (
-     [cn] => Mike Morgan
-     [title] => Director of Web Development
-     [bugzilla_email] => morgamic@gmail.com
-     )
+     *  [someone@somewhere.com] => Array  //LDAP email
+     *  (
+     *      [cn] => John Smith
+     *      [title] => Director of Web Development
+     *      [bugzilla_email] => someone-bug@somewhere.com //bugzilla email
+     *  )
      *  , ...
      * )
      */
@@ -86,7 +86,7 @@ class Ldap {
 
         $cleaned_list = array();
         foreach ($manager_list as $manager) {
-            // ensure keys to keep out of isset?:;
+            // ensure keys to keep out of isset?:;   
             $manager = array_merge(array('cn'=>null,'title'=>null,'mail'=>null,'bugzillaemail'=>null),$manager);
 
             if(! empty($manager['mail'])) {
@@ -106,6 +106,17 @@ class Ldap {
      * Returns LDAP attributes for the given email
      * @param string $ldap_email
      * @return array
+     * ex: Array
+     * (
+     *      [employee_type] => CE
+     *      [mail] => someone@somewhere.com
+     *      [cn] => Fred Smith
+     *      [title] => Director of Web Development
+     *      [bugzilla_email] => someone-bug@somewhere.com
+     *      [dn] => mail=someone@somewhere.com,o=com,dc=companyX
+     * )
+
+     *
      */
     public function employee_attributes($ldap_email) {
         $manager = null;
@@ -197,6 +208,13 @@ class Ldap {
             $this->log->add('error', "LDAP search failed using [{$this->ds()},{$this->base_dn}, "
                     ."(&(objectClass=mozComPerson)(isManager=TRUE))]"
                     ."LDAP error:[".ldap_error($this->ds)."]");
+        }
+        // cleanup, convert to expected underscore format
+        foreach ($search_results as &$result) {
+            $result['employee_type']=$result['employeetype'];
+            unset ($result['employeetype']);
+            $result['bugzilla_email']=$result['bugzillaemail'];
+            unset ($result['bugzillaemail']);
         }
         return $search_results;
     }
