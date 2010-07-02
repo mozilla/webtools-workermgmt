@@ -65,4 +65,26 @@ class Controller extends Kohana_Controller {
         array_push($crumbs,array(key(array_pop($crumbs))));
         return $crumbs;
     }
+
+    /**
+     * Submit these bug types using the validated from data
+     *
+     * @param array $bugs_to_file Must be known values of Bugzilla
+     *      i.e. Bugzilla::BUG_NEWHIRE_SETUP, Bugzilla::BUG_HR_CONTRACTOR, ...
+     * @param array $form_input The validated form input
+     */
+    protected function file_these(array $bugs_to_file, $form_input) {
+        $success = false;
+        $bugzilla = Bugzilla::instance(kohana::config('workermgmt'));
+        foreach ($bugs_to_file as $bug_to_file) {
+            $filing = $bugzilla->newhire_filing($bug_to_file, $form_input);
+            if ($filing['error_message']!==null) {
+                client::messageSend($filing['error_message'], E_USER_ERROR);
+            } else {
+                client::messageSend($filing['success_message'], E_USER_NOTICE);
+                $success = true;
+            }
+        }
+        return $success;
+    }
 }
