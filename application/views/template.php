@@ -8,10 +8,11 @@ $logout_link = isset ($logout_link) ? $logout_link : HTML::anchor('authenticate/
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title><?php echo HTML::chars($title) ?></title>
         <?php 
-            echo HTML::style('http://bugzilla.mozilla.org/skins/standard/global.css');
-            echo HTML::style('http://bugzilla.mozilla.org/skins/custom/global.css');
-            echo HTML::style('media/css/main.css');
-            echo HTML::style('media/css/redmond/jquery-ui-1.7.2.custom.css');
+            echo HTML::style('http://bugzilla.mozilla.org/skins/standard/global.css')."\n";
+            echo HTML::style('http://bugzilla.mozilla.org/skins/custom/global.css')."\n";
+            echo HTML::style('media/css/main.css')."\n";
+            echo HTML::style('media/css/jquery.autocomplete.css')."\n";
+            echo HTML::style('media/css/redmond/jquery-ui-1.7.2.custom.css')."\n";  
         ?>
         <?php echo isset($css_extra)?$css_extra:''; ?>
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
