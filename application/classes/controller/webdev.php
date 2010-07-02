@@ -90,13 +90,7 @@ class Controller_Webdev extends Controller_Template {
                 // check for invilid
                 $form = Arr::overwrite($form, $post->as_array());
 //                $form = $this->build_supplemental_form_values($form, $hiring);
-                $bugs_to_file = array(Bugzilla::BUG_NEWHIRE_SETUP);
-                if($form['machine_needed']) {
-                    $bugs_to_file[] = Bugzilla::BUG_HARDWARE_REQUEST;
-                }
-                if($form['mail_needed']) {
-                    $bugs_to_file[] = Bugzilla::BUG_EMAIL_SETUP;
-                }
+                $bugs_to_file = array(Bugzilla::BUG_NEW_WEBDEV_PROJECT);
                 // File the appropriate Bugs
                 if($this->file_these($bugs_to_file, $form)) {
                     // do anything ???
@@ -130,13 +124,9 @@ class Controller_Webdev extends Controller_Template {
                 .'var memebers_groups_posted = '.  json_encode($memebers_groups_posted).'; </script>';
         $this->template->js_extra .= HTML::script('media/js/webdev.js');
         $this->template->js_extra .= HTML::script('media/js/jquery.textarearesizer.compressed.js');
-        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
-
-//        $this->template->css_extra = HTML::style('media/css/content-assist.css');
-        
-        $this->template->title = 'WebTools::Webdev Project Init';
         $this->template->content = new View('pages/webdev/project_init');
         $this->template->content->form = $form;
         $this->template->content->lists = $this->select_lists;
+        $this->template->title = 'WebTools::Webdev Project Init';
     }
 }

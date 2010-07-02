@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
     $.ajax({
       url: URL_BASE+"api/all_employees",
       success: init_selectors,

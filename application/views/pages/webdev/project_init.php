@@ -9,7 +9,7 @@
 
     echo form::auto_label('name');
     client::validation('name');
-    echo form::input('name=id',$form['name']);
+    echo form::input('name=id',$form['name'],array('class'=>'first_focus'));
     ?>
 
     <fieldset>

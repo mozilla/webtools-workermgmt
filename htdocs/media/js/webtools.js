@@ -51,6 +51,8 @@ $(document).ready(function(){
   select_to_autocomplete('manager',{extra_attribs: 'size="60"'});
   select_to_autocomplete('buddy',{extra_attribs: 'size="60"'});
 
+  $('.first_focus').focus();
+
 });
 /**
  * Wrote some wrapper code that allows Jquery Auto complete to

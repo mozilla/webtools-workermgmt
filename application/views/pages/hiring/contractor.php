@@ -12,7 +12,7 @@
 
     echo form::auto_label('contract_type','New/Extension');
     client::validation('contract_type');
-    echo form::radio('contract_type', 'New', Arr::get($_POST,'contract_type')=='New');?>New contract
+    echo form::radio('contract_type', 'New', Arr::get($_POST,'contract_type')=='New',array('class'=>'first_focus'));?>New contract
     <?php echo form::radio('contract_type', 'Extension', Arr::get($_POST,'contract_type')=='Extension'); ?>Extension of existing contract
     
 

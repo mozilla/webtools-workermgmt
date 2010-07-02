@@ -9,7 +9,7 @@
 
     echo form::auto_label('hire_type');
     client::validation('hire_type');
-    echo form::select('hire_type=id',$lists['hire_type'],$form['hire_type']);
+    echo form::select('hire_type=id',$lists['hire_type'],$form['hire_type'],array('class'=>'first_focus'));
     
     
     echo form::auto_label('first_name');
