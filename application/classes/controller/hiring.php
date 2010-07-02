@@ -157,7 +157,6 @@ class Controller_Hiring extends Controller_Template {
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
         $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
-        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
         $this->template->title = 'WebTools::Employee New Hire';
         $this->template->content = new View('pages/hiring/employee');
         $this->template->content->form = $form;
@@ -267,34 +266,11 @@ class Controller_Hiring extends Controller_Template {
         // the UI used client to determine which fields to decorate as 'required'
         form::required_fields($required_fields);
         $this->template->js_extra = HTML::script('media/js/jquery.autocomplete.min.js');
-        $this->template->css_extra = HTML::style('media/css/jquery.autocomplete.css');
 
         $this->template->title = 'WebTools::Contractor New Hire';
         $this->template->content = new View('pages/hiring/contractor');
         $this->template->content->form = $form;
         $this->template->content->lists = $this->select_lists;
-    }
-    
-    /**
-     * Submit these bug types using the validated from data
-     * 
-     * @param array $bugs_to_file Must be known values of Bugzilla
-     *      i.e. Bugzilla::BUG_NEWHIRE_SETUP, Bugzilla::BUG_HR_CONTRACTOR, ...
-     * @param array $form_input The validated form input
-     */
-    private function file_these(array $bugs_to_file, $form_input) {
-        $success = false;
-        $bugzilla = Bugzilla::instance(kohana::config('workermgmt'));
-        foreach ($bugs_to_file as $bug_to_file) {
-            $filing = $bugzilla->newhire_filing($bug_to_file, $form_input);
-            if ($filing['error_message']!==null) {
-                client::messageSend($filing['error_message'], E_USER_ERROR);
-            } else {
-                client::messageSend($filing['success_message'], E_USER_NOTICE);
-                $success = true;
-            }
-        }
-        return $success;
     }
     /**
      * Build needed additional fields for bugzilla submission
@@ -312,7 +288,7 @@ class Controller_Hiring extends Controller_Template {
         $additions['username']=strtolower($first_initial.$last_name);
         // build the display manager name parts
         $manager_attributes = $hiring->employee_attributes($form['manager']);
-        $additions['bz_manager']=isset($manager_attributes['bugzilla_email'])?$manager_attributes['bugzilla_email']:null;
+        $additions['manager_bz_email']=isset($manager_attributes['bugzilla_email'])?$manager_attributes['bugzilla_email']:null;
         $additions['manager_name']=isset($manager_attributes['cn'])?$manager_attributes['cn']:null;
         // build the buddy name display parts (if buddy was submitted)
         $additions['buddy_name'] = '';
