@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Model_Filing {
+class Filing {
 
     /*
      * product (string) Required - The name of the product the bug is being
@@ -57,7 +57,7 @@ class Model_Filing {
         true => array('trim' => array()),
     );
     /**
-     * The allowed attributes list is build from this list, so it is
+     * The allowed attributes list is built from this list, so it is
      * REQUIRED that there is an entry for every field you would want filed.
      * If a field is optional or you don't care what field you send, just set
      *
@@ -65,80 +65,133 @@ class Model_Filing {
      *
      * this also supports arrays as attributes
      *
-     *   'optional_field' => array('array' => array()),
+     *   'optional_field' => 'array',
+     *
+     *   usage:
+     *     $filing->foo = 'value1';
+     *     $filing->foo = 'value2';
+     *   The value for $filing->foo will be:
+     *     array(0 => value1, 1 => value2)
      * 
      */
     protected $field_definitions = array(
         /*
-         * REQUIRED fields
+         * REQUIRED fields (noting what the bzilla docs state as required
+         *   but not enforcing here.  We let Bugzilla do that and deal with the
+         *   returned error)
          */
-        'product' => array('not_empty' => array()),
-        'component' => array('not_empty' => array()),
-        'summary' => array('not_empty' => array()),
-        'version' => array('not_empty' => array()),
-        'description' => array('not_empty' => array()),
+        'product'       => null,
+        'component'     => null,
+        'summary'       => null,
+        'version'       => null,
+        'description'   => null,
         /*
          * These will go to default values, probably best practice
          * to explicitly set them
          */
-        "op_sys" => null,
-        "platform"=> null,
-        "priority"=> null,
-        "severity"=> null,
+        "op_sys"    => null,
+        "platform"  => null,
+        "priority"  => null,
+        "severity"  => null,
         /*
          * Optional
          */
-        "alias" => null,
-        "assigned_to" => null,
-        "cc" => array('array' => array()),
-        "groups"=> array('array' => array()),
-        "qa_contact" => null,
-        "status" => null,
-        "target_milestone" => null
+        "alias"             => null,
+        "assigned_to"       => null,
+        "cc"                => 'array',
+        "groups"            => 'array',
+        "qa_contact"        => null,
+        "status"            => null,
+        "target_milestone"  => null
     );
 
+    /*
+     * The attributes for this model, they are designed to match one to one
+     * with the attributes available to the bugzilla
+     * xmlrpc call 'Bugzilla.create'
+     */
     protected $attributes = array();
+    /*
+     * Typically this is an array of data that came from a submitted
+     * html form. It is used to populate $this->attributes
+     */
+    protected $submitted_data = array();
 
-    public function __toString() {
-        return "Model_Filing\n".print_r($this->attributes, true);
-    }
+    protected $required_submitted_data = array();
 
-    public function __construct() {
+
+    /**
+	 * Creates and returns a new model.
+	 *
+	 * @chainable
+	 * @param   string  model name
+	 * @param   mixed   parameter for find()
+	 * @return  ORM
+	 */
+	public static function factory($model, $id = NULL) {
+		// Set class name
+		$model = 'Filing_'.ucfirst($model);
+
+		return new $model($id);
+	}
+    /**
+     *
+     * @param array $submitted_data
+     */
+    public function __construct(array $submitted_data) {
         $this->attributes = array_fill_keys(array_keys($this->field_definitions), null) ;
+        $this->submitted_data = $submitted_data;
+        $this->check_required_input();
     }
+    
     public function __get($name) {
         return key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
     }
+    /*
+     * supports integer indexed attributes
+     *
+     * You signify an attribute in an array attrib by
+     * $this->field_definitions['foo'] => 'array';
+     */
     public function __set($name, $value) {
         if(key_exists($name, $this->attributes)) {
             // check if this is an array attribute
-            if(key_exists('array', $this->field_definitions[$name]) &&  ! is_array($value)) {
+            if($this->field_definitions[$name]=='array' &&  ! is_array($value)) {
                 $this->attributes[$name][] = $value;
             } else {
                 $this->attributes[$name] = $value;
             }
         }
     }
+    /**
+     * conatinates the current $this->$name with param $value
+     * 
+     * @param string $name
+     * @param string $value
+     * @param boolean $add_newline If to prefix $value with "\n"
+     */
     public function append_to($name, $value, $add_newline=true) {
-        if(key_exists($name, $this->attributes) && ! key_exists('array', $this->field_definitions[$name])) {
+        if(key_exists($name, $this->attributes) && $this->field_definitions[$name]!='array') {
             $value = $add_newline ? "\n{$value}" : $value;
             $this->attributes[$name] .= $value;
         }
     }
 
-    public function has_required() {
-        $has_required = false;
-        $fields_to_check = array();
-        foreach ($this->field_definitions as $field_name => $definition) {
-            if(is_array($definition) && key_exists('not_empty', $definition) ) {
-                $fields_to_check = $fields_to_check + array($field_name => $this->attributes[$field_name]);
-//                array_push($fields_to_check, array($field_name => $this->attributes[$field_name]));
-            }
+    public function has_required_submitted_data() {
+        $unsupplied_fields = array_diff_key($this->required_submitted_data, $this->submitted_data);
+        if($unsupplied_fields) {
+            print_r($unsupplied_fields);die;
         }
-        print_r($fields_to_check);die;
+        
     }
 
+
+
+
+
     
-    
+    public function __toString() {
+        return "Model_Filing\n".print_r($this->attributes, true);
+    }
 
 }

@@ -171,6 +171,29 @@ class Bugzilla {
                 break;
 
             case self::BUG_NEWHIRE_SETUP:
+
+                //****** Implement this ******
+                $bug_filing = Model_Filing::factory('newhireSetup',$input);
+                if($bug_filing->has_required_submitted_data()) {
+                    $bug_filing->file();
+                    if($bug_filing->has_filing_errors()) {
+                        // build error message
+                        Client::messageSend("There was an error in filing your bug: ", E_USER_ERROR);
+                        $this->log->add('error',"");
+                    } else {
+                        // build success message
+                    }
+                } else {
+                    Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
+                    $this->log->add('error',"");
+                }
+
+
+
+
+
+
+
                 $bug = new Model_Filing();
                 $bug->product = "Mozilla Corporation";
                 $bug->component = "Facilities Management";
@@ -235,7 +258,7 @@ class Bugzilla {
                 break;
 
             default:
-                $this->log->add('error',"Urecognized Filing reqest type [$request_type]", E_USER_ERROR);
+                $this->log->add('error',"Urecognized Filing reqest type [$request_type]");
                 break;
         }
         $this->log->add('debug', "\$filing_response:".print_r($filing_response,1));
