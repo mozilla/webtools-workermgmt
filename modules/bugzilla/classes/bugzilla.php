@@ -173,47 +173,34 @@ class Bugzilla {
             case self::BUG_NEWHIRE_SETUP:
 
                 //****** Implement this ******
-                $bug_filing = Model_Filing::factory('newhireSetup',$input);
-                if($bug_filing->has_required_submitted_data()) {
+                $bug_filing = Filing::factory('NewhireSetup',$input);
+                if( ! $bug_filing->has_required_input_fields()) {
+                    // build error message
+                    Client::messageSend("There was an error in filing your bug. Missing required input values", E_USER_ERROR);
+                    $this->log->add('error',
+                        __METHOD__." {$bug_filing->last_error()}\nSubmitted Data\n :data",
+                        array(':data'=> print_r($bug_filing->submitted_data,true))
+                    );
+                    return false;
+                }
+                try {
                     $bug_filing->file();
-                    if($bug_filing->has_filing_errors()) {
-                        // build error message
-                        Client::messageSend("There was an error in filing your bug: ", E_USER_ERROR);
-                        $this->log->add('error',"");
+                    $filing_response = $this->file_bug($bug_filing);
+                } catch (Exception $e) {
+                    if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
+                        $this->log->add('error',__METHOD__." {$e->getMessage()}");
+                        Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
+                    } else if($e->getCode()==Filing::EXCEPTION_BUGZILLA_INTERACTION) {
+                        $this->log->add('error',__METHOD__." {$e->getMessage()}");
+                        Client::messageSend("There was an error communicating "
+                            ."with the Bugzilla server:{$e->getMessage()}", E_USER_ERROR);
                     } else {
-                        // build success message
+                        $this->log->add('error',__METHOD__." {$e->getMessage()}");
+                        Client::messageSend('Unknown exception when filing this bug', E_USER_ERROR);
                     }
-                } else {
-                    Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
-                    $this->log->add('error',"");
+                    return false;
                 }
 
-
-
-
-
-
-
-                $bug = new Model_Filing();
-                $bug->product = "Mozilla Corporation";
-                $bug->component = "Facilities Management";
-                $bug->summary = "New Hire Notification - {$input['fullname']} ({$input['start_date']})";
-                $bug->description = "Name: {$input['fullname']}\n"
-                    . "E-mail: {$input['username']}@mozilla.com\n"
-                    . "Type: {$input['hire_type']}\n"
-                    . "Manager: {$input['manager_name']} ({$input['manager']})\n"
-                    . "Buddy: {$input['buddy_name']} ({$input['buddy']})\n"
-                    . "Start date: {$input['start_date']}";
-                if($input['hire_type']=='Intern') {
-                    $bug->append_to('description', "End of Internship: {$input['end_date']}");
-                }
-                $location = $input['location'] == "other"?$input['location_other']:$input['location'];
-                $bug->append_to('description', "Location: {$location}");
-                $bug->cc = "accounting@mozilla.com";
-                $bug->cc = $input['manager_bz_email'];
-                $bug->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
-                
-                $filing_response = $this->file_bug($bug);
 
                 break;
 
@@ -377,7 +364,7 @@ class Bugzilla {
      *
      * @param $bug_to_file Model_Filing The data needed to build the bug request
      */
-    private function file_bug(Model_Filing $bug_to_file) {
+    private function file_bug(Filing $bug_to_file) {
 
         $this->log->add('debug',"Starting [".__METHOD__."] with \$bug_meta = {$bug_to_file}");
 
@@ -391,10 +378,10 @@ class Bugzilla {
                 'description' => $bug_to_file->description,
                 'cc' => $bug_to_file->cc,
 
-                'version' => 'other',
-                'platform' => 'All',
-                'op_sys' => 'Other',
-                'severity' => 'normal',
+                'version' => $bug_to_file->version,
+                'platform' => $bug_to_file->platform,
+                'op_sys' => $bug_to_file->op_sys,
+                'severity' => $bug_to_file->severity,
             ),
             array(
                 'escaping' => array('markup'),

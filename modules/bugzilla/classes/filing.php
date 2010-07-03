@@ -1,8 +1,26 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Filing {
+abstract class Filing {
 
-    /*
+    /**
+     * Bug types we know about, these correspond to the case:'s
+     * in $this::newhire_filing()
+     */
+    const BUG_HR_CONTRACTOR = 'hr_contractor';
+    const BUG_EMAIL_SETUP = 'email_setup';
+    const BUG_HARDWARE_REQUEST = 'hardware_request';
+    const BUG_NEWHIRE_SETUP = 'newhire_setup';
+    const BUG_NEW_WEBDEV_PROJECT = 'new_webdev_project';
+
+    const CODE_LOGIN_REQUIRED = 410;
+    const CODE_EMPLOYEE_HIRING_GROUP = 26;
+    const CODE_CONTRACTOR_HIRING_GROUP = 59;
+
+    const EXCEPTION_MISSING_INPUT = 100;
+    const EXCEPTION_BUGZILLA_INTERACTION = 200;
+
+    /* @see http://www.bugzilla.org/docs/tip/en/html/api/Bugzilla/WebService/Bug.html
+     * 
      * product (string) Required - The name of the product the bug is being
      *   filed against.
      *
@@ -53,9 +71,6 @@ class Filing {
      *
      */
 
-    protected $_filters = array(
-        true => array('trim' => array()),
-    );
     /**
      * The allowed attributes list is built from this list, so it is
      * REQUIRED that there is an entry for every field you would want filed.
@@ -117,35 +132,47 @@ class Filing {
      */
     protected $submitted_data = array();
 
-    protected $required_submitted_data = array();
-
-
     /**
+     * this is an array of the keys required to be present in
+     * $submitted_data.  They can have empty values, it's just
+     * required that the keys are there.
+     */
+    protected $required_input_fields = array();
+    protected $missing_required_fields = array();
+
+    protected $last_error;
+
+        /**
 	 * Creates and returns a new model.
 	 *
 	 * @chainable
 	 * @param   string  model name
 	 * @param   mixed   parameter for find()
-	 * @return  ORM
+	 * @return  Filing
 	 */
-	public static function factory($model, $id = NULL) {
+	public static function factory($filing_class, $submitted_data) {
 		// Set class name
-		$model = 'Filing_'.ucfirst($model);
-
-		return new $model($id);
+		$filing_class = 'Filing_'.ucfirst($filing_class);
+        return new $filing_class($submitted_data);
 	}
     /**
      *
      * @param array $submitted_data
      */
-    public function __construct(array $submitted_data) {
+    protected function __construct(array $submitted_data) {
         $this->attributes = array_fill_keys(array_keys($this->field_definitions), null) ;
         $this->submitted_data = $submitted_data;
-        $this->check_required_input();
+        $this->missing_required_fields = $this->required_input_fields;
     }
     
-    public function __get($name) {
-        return key_exists($name, $this->attributes) ? $this->attributes[$name] : null;
+    public function __get($key) {
+        if(key_exists($key, $this->attributes)) {
+            return $this->attributes[$key];
+        }
+        if(in_array($key, array('submitted_data','attributes','required_input_fields'))) {
+            return $this->$key;
+        }
+        return null;
     }
     /*
      * supports integer indexed attributes
@@ -153,13 +180,13 @@ class Filing {
      * You signify an attribute in an array attrib by
      * $this->field_definitions['foo'] => 'array';
      */
-    public function __set($name, $value) {
-        if(key_exists($name, $this->attributes)) {
+    public function __set($key, $value) {
+        if(key_exists($key, $this->attributes)) {
             // check if this is an array attribute
-            if($this->field_definitions[$name]=='array' &&  ! is_array($value)) {
-                $this->attributes[$name][] = $value;
+            if($this->field_definitions[$key]=='array' &&  ! is_array($value)) {
+                $this->attributes[$key][] = $value;
             } else {
-                $this->attributes[$name] = $value;
+                $this->attributes[$key] = $value;
             }
         }
     }
@@ -176,19 +203,54 @@ class Filing {
             $this->attributes[$name] .= $value;
         }
     }
-
-    public function has_required_submitted_data() {
-        $unsupplied_fields = array_diff_key($this->required_submitted_data, $this->submitted_data);
-        if($unsupplied_fields) {
-            print_r($unsupplied_fields);die;
+    /**
+     * Check that all the required input filed keys are present in the
+     * given input.
+     * This signals that we are ready to attempt to file the bug
+     * 
+     * @return bool
+     */
+    public function has_required_input_fields() {
+        $this->missing_required_fields = array_diff(
+            $this->required_input_fields,
+            array_keys($this->submitted_data)
+        );
+        if($this->missing_required_fields) {
+            $this->last_error = "Missing required fields: "
+                . implode(', ', $this->missing_required_fields);
         }
-        
+        return ! $this->missing_required_fields;
+    }
+    /**
+     * This is where the business logic of how to contruct the bug goes,
+     * so children of this class are required to implement it.
+     */
+    public abstract function file();
+
+    /**
+     * used by file() to build the content of the bug
+     * 
+     * @param string $key key in $this->submitted_data
+     * @return string
+     */
+    protected function input($key) {
+        // any key asked for here should always exist.
+        if( ! key_exists ($key, $this->submitted_data)) {
+            throw new Exception(
+                "Asked for non-existent submitted_data key: [{$key}]",
+                self::EXCEPTION_MISSING_INPUT);
+        }
+        return $this->submitted_data[$key];
     }
 
 
 
 
 
+
+    public function last_error() {
+        return $this->last_error;
+    }
     
     public function __toString() {
         return "Model_Filing\n".print_r($this->attributes, true);
