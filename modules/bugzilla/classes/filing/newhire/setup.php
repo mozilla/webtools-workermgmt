@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Filing_NewhireSetup extends Filing {
+class Filing_Newhire_Setup extends Filing {
     
     protected $required_input_fields = array(
         'fullname',
@@ -17,15 +17,7 @@ class Filing_NewhireSetup extends Filing {
         'manager_bz_email'
     );
 
-    protected function __construct(array $submitted_data) {
-        parent::__construct($submitted_data);
-        $this->version = 'other';
-        $this->platform = 'All';
-        $this->op_sys = 'Other';
-        $this->severity = 'normal';
-    }
-
-    public function  file() {
+    public function  contruct_content() {
         $t = $this;
         
         $this->product = "Mozilla Corporation";

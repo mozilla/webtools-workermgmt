@@ -87,11 +87,11 @@ class Ldap {
         $cleaned_list = array();
         foreach ($manager_list as $manager) {
             // ensure keys to keep out of isset?:;   
-            $manager = array_merge(array('cn'=>null,'title'=>null,'mail'=>null,'bugzillaemail'=>null),$manager);
+            $manager = array_merge(array('cn'=>null,'title'=>null,'mail'=>null,'bugzilla_email'=>null),$manager);
 
             if(! empty($manager['mail'])) {
-                $bugzilla_email = !empty($manager['bugzillaemail'])
-                        ?$manager['bugzillaemail']
+                $bugzilla_email = !empty($manager['bugzilla_email'])
+                        ?$manager['bugzilla_email']
                         :$manager['mail'];
                 $cleaned_list[$manager['mail']] = array(
                         'cn' => $manager['cn']?$manager['cn']:null,
@@ -213,8 +213,12 @@ class Ldap {
         foreach ($search_results as &$result) {
             $result['employee_type']=$result['employeetype'];
             unset ($result['employeetype']);
-            $result['bugzilla_email']=$result['bugzillaemail'];
-            unset ($result['bugzillaemail']);
+            if(isset ($result['bugzillaemail'])) {
+                $result['bugzilla_email']=$result['bugzillaemail'];
+                unset ($result['bugzillaemail']);
+            } else {
+                $result['bugzilla_email']=$result['mail'];
+            }
         }
         return $search_results;
     }

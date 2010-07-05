@@ -29,9 +29,9 @@ class Bugzilla {
     const BUG_NEWHIRE_SETUP = 'newhire_setup';
     const BUG_NEW_WEBDEV_PROJECT = 'new_webdev_project';
 
-    const CODE_LOGIN_REQUIRED = 410;
-    const CODE_EMPLOYEE_HIRING_GROUP = 26;
-    const CODE_CONTRACTOR_HIRING_GROUP = 59;
+//    const CODE_LOGIN_REQUIRED = 410;
+//    const CODE_EMPLOYEE_HIRING_GROUP = 26;
+//    const CODE_CONTRACTOR_HIRING_GROUP = 59;
 
 
     public function  __construct(Kohana_Config_File $config) {
@@ -106,148 +106,56 @@ class Bugzilla {
         switch ($request_type) {
             
             case self::BUG_EMAIL_SETUP:
-                $bug = new Model_Filing();
-                $bug->product = "mozilla.org";
-                $bug->component = "Server Operations: Account Requests";
-                $bug->summary = "LDAP/Zimbra Account Request - {$input['fullname']} "
-                    ."<{$input['username']}@mozilla.com> ({$input['start_date']})";
-                $bug->description =
-                    "Name: {$input['fullname']}\n" .
-                    "Username: {$input['username']}\n" .
-                    "Type: " . $input['hire_type'] . "\n" .
-                    "Manager: {$input['manager_name']}\n" .
-                    "Start date: " . $input['start_date'];
 
-                if($input['hire_type']=='Intern') {
-                    $bug->append_to('description', "End of Internship: {$input['end_date']}");
-                }
-                $location = $input['location'] == "other"?$input['location_other']:$input['location'];
-                $bug->append_to('description', "Location: {$location}");
-                if(!empty ($input['mail_alias'])) {
-                    $bug->append_to('description', "Alias: {$input['mail_alias']}");
-                }
-                if(!empty ($input['mail_lists'])) {
-                    $bug->append_to('description', "Mailing lists: {$input['mail_lists']}");
-                }
-                if(!empty ($input['other_comments'])) {
-                    $bug->append_to('description', "Other comments: {$input['other_comments']}");
-                }
-                $bug->cc = $input['manager_bz_email'];
-                $bug->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
-
-                $filing_response = $this->file_bug($bug);
+                $the_bug = 'Newhire_Email';
                 break;
 
             case self::BUG_HARDWARE_REQUEST:
-                $bug = new Model_Filing();
-                $bug->product = "mozilla.org";
-                $bug->component = "Server Operations: Desktop Issues";
-                $bug->summary = "Hardware Request - {$input['fullname']} ({$input['start_date']})";
-                $bug->description = "Name: {$input['fullname']}\n"
-                    . "Username: {$input['username']}\n"
-                    . "Type: {$input['hire_type']}\n"
-                    . "Manager: {$input['manager_name']}\n"
-                    . "Start date: {$input['start_date']}";
-
-                if($input['hire_type']=='Intern') {
-                    $bug->append_to('description', "End of Internship: {$input['end_date']}");
-                }
-
-                $location = $input['location'] == "other"?$input['location_other']:$input['location'];
-                $bug->append_to('description',
-                    "\nLocation: {$location}\n"
-                    ."Machine: " . $input['machine_type']
-                );
-                
-                if(!empty ($input['machine_special_requests'])) {
-                    $bug->append_to('description',
-                        "Special Requests: {$input['machine_special_requests']}"
-                    );
-                }
-                $bug->cc = $input['manager_bz_email'];
-                $bug->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
-
-                $filing_response = $this->file_bug($bug);
+                $the_bug = 'Newhire_Hardware';
                 break;
 
             case self::BUG_NEWHIRE_SETUP:
-
-                //****** Implement this ******
-                $bug_filing = Filing::factory('NewhireSetup',$input);
-                if( ! $bug_filing->has_required_input_fields()) {
-                    // build error message
-                    Client::messageSend("There was an error in filing your bug. Missing required input values", E_USER_ERROR);
-                    $this->log->add('error',
-                        __METHOD__." {$bug_filing->last_error()}\nSubmitted Data\n :data",
-                        array(':data'=> print_r($bug_filing->submitted_data,true))
-                    );
-                    return false;
-                }
-                try {
-                    $bug_filing->file();
-                    $filing_response = $this->file_bug($bug_filing);
-                } catch (Exception $e) {
-                    if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
-                        $this->log->add('error',__METHOD__." {$e->getMessage()}");
-                        Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
-                    } else if($e->getCode()==Filing::EXCEPTION_BUGZILLA_INTERACTION) {
-                        $this->log->add('error',__METHOD__." {$e->getMessage()}");
-                        Client::messageSend("There was an error communicating "
-                            ."with the Bugzilla server:{$e->getMessage()}", E_USER_ERROR);
-                    } else {
-                        $this->log->add('error',__METHOD__." {$e->getMessage()}");
-                        Client::messageSend('Unknown exception when filing this bug', E_USER_ERROR);
-                    }
-                    return false;
-                }
-
-
+                $the_bug = 'Newhire_Setup';
                 break;
 
             case self::BUG_HR_CONTRACTOR:
-                $bug = new Model_Filing();
-                $bug->product = "Mozilla Corporation";
-                $bug->component = "Consulting";
-
-                $summary_2nd_half = ($input['org_name']!==null ? $input['org_name'] : $input['fullname']);
-                $bug->summary = "Contractor Request - {$summary_2nd_half} ({$input['start_date']})";
-
-                $org_string = $input['org_name']!==null ? "Organization Name: {$input['org_name']}":"";
-                $bug->description = $org_string;
-                
-                $contact_string = !empty($input['org_name'])
-                    ? "Contact: {$input['fullname']}\n"
-                    : "Name: {$input['fullname']}\n";
-
-                $bug->append_to('description',
-                    $contact_string
-                    . "Address: " . $input['address'] . "\n"
-                    . "Phone: " . $input['phone_number'] . "\n"
-                    . "E-mail: " . $input['email_address'] . "\n"
-                    . "Start of contract: " . $input['start_date'] . "\n"
-                    . "End of contract: " . $input['end_date'] . "\n"
-                    . "Rate of pay: " . $input['pay_rate'] . "\n"
-                    . "Total payment limitation: " . $input['payment_limit'] . "\n"
-                    . "Manager: {$input['manager_name']}"
-                );
-                $location = $input['location'] == "other"?$input['location_other']:$input['location'];
-                $bug->append_to('description',
-                    "Location: {$location}\n"
-                    . "Type: " . $input['contract_type'] . "\n"
-                    . "Category: " . $input['contractor_category'] . "\n\n"
-                    . "Statement of work:\n" . $input['statement_of_work'] . "\n"
-                );
-                $bug->cc = "accounting@mozilla.com";
-                $bug->cc = $input['manager_bz_email'];
-                $bug->groups = array(self::CODE_CONTRACTOR_HIRING_GROUP);
-
-                $filing_response = $this->file_bug($bug);
+                $the_bug = 'Newhire_Contractor';
                 break;
 
             default:
                 $this->log->add('error',"Urecognized Filing reqest type [$request_type]");
                 break;
+
         }
+
+        
+        $bug_filing = Filing::factory($the_bug, $input);
+        if( ! $bug_filing->has_required_input_fields()) {
+            // build error message
+            Client::messageSend("There was an error in filing your bug. Missing required input values", E_USER_ERROR);
+            $this->log->add('error',
+                __METHOD__." {$bug_filing->last_error()}\nSubmitted Data\n :data",
+                array(':data'=> print_r($bug_filing->submitted_data,true))
+            );
+            die('eeeek');
+        }
+        try {
+            $bug_filing->contruct_content();
+            $filing_response = $this->file_bug($bug_filing);
+        } catch (Exception $e) {
+            if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
+                $this->log->add('error',__METHOD__." {$e->getMessage()}");
+                Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
+            } else if($e->getCode()==Filing::EXCEPTION_BUGZILLA_INTERACTION) {
+                $this->log->add('error',__METHOD__." {$e->getMessage()}");
+                Client::messageSend("There was an error communicating "
+                    ."with the Bugzilla server:{$e->getMessage()}", E_USER_ERROR);
+            } else {
+                $this->log->add('error',__METHOD__." {$e->getMessage()}\n{$e->getTraceAsString()}");
+                Client::messageSend('Unknown exception when filing this bug', E_USER_ERROR);
+            }
+        }
+
         $this->log->add('debug', "\$filing_response:".print_r($filing_response,1));
         $error_code = isset($filing_response['faultCode'])?$filing_response['faultCode']:null;
         $error_message = isset($filing_response['faultString'])?$filing_response['faultString']:null;
@@ -367,7 +275,6 @@ class Bugzilla {
     private function file_bug(Filing $bug_to_file) {
 
         $this->log->add('debug',"Starting [".__METHOD__."] with \$bug_meta = {$bug_to_file}");
-
         $request = xmlrpc_encode_request(
             "Bug.create",
             array(

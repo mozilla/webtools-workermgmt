@@ -160,11 +160,23 @@ abstract class Filing {
      * @param array $submitted_data
      */
     protected function __construct(array $submitted_data) {
-        $this->attributes = array_fill_keys(array_keys($this->field_definitions), null) ;
+        $this->attributes = array_fill_keys(array_keys($this->field_definitions), null);
         $this->submitted_data = $submitted_data;
         $this->missing_required_fields = $this->required_input_fields;
+        $this->set_defaults();
     }
-    
+    /**
+     * Some common sensible defaults
+     * You can overide these in the
+     */
+    protected function set_defaults() {
+        $this->version = 'other';
+        $this->platform = 'All';
+        $this->op_sys = 'Other';
+        $this->severity = 'normal';
+    }
+
+
     public function __get($key) {
         if(key_exists($key, $this->attributes)) {
             return $this->attributes[$key];
@@ -225,7 +237,7 @@ abstract class Filing {
      * This is where the business logic of how to contruct the bug goes,
      * so children of this class are required to implement it.
      */
-    public abstract function file();
+    public abstract function contruct_content();
 
     /**
      * used by file() to build the content of the bug
