@@ -276,6 +276,10 @@ abstract class Filing {
          */
         $filing_response = $this->send_bug_request();
         Kohana_Log::instance()->add('debug', __METHOD__." \$filing_response:".print_r($filing_response,1));
+        if($filing_response==null) {
+            Kohana_Log::instance()->add('error', __METHOD__." null returned from \$this->send_bug_request()");
+            throw new Exception("null returned from the request to Bugzilla", self::EXCEPTION_BUGZILLA_INTERACTION);
+        }
         // look for errors in the response from Bugzilla
         $error_code = isset($filing_response['faultCode'])
             ? $filing_response['faultCode']
