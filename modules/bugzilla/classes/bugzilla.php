@@ -19,21 +19,6 @@ class Bugzilla {
 
     private $log;
 
-    /**
-     * Bug types we know about, these correspond to the case:'s
-     * in $this::newhire_filing()
-     */
-    const BUG_HR_CONTRACTOR = 'hr_contractor';
-    const BUG_EMAIL_SETUP = 'email_setup';
-    const BUG_HARDWARE_REQUEST = 'hardware_request';
-    const BUG_NEWHIRE_SETUP = 'newhire_setup';
-    const BUG_NEW_WEBDEV_PROJECT = 'new_webdev_project';
-
-//    const CODE_LOGIN_REQUIRED = 410;
-//    const CODE_EMPLOYEE_HIRING_GROUP = 26;
-//    const CODE_CONTRACTOR_HIRING_GROUP = 59;
-
-
     public function  __construct(Kohana_Config_File $config) {
         $this->config = $config;
         $this->bz_id = Session::instance()->get('bz_id');
@@ -49,6 +34,15 @@ class Bugzilla {
     public function error_message() {
         return $this->error_message;
     }
+    /**
+     * Accessor for config values.
+     * 
+     * @param string
+     */
+    public function config($key) {
+        return isset ($this->config[$key]) ? $this->config[$key] : null;
+
+    }
 
     /**
      * Return a static instance of Bugzilla.
@@ -59,126 +53,6 @@ class Bugzilla {
         static $instance;
         empty($instance) and $instance = new self($config);
         return $instance;
-    }
-
-    /**
-     * The types of bugs we can file for.  To add more,  add a CONST above and
-     * an array element here.  Then add a case: in $this::newhire_filing()
-     */
-    private $bug_filing_types = array(
-        self::BUG_HR_CONTRACTOR => array(
-            "success_message" => 'Human Resources notification -- <a href="%s/show_bug.cgi?id=%d" target="_blank">bug %d</a>'
-        ),
-        self::BUG_NEWHIRE_SETUP => array(
-            "success_message" => 'Karen/Accounting notification -- <a href="%s/show_bug.cgi?id=%d" target="_blank">bug %d</a>'
-        ),
-        self::BUG_EMAIL_SETUP => array(
-            "success_message" => 'Mail account request -- <a href="%s/show_bug.cgi?id=%d" target="_blank">bug %d</a>'
-        ),
-        self::BUG_HARDWARE_REQUEST => array(
-            "success_message" => 'Hardware request -- <a href="%s/show_bug.cgi?id=%d" target="_blank">bug %d</a>'
-        )
-    );
-
-    /**
-     *
-     * @todo This still needs A LOT of work.  Need a much more elegant templated
-     *  solution (samkeen)
-     *
-     * @param array $input
-     * @return array $result
-     * array(
-     *  'error_code' => null,
-     *  'error_message' => null,
-     *  'bug_id' => null,
-     *  'success_message' => null
-     * );
-     */
-    public function newhire_filing($request_type, array $input) {
-        $result = array(
-            'error_code' => null,
-            'error_message' => null,
-            'bug_id' => null,
-            'success_message' => null
-        );
-        $filing_response = array();
-        
-        switch ($request_type) {
-            
-            case self::BUG_EMAIL_SETUP:
-
-                $the_bug = 'Newhire_Email';
-                break;
-
-            case self::BUG_HARDWARE_REQUEST:
-                $the_bug = 'Newhire_Hardware';
-                break;
-
-            case self::BUG_NEWHIRE_SETUP:
-                $the_bug = 'Newhire_Setup';
-                break;
-
-            case self::BUG_HR_CONTRACTOR:
-                $the_bug = 'Newhire_Contractor';
-                break;
-
-            default:
-                $this->log->add('error',"Urecognized Filing reqest type [$request_type]");
-                break;
-
-        }
-
-        
-        $bug_filing = Filing::factory($the_bug, $input);
-        if( ! $bug_filing->has_required_input_fields()) {
-            // build error message
-            Client::messageSend("There was an error in filing your bug. Missing required input values", E_USER_ERROR);
-            $this->log->add('error',
-                __METHOD__." {$bug_filing->last_error()}\nSubmitted Data\n :data",
-                array(':data'=> print_r($bug_filing->submitted_data,true))
-            );
-            die('eeeek');
-        }
-        try {
-            $bug_filing->contruct_content();
-            $filing_response = $this->file_bug($bug_filing);
-        } catch (Exception $e) {
-            if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
-                $this->log->add('error',__METHOD__." {$e->getMessage()}");
-                Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
-            } else if($e->getCode()==Filing::EXCEPTION_BUGZILLA_INTERACTION) {
-                $this->log->add('error',__METHOD__." {$e->getMessage()}");
-                Client::messageSend("There was an error communicating "
-                    ."with the Bugzilla server:{$e->getMessage()}", E_USER_ERROR);
-            } else {
-                $this->log->add('error',__METHOD__." {$e->getMessage()}\n{$e->getTraceAsString()}");
-                Client::messageSend('Unknown exception when filing this bug', E_USER_ERROR);
-            }
-        }
-
-        $this->log->add('debug', "\$filing_response:".print_r($filing_response,1));
-        $error_code = isset($filing_response['faultCode'])?$filing_response['faultCode']:null;
-        $error_message = isset($filing_response['faultString'])?$filing_response['faultString']:null;
-        if($error_message) {
-            $result['error_code']=$error_code;
-            $result['error_message']=$error_message;
-        }
-        /**
-         * if we get error code CODE_LOGIN_REQUIRED (login required), no need to try the
-         * rest of these, just redrect to login.php
-         */
-        if($result['error_code']&&$result['error_code']==self::CODE_LOGIN_REQUIRED) {
-            client::messageSend($result['error_message'], E_USER_ERROR);
-            url::redirect('login');
-        }
-        if(isset($filing_response['id'])) {
-            $result['bug_id'] = isset($filing_response['id'])?$filing_response['id']:null;
-            $result['success_message'] = sprintf(
-                    $this->bug_filing_types[$request_type]['success_message'],
-                    $this->config['bugzilla_url'], $result['bug_id'], $result['bug_id']
-            );
-        }
-        return $result;
     }
 
     /**
@@ -223,7 +97,7 @@ class Bugzilla {
      * @param sting $xml
      * @return
      */
-    private function call($xml) {
+    public function call($xml) {
         $bugzilla_server = $this->config['bugzilla_url'];
         $bugzilla_xmlrpc = "/xmlrpc.cgi";
         $additional_headers = array('Content-type: text/xml;charset=UTF-8');
@@ -265,39 +139,6 @@ class Bugzilla {
         $this->log->add('debug',"Response from XMLRPC call in [".__METHOD__
                 ."] with \$response = ".print_r($response,1));
         return $response;
-    }
-
-    /**
-     * File a bug in the Bugzilla system
-     *
-     * @param $bug_to_file Model_Filing The data needed to build the bug request
-     */
-    private function file_bug(Filing $bug_to_file) {
-
-        $this->log->add('debug',"Starting [".__METHOD__."] with \$bug_meta = {$bug_to_file}");
-        $request = xmlrpc_encode_request(
-            "Bug.create",
-            array(
-                'product' => $bug_to_file->product,
-                'component' => $bug_to_file->component,
-                'summary' => $bug_to_file->summary,
-                'groups' => $bug_to_file->groups,
-                'description' => $bug_to_file->description,
-                'cc' => $bug_to_file->cc,
-
-                'version' => $bug_to_file->version,
-                'platform' => $bug_to_file->platform,
-                'op_sys' => $bug_to_file->op_sys,
-                'severity' => $bug_to_file->severity,
-            ),
-            array(
-                'escaping' => array('markup'),
-                'encoding' => 'utf-8'
-            )
-        );
-        $method = null;
-        $response = xmlrpc_decode_request($this->call($request),$method);
-        return xmlrpc_decode_request($this->call($request), $request);
     }
 
 }

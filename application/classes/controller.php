@@ -75,14 +75,42 @@ class Controller extends Kohana_Controller {
      */
     protected function file_these(array $bugs_to_file, $form_input) {
         $success = false;
-        $bugzilla = Bugzilla::instance(kohana::config('workermgmt'));
+        $bugzilla_connector = Bugzilla::instance(kohana::config('workermgmt'));
+        $filing = array();
         foreach ($bugs_to_file as $bug_to_file) {
-            $filing = $bugzilla->newhire_filing($bug_to_file, $form_input);
-            if ($filing['error_message']!==null) {
-                client::messageSend($filing['error_message'], E_USER_ERROR);
-            } else {
+            try {
+                $filing = Filing::factory(
+                        $bug_to_file, $form_input, $bugzilla_connector)
+                        ->file();
+                
                 client::messageSend($filing['success_message'], E_USER_NOTICE);
                 $success = true;
+            } catch (Exception $e) {
+                /**
+                 * either the supplied $submitted_data to the Filing instance
+                 * was missing or contruct_content() method of the Filing
+                 * instance tried to access a submitted content key that did
+                 * not exist.
+                 */
+                if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
+                    Kohana_Log::instance()->log->add('error',__METHOD__." {$e->getMessage()}");
+                    Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
+                /**
+                 * bug was constructed successfully but we got an error back
+                 * when we sent it to Bugzilla
+                 */
+                } else if($e->getCode()==Filing::EXCEPTION_BUGZILLA_INTERACTION) {
+                    Kohana_Log::instance()->add('error',__METHOD__." {$e->getMessage()}");
+                    Client::messageSend("There was an error communicating "
+                        ."with the Bugzilla server: {$e->getMessage()}", E_USER_ERROR);
+                /**
+                 * something happend, log it and toss it
+                 */
+                } else {
+                    Kohana_Log::instance()->add('error',__METHOD__." {$e->getMessage()}\n{$e->getTraceAsString()}");
+                    Client::messageSend('Unknown exception when filing this bug', E_USER_ERROR);
+                    throw $e;
+                }
             }
         }
         return $success;

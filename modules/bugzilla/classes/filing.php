@@ -1,25 +1,20 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
+/**
+ *
+ * Requires XMLRPC ext @see http://php.net/manual/en/book.xmlrpc.php
+ */
 abstract class Filing {
 
-    /**
-     * Bug types we know about, these correspond to the case:'s
-     * in $this::newhire_filing()
-     */
-    const BUG_HR_CONTRACTOR = 'hr_contractor';
-    const BUG_EMAIL_SETUP = 'email_setup';
-    const BUG_HARDWARE_REQUEST = 'hardware_request';
-    const BUG_NEWHIRE_SETUP = 'newhire_setup';
-    const BUG_NEW_WEBDEV_PROJECT = 'new_webdev_project';
+    const ERROR_CODE_LOGIN_REQUIRED = 410;
 
-    const CODE_LOGIN_REQUIRED = 410;
     const CODE_EMPLOYEE_HIRING_GROUP = 26;
     const CODE_CONTRACTOR_HIRING_GROUP = 59;
 
     const EXCEPTION_MISSING_INPUT = 100;
     const EXCEPTION_BUGZILLA_INTERACTION = 200;
 
-    /* @see http://www.bugzilla.org/docs/tip/en/html/api/Bugzilla/WebService/Bug.html
+    /**
+     * @see http://www.bugzilla.org/docs/tip/en/html/api/Bugzilla/WebService/Bug.html
      * 
      * product (string) Required - The name of the product the bug is being
      *   filed against.
@@ -120,13 +115,14 @@ abstract class Filing {
         "target_milestone"  => null
     );
 
-    /*
+    /**
      * The attributes for this model, they are designed to match one to one
      * with the attributes available to the bugzilla
      * xmlrpc call 'Bugzilla.create'
      */
     protected $attributes = array();
-    /*
+    
+    /**
      * Typically this is an array of data that came from a submitted
      * html form. It is used to populate $this->attributes
      */
@@ -138,11 +134,15 @@ abstract class Filing {
      * required that the keys are there.
      */
     protected $required_input_fields = array();
+    
+    /**
+     * array of any field that were found to be missing
+     */
     protected $missing_required_fields = array();
 
-    protected $last_error;
+    private $bz_connector;
 
-        /**
+    /**
 	 * Creates and returns a new model.
 	 *
 	 * @chainable
@@ -150,17 +150,18 @@ abstract class Filing {
 	 * @param   mixed   parameter for find()
 	 * @return  Filing
 	 */
-	public static function factory($filing_class, $submitted_data) {
+	public static function factory($filing_class, $submitted_data, $bz_connector) {
 		// Set class name
 		$filing_class = 'Filing_'.ucfirst($filing_class);
-        return new $filing_class($submitted_data);
+        return new $filing_class($submitted_data, $bz_connector);
 	}
     /**
      *
      * @param array $submitted_data
      */
-    protected function __construct(array $submitted_data) {
+    protected function __construct(array $submitted_data, $bz_connector) {
         $this->attributes = array_fill_keys(array_keys($this->field_definitions), null);
+        $this->bz_connector = $bz_connector;
         $this->submitted_data = $submitted_data;
         $this->missing_required_fields = $this->required_input_fields;
         $this->set_defaults();
@@ -219,19 +220,23 @@ abstract class Filing {
      * Check that all the required input filed keys are present in the
      * given input.
      * This signals that we are ready to attempt to file the bug
+     *
+     * @throws self::EXCEPTION_MISSING_INPUT
      * 
-     * @return bool
+     * @return void
      */
-    public function has_required_input_fields() {
+    public function validate_required_input_fields() {
         $this->missing_required_fields = array_diff(
             $this->required_input_fields,
             array_keys($this->submitted_data)
         );
         if($this->missing_required_fields) {
-            $this->last_error = "Missing required fields: "
+            $msg = "Missing required fields: "
                 . implode(', ', $this->missing_required_fields);
+            throw new Exception($msg, self::EXCEPTION_MISSING_INPUT);
+            Kohana_Log::instance()->add('error', __METHOD__." $msg");
+            
         }
-        return ! $this->missing_required_fields;
     }
     /**
      * This is where the business logic of how to contruct the bug goes,
@@ -240,8 +245,101 @@ abstract class Filing {
     public abstract function contruct_content();
 
     /**
-     * used by file() to build the content of the bug
+     *
+     * @throws EXCEPTION_MISSING_INPUT
+     * @throws EXCEPTION_BUGZILLA_INTERACTION
+     *
+     * @return array $result
+     * array(
+     *  'error_code' => null,
+     *  'error_message' => null,
+     *  'bug_id' => null,
+     *  'success_message' => null
+     * );
+     */
+    public function file() {
+        $result = array(
+            'bug_id' => null,
+            'success_message' => null
+        );
+        $filing_response = array();
+        /**
+         * verify that all required key are present in the supplied user input
+         */
+        $this->validate_required_input_fields();
+        /**
+         * Take the user input an contruct the content for the bug filing
+         */
+        $this->contruct_content();
+        /**
+         * send the bug to Bugzilla.
+         */
+        $filing_response = $this->send_bug_request();
+        Kohana_Log::instance()->add('debug', __METHOD__." \$filing_response:".print_r($filing_response,1));
+        // look for errors in the response from Bugzilla
+        $error_code = isset($filing_response['faultCode'])
+            ? $filing_response['faultCode']
+            : null;
+        $error_message = isset($filing_response['faultString'])
+            ? $filing_response['faultString']
+            : null;
+        /**
+         * if we get error code CODE_LOGIN_REQUIRED (login required), no need to try the
+         * rest of these, just redrect to login.php
+         */
+        if($error_code == self::ERROR_CODE_LOGIN_REQUIRED) {
+            client::messageSend($result['error_message'], E_USER_ERROR);
+            url::redirect('login');
+        }
+        // for any other errors, contruct and throw an Exception
+        if($error_message) {
+            throw new Exception("$error_message, code[{$error_code}]", self::EXCEPTION_BUGZILLA_INTERACTION);
+        }
+        /**
+         * grab the Id os the bug created, construct a Success message for the UI
+         */
+        if(isset($filing_response['id'])) {
+            $result['bug_id'] = isset($filing_response['id'])?$filing_response['id']:null;
+            $result['success_message'] = $this->success_message($result['bug_id']);
+        }
+        return $result;
+    }
+    /**
+     * Make the actual xml rpc request to Bugzilla
      * 
+     * @return array
+     */
+    private function send_bug_request() {
+        $log = Kohana_Log::instance();
+
+        $log->add('debug',"Starting [".__METHOD__."] with \$bug_meta = {$this}");
+        $request = xmlrpc_encode_request(
+            "Bug.create",
+            array(
+                'product' => $this->product,
+                'component' => $this->component,
+                'summary' => $this->summary,
+                'groups' => $this->groups,
+                'description' => $this->description,
+                'cc' => $this->cc,
+
+                'version' => $this->version,
+                'platform' => $this->platform,
+                'op_sys' => $this->op_sys,
+                'severity' => $this->severity,
+            ),
+            array(
+                'escaping' => array('markup'),
+                'encoding' => 'utf-8'
+            )
+        );
+        return xmlrpc_decode($this->bz_connector->call($request));
+    }
+
+    /**
+     * used by file() to build the content of the bug
+     *
+     * @throws EXCEPTION_MISSING_INPUT
      * @param string $key key in $this->submitted_data
      * @return string
      */
@@ -254,14 +352,16 @@ abstract class Filing {
         }
         return $this->submitted_data[$key];
     }
-
-
-
-
-
-
-    public function last_error() {
-        return $this->last_error;
+    /**
+     * @todo Find a better home for this, UI concerns should maybe go elsewhere
+     * 
+     * @return string
+     */
+    protected function success_message($bug_id) {
+        return sprintf(
+            $this->success_message,
+            $this->bz_connector->config('bugzilla_url'), $bug_id, $bug_id
+        );
     }
     
     public function __toString() {

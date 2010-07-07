@@ -129,12 +129,12 @@ class Controller_Hiring extends Controller_Template {
                 // check for invilid
                 $form = Arr::overwrite($form, $post->as_array());
                 $form = $this->build_supplemental_form_values($form, $hiring);
-                $bugs_to_file = array(Bugzilla::BUG_NEWHIRE_SETUP);
+                $bugs_to_file = array('Newhire_Setup');
                 if($form['machine_needed']) {
-                    $bugs_to_file[] = Bugzilla::BUG_HARDWARE_REQUEST;
+                    $bugs_to_file[] = 'Newhire_Hardware';
                 }
                 if($form['mail_needed']) {
-                    $bugs_to_file[] = Bugzilla::BUG_EMAIL_SETUP;
+                    $bugs_to_file[] = 'Newhire_Email';
                 }
                 // File the appropriate Bugs
                 if($this->file_these($bugs_to_file, $form)) {
