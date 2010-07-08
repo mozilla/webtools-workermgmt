@@ -8,7 +8,7 @@
  * @package    Bugzilla
  * @author     skeen@mozilla.org
  */
-class Bugzilla {
+class Bugzilla_Client {
     private $error_message;
     private $curler;
 

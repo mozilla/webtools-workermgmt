@@ -16,7 +16,7 @@ class Controller extends Kohana_Controller {
         $requested_area = strtolower($this->request->controller."::".$this->request->action);
         if( ! in_array($requested_area, $this->non_authed_areas)) {
             // run authentication
-            if( ! Bugzilla::instance(Kohana::config('workermgmt'))->authenticated()) {
+            if( !Bugzilla_Client::instance(Kohana::config('workermgmt'))->authenticated()) {
                 $this->request->redirect('authenticate/login');
             }
         }
@@ -75,15 +75,20 @@ class Controller extends Kohana_Controller {
      */
     protected function file_these(array $bugs_to_file, $form_input) {
         $success = false;
-        $bugzilla_connector = Bugzilla::instance(kohana::config('workermgmt'));
+        $bugzilla_connector = Bugzilla_Client::instance(kohana::config('workermgmt'));
         $filing = array();
         foreach ($bugs_to_file as $bug_to_file) {
             try {
-                $filing = Filing::factory(
-                        $bug_to_file, $form_input, $bugzilla_connector)
-                        ->file();
-                
-                client::messageSend($filing['success_message'], E_USER_NOTICE);
+                $filing = Filing::factory($bug_to_file, $form_input, $bugzilla_connector);
+                $filing->file();
+                Client::messageSend(
+                    sprintf("%s -- <a href=\"%s/show_bug.cgi?id=%d\" target=\"_blank\">bug %d</a>",
+                        array($filing->label,
+                              $this->bz_connector->config('bugzilla_url'),
+                              $filing->bug_id,
+                              $filing->bug_id)
+                    )
+                , E_USER_NOTICE);
                 $success = true;
             } catch (Exception $e) {
                 /**
@@ -102,7 +107,7 @@ class Controller extends Kohana_Controller {
                 } else if($e->getCode()==Filing::EXCEPTION_BUGZILLA_INTERACTION) {
                     Kohana_Log::instance()->add('error',__METHOD__." {$e->getMessage()}");
                     Client::messageSend("There was an error communicating "
-                        ."with the Bugzilla server: {$e->getMessage()}", E_USER_ERROR);
+                        ."with the Bugzilla server for Bug \"{$filing->label}\": {$e->getMessage()}", E_USER_ERROR);
                 /**
                  * something happend, log it and toss it
                  */

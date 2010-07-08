@@ -17,11 +17,8 @@ class Filing_Newhire_Email extends Filing {
         'other_comments',
         'manager_bz_email'
     );
-    /**
-     * sprintf expecting bugzilla_url, bug_id that was just created
-     * @see Filing->success_message()
-     */
-    protected $success_message = 'Mail account request -- <a href="%s/show_bug.cgi?id=%d" target="_blank">bug %d</a>';
+
+    protected $label = "Mail account request";
 
     public function  contruct_content() {
         $t = $this;

@@ -35,7 +35,7 @@ class Client {
                         $warnings .= '<li>'.$message[0].'</li>'."\n";
                         break;
                     case E_USER_ERROR:
-                        $errors .= '<li">'.$message[0].'</li>'."\n";
+                        $errors .= '<li>'.$message[0].'</li>'."\n";
                         break;
                     case E_USER_NOTICE:
                     default:

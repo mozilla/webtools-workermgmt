@@ -10,7 +10,7 @@
 class Controller_Authenticate extends Controller_Template {
 
     public function  __construct(Kohana_Request $request) {
-        $this->bugzilla = Bugzilla::instance(Kohana::config('workermgmt'));
+        $this->bugzilla = Bugzilla_Client::instance(Kohana::config('workermgmt'));
         parent::__construct($request);
     }  
 

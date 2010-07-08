@@ -116,6 +116,19 @@ abstract class Filing {
     );
 
     /**
+     * made available through __get
+     */
+    protected $bug_id;
+
+    /**
+     * Set this to a human approriate label for this bug in the child class.
+     * Used for messaging
+     *
+     * made available through __get
+     */
+    protected $label = "Unspecified";
+    
+    /**
      * The attributes for this model, they are designed to match one to one
      * with the attributes available to the bugzilla
      * xmlrpc call 'Bugzilla.create'
@@ -177,12 +190,12 @@ abstract class Filing {
         $this->severity = 'normal';
     }
 
-
     public function __get($key) {
         if(key_exists($key, $this->attributes)) {
             return $this->attributes[$key];
         }
-        if(in_array($key, array('submitted_data','attributes','required_input_fields'))) {
+        // allow public gtting of these attributes
+        if(in_array($key, array('bug_id', 'label', 'submitted_data','attributes','required_input_fields'))) {
             return $this->$key;
         }
         return null;
@@ -249,19 +262,9 @@ abstract class Filing {
      * @throws EXCEPTION_MISSING_INPUT
      * @throws EXCEPTION_BUGZILLA_INTERACTION
      *
-     * @return array $result
-     * array(
-     *  'error_code' => null,
-     *  'error_message' => null,
-     *  'bug_id' => null,
-     *  'success_message' => null
-     * );
+     * @return void
      */
     public function file() {
-        $result = array(
-            'bug_id' => null,
-            'success_message' => null
-        );
         $filing_response = array();
         /**
          * verify that all required key are present in the supplied user input
@@ -292,7 +295,7 @@ abstract class Filing {
          * rest of these, just redrect to login.php
          */
         if($error_code == self::ERROR_CODE_LOGIN_REQUIRED) {
-            client::messageSend($result['error_message'], E_USER_ERROR);
+            client::messageSend($error_message, E_USER_ERROR);
             url::redirect('login');
         }
         // for any other errors, contruct and throw an Exception
@@ -300,13 +303,9 @@ abstract class Filing {
             throw new Exception("$error_message, code[{$error_code}]", self::EXCEPTION_BUGZILLA_INTERACTION);
         }
         /**
-         * grab the Id os the bug created, construct a Success message for the UI
+         * grab the Id os the bug created
          */
-        if(isset($filing_response['id'])) {
-            $result['bug_id'] = isset($filing_response['id'])?$filing_response['id']:null;
-            $result['success_message'] = $this->success_message($result['bug_id']);
-        }
-        return $result;
+        $this->bug_id = isset($filing_response['id']) ? $filing_response['id'] : null;
     }
     /**
      * Make the actual xml rpc request to Bugzilla
@@ -356,17 +355,7 @@ abstract class Filing {
         }
         return $this->submitted_data[$key];
     }
-    /**
-     * @todo Find a better home for this, UI concerns should maybe go elsewhere
-     * 
-     * @return string
-     */
-    protected function success_message($bug_id) {
-        return sprintf(
-            $this->success_message,
-            $this->bz_connector->config('bugzilla_url'), $bug_id, $bug_id
-        );
-    }
+
     
     public function __toString() {
         return "Model_Filing\n".print_r($this->attributes, true);

@@ -17,11 +17,10 @@ class Filing_Newhire_Setup extends Filing {
         'manager_bz_email'
     );
     /**
-     * sprintf expecting bugzilla_url, bug_id that was just created
-     * @see Filing->success_message()
+     * label that will be used for messaging.
      */
-    protected $success_message = 'Karen/Accounting notification -- <a href="%s/show_bug.cgi?id=%d" target="_blank">bug %d</a>';
-
+    protected $label = "Karen/Accounting notification";
+    
     public function  contruct_content() {
         $t = $this;
         
