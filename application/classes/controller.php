@@ -92,12 +92,18 @@ class Controller extends Kohana_Controller {
                 $success = true;
             } catch (Exception $e) {
                 /**
+                 * Timed out session most likely
+                 */
+                if($e->getCode()==Filing::EXCEPTION_AUTHENTICATION_FAILED) {
+                    client::messageSend('Authentication Failed, need to re-login', E_USER_ERROR);
+                    $this->request->redirect('authenticate/login');
+                /**
                  * either the supplied $submitted_data to the Filing instance
                  * was missing or contruct_content() method of the Filing
                  * instance tried to access a submitted content key that did
                  * not exist.
                  */
-                if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
+                } else if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
                     Kohana_Log::instance()->log->add('error',__METHOD__." {$e->getMessage()}");
                     Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
                 /**

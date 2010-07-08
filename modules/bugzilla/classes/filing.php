@@ -12,6 +12,7 @@ abstract class Filing {
 
     const EXCEPTION_MISSING_INPUT = 100;
     const EXCEPTION_BUGZILLA_INTERACTION = 200;
+    const EXCEPTION_AUTHENTICATION_FAILED = 300;
 
     /**
      * @see http://www.bugzilla.org/docs/tip/en/html/api/Bugzilla/WebService/Bug.html
@@ -291,12 +292,10 @@ abstract class Filing {
             ? $filing_response['faultString']
             : null;
         /**
-         * if we get error code CODE_LOGIN_REQUIRED (login required), no need to try the
-         * rest of these, just redrect to login.php
+         * Auth failed, session probably timed out.
          */
         if($error_code == self::ERROR_CODE_LOGIN_REQUIRED) {
-            client::messageSend($error_message, E_USER_ERROR);
-            url::redirect('login');
+            throw new Exception("Authentication failed, code[{$error_code}]", self::EXCEPTION_AUTHENTICATION_FAILED);
         }
         // for any other errors, contruct and throw an Exception
         if($error_message) {
