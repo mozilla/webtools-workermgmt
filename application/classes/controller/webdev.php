@@ -59,13 +59,9 @@ class Controller_Webdev extends Controller_Template {
         $errors = $form;
 
         if($_POST) {
-
-
-//            if( ! Form::valid_token()) {
-//                $this->request->redirect('webdev/project_init');
-//            }
-
-
+            if( ! Form::valid_token()) {
+                $this->request->redirect('webdev/project_init');
+            }
             Form_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
             // hack to have Validate keep psot key/values after ->check()
