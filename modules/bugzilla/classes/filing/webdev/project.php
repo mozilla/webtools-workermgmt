@@ -26,10 +26,8 @@ class Filing_Webdev_Project extends Filing {
         
         $this->product = "Core";
         $this->component = "Tracking";
-        $this->summary = "{$t->input('name')}";
         $this->version = 'unspecified';
-        $this->platform = 'all';
-        $this->op_sys = 'all';
+        $this->summary = "{$t->input('name')}";
         $this->description = "Overview: {$t->input('overview')}";
         $this->append_to('description', "\nProject Scope: {$t->input('scope')}");
         $this->append_to('description', "\nDependencies: {$t->dependencies_text()}");

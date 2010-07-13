@@ -316,18 +316,18 @@ abstract class Filing {
         $request = xmlrpc_encode_request(
             "Bug.create",
             array(
-                'product' => $this->product,
-                'component' => $this->component,
-                'summary' => $this->summary,
-                'groups' => $this->groups,
-                'description' => $this->description,
-                'cc' => $this->cc,
+                'product'       => $this->product,
+                'component'     => $this->component,
+                'summary'       => $this->summary,
+                'groups'        => $this->groups,
+                'description'   => $this->description,
+                'cc'            => $this->cc,
 
-                'version' => $this->version,
-                'platform' => $this->platform,
-                'op_sys' => $this->op_sys,
-                'severity' => $this->severity,
-                'assigned_to' => $this->assigned_to
+                'version'       => $this->version,
+                'platform'      => 'all',
+                'op_sys'        => 'all',
+                'severity'      => $this->severity,
+                'assigned_to'   => $this->assigned_to
             ),
             array(
                 'escaping' => array('markup'),
