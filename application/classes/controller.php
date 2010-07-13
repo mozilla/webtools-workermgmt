@@ -83,10 +83,10 @@ class Controller extends Kohana_Controller {
                 $filing->file();
                 Client::messageSend(
                     sprintf("%s -- <a href=\"%s/show_bug.cgi?id=%d\" target=\"_blank\">bug %d</a>",
-                        array($filing->label,
-                              $this->bz_connector->config('bugzilla_url'),
-                              $filing->bug_id,
-                              $filing->bug_id)
+                            $filing->label,
+                            $bugzilla_connector->config('bugzilla_url'),
+                            $filing->bug_id,
+                            $filing->bug_id
                     )
                 , E_USER_NOTICE);
                 $success = true;
@@ -104,7 +104,7 @@ class Controller extends Kohana_Controller {
                  * not exist.
                  */
                 } else if($e->getCode()==Filing::EXCEPTION_MISSING_INPUT) {
-                    Kohana_Log::instance()->log->add('error',__METHOD__." {$e->getMessage()}");
+                    Kohana_Log::instance()->add('error',__METHOD__." {$e->getMessage()}");
                     Client::messageSend('Missing required input to build this Bug', E_USER_ERROR);
                 /**
                  * bug was constructed successfully but we got an error back

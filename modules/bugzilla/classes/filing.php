@@ -68,6 +68,10 @@ abstract class Filing {
      */
 
     /**
+     * The attributes for this model, they are designed to match one to one
+     * with the attributes available to the bugzilla
+     * xmlrpc call 'Bugzilla.create'
+     *
      * The allowed attributes list is built from this list, so it is
      * REQUIRED that there is an entry for every field you would want filed.
      * If a field is optional or you don't care what field you send, just set
@@ -85,11 +89,11 @@ abstract class Filing {
      *     array(0 => value1, 1 => value2)
      * 
      */
-    protected $field_definitions = array(
+    protected $attributes = array(
         /*
-         * REQUIRED fields (noting what the bzilla docs state as required
-         *   but not enforcing here.  We let Bugzilla do that and deal with the
-         *   returned error)
+         * These 5 are the REQUIRED fields (noting what the bzilla docs state as
+         *   required but not enforcing here.  We let Bugzilla do that and
+         *   deal with the returned error)
          */
         'product'       => null,
         'component'     => null,
@@ -109,6 +113,7 @@ abstract class Filing {
          */
         "alias"             => null,
         "assigned_to"       => null,
+        // these are defined as 'array' attributes (see $this->__get()
         "cc"                => 'array',
         "groups"            => 'array',
         "qa_contact"        => null,
@@ -128,13 +133,6 @@ abstract class Filing {
      * made available through __get
      */
     protected $label = "Unspecified";
-    
-    /**
-     * The attributes for this model, they are designed to match one to one
-     * with the attributes available to the bugzilla
-     * xmlrpc call 'Bugzilla.create'
-     */
-    protected $attributes = array();
     
     /**
      * Typically this is an array of data that came from a submitted
@@ -174,7 +172,7 @@ abstract class Filing {
      * @param array $submitted_data
      */
     protected function __construct(array $submitted_data, $bz_connector) {
-        $this->attributes = array_fill_keys(array_keys($this->field_definitions), null);
+        $this->attributes = array_fill_keys(array_keys($this->attributes), null);
         $this->bz_connector = $bz_connector;
         $this->submitted_data = $submitted_data;
         $this->missing_required_fields = $this->required_input_fields;
@@ -210,7 +208,7 @@ abstract class Filing {
     public function __set($key, $value) {
         if(key_exists($key, $this->attributes)) {
             // check if this is an array attribute
-            if($this->field_definitions[$key]=='array' &&  ! is_array($value)) {
+            if($this->attributes[$key]=='array' &&  ! is_array($value)) {
                 $this->attributes[$key][] = $value;
             } else {
                 $this->attributes[$key] = $value;
@@ -225,7 +223,7 @@ abstract class Filing {
      * @param boolean $add_newline If to prefix $value with "\n"
      */
     public function append_to($name, $value, $add_newline=true) {
-        if(key_exists($name, $this->attributes) && $this->field_definitions[$name]!='array') {
+        if(key_exists($name, $this->attributes) && $this->attributes[$name]!='array') {
             $value = $add_newline ? "\n{$value}" : $value;
             $this->attributes[$name] .= $value;
         }

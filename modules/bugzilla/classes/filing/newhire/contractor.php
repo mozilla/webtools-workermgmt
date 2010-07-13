@@ -36,7 +36,8 @@ class Filing_Newhire_Contractor extends Filing {
         $org_string = $t->input('org_name')!==null ? "Organization Name: {$t->input('org_name')}":"";
         $this->description = $org_string;
 
-        $contact_string = !empty($t->input('org_name'))
+        $org_name = $t->input('org_name');
+        $contact_string = ! empty($org_name)
             ? "Contact: {$t->input('fullname')}\n"
             : "Name: {$t->input('fullname')}\n";
 

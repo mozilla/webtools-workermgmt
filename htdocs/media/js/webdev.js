@@ -3,6 +3,10 @@ $(document).ready(function(){
     $.ajax({
       url: URL_BASE+"api/all_employees",
       success: init_selectors,
+      timeout: 4000,
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+          alert("Unable to contact LDAP for needed data.\n\nContact support");
+      },
       dataType: 'json'
     });
 });

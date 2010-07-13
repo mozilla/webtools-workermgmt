@@ -75,7 +75,7 @@ class Controller_Webdev extends Controller_Template {
             // $post
             //    ->rule('start_date', 'date')
             //    ->rule('end_date', 'date')
-            //      ->rule('email_address', 'email');
+            //    ->rule('email_address', 'email');
 
             // add all the required fields
             foreach ($required_fields as $required_field) {
@@ -83,18 +83,13 @@ class Controller_Webdev extends Controller_Template {
             }
 
             if ($post->check()) {
-                // check for invilid
+                // check for invalid
                 $form = Arr::overwrite($form, $post->as_array());
-//                $form = $this->build_supplemental_form_values($form, $hiring);
-                $bugs_to_file = array(Bugzilla::BUG_NEW_WEBDEV_PROJECT);
                 // File the appropriate Bugs
+                $bugs_to_file = array('Webdev_Project');
                 if($this->file_these($bugs_to_file, $form)) {
-                    // do anything ???
-                }
-                if( ! client::has_errors()) {
                     $this->request->redirect('webdev/project_init');
                 }
-
             } else {
                 $form = arr::overwrite($form, $post->as_array());
                 client::validation_results(arr::overwrite($errors, $post->errors('hiring_employee_form_validations')));
