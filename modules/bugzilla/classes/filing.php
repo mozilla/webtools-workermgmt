@@ -327,6 +327,7 @@ abstract class Filing {
                 'platform' => $this->platform,
                 'op_sys' => $this->op_sys,
                 'severity' => $this->severity,
+                'assigned_to' => $this->assigned_to
             ),
             array(
                 'escaping' => array('markup'),
