@@ -1,6 +1,6 @@
-<h2>
-    Project Initialization Form
-</h2>
+<h2>Project Initiation Form</h2>
+<p>For any Mozilla project that contains Web Dev as a dependency, please fill
+   out the following form prior to kickoff.</p>
 <p><strong>*</strong> denotes a required field</p>
 <form class="app_form" method="post" action="" id="project_init_form" accept-charset="utf-8">
 
@@ -14,6 +14,8 @@
 
     <fieldset>
         <legend>Team Members</legend>
+        <p>(expand and input each stakeholders' Bugzilla emails to be cc'd on
+           created bugs. Leave empty if N/A)</p>
 
         <div class="multi-lookup">
         <?php
@@ -59,7 +61,9 @@
     </fieldset>
     
     <?php
-    echo form::auto_label('overview');
+    echo form::auto_label('overview');?>
+    <p>Briefly describe the background, goals and objectives for this project</p>
+    <?php
     client::validation('overview');
     echo form::textarea(
             'overview=id',
@@ -68,7 +72,10 @@
     ?>
 
     <?php
-    echo form::auto_label('scope');
+    echo form::auto_label('scope', 'Project Scope');?>
+    <p>Outline the work that needs to be accomplished (e.g. UX, design,
+       implementation, QA, etc.) and time-line for delivery.</p>
+    <?php
     client::validation('scope');
     echo form::textarea(
             'scope=id',
@@ -78,7 +85,8 @@
 
     <fieldset>
         <legend>Dependencies</legend>
-        
+        <p>Identify and provide details for any of the follow dependencies
+           that are included in the project scope (leave blank if N/A):</p>
         <?php
         echo form::auto_label('dependencies_legal','Legal');
         client::validation('dependencies_legal');
@@ -128,7 +136,9 @@
     </fieldset>
 
     <?php
-    echo form::auto_label('assumptions');
+    echo form::auto_label('assumptions');?>
+    <p>List all, including constraints and exclusions:</p>
+    <?php
     client::validation('assumptions');
     echo form::textarea(
             'assumptions=id',
@@ -137,14 +147,18 @@
     ?>
 
     <?php
-    echo form::auto_label('deliverables');
+    echo form::auto_label('deliverables');?>
+    <p>List all specs, PRDs, wireframes, design comps, etc. that web dev should
+       expect and need for this project and include target delivery date for each:</p>
+    <?php
     client::validation('deliverables');
     echo form::textarea(
             'deliverables=id',
             $form['deliverables'],
             array('class' => 'resizable'));
     ?>
-    
-
     <input type="submit" id="submit" name="submit" value="Submit Request" />
+    <p>Thanks; this helps a lot. We'll be in touch soon to discuss this project
+       in detail.</p>
+    <p>Please contact malexis@mozilla.com with any questions.</p>
 </form>
