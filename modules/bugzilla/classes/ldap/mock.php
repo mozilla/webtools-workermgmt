@@ -28,7 +28,7 @@ class Ldap_Mock extends Ldap {
     return parent::__construct($config, $credentials);
   }
 
-  public function employee_list($type='all') {
+  public function employee_list($type='all', $use_bugzilla_email = false) {
     Kohana_Log::instance()->add('debug',"Called MOCK ".__METHOD__);
     return json_decode($this->manager_list, true);
   }
