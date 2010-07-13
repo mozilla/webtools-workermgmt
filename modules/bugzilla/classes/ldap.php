@@ -107,7 +107,6 @@ class Ldap {
                 }
             }   
         }
-        echo json_encode($cleaned_list);die;
         return $cleaned_list;
     }
     /**
