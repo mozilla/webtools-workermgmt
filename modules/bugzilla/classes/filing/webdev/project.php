@@ -24,9 +24,12 @@ class Filing_Webdev_Project extends Filing {
     public function  contruct_content() {
         $t = $this;
         
-        $this->product = "Websites";
-        $this->component = "Other";
-        $this->summary = "New Web Dev Project: {$t->input('name')}";
+        $this->product = "Core";
+        $this->component = "Tracking";
+        $this->summary = "{$t->input('name')}";
+        $this->version = 'unspecified';
+        $this->platform = 'all';
+        $this->op_sys = 'all';
         $this->description = "Overview: {$t->input('overview')}";
         $this->append_to('description', "\nProject Scope: {$t->input('scope')}");
         $this->append_to('description', "\nDependencies: {$t->dependencies_text()}");
@@ -34,9 +37,10 @@ class Filing_Webdev_Project extends Filing {
         $this->append_to('description', "\nDeliverables: {$t->input('deliverables')}");
 
         // add cc's
-//        $this->cc = "accounting@mozilla.com";
+        $this->cc = $t->build_carbon_copies(array("morgamic@gmail.com"));
 //        $this->cc = $t->input('manager_bz_email');
         $this->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
+        $this->assigned_to = 'malexis@mozilla.com';
         
     }
 
@@ -48,7 +52,22 @@ class Filing_Webdev_Project extends Filing {
             }
         }
         return $dependencies_text ? $dependencies_text : "None";
-
+    }
+    private function build_carbon_copies(array $default_ccs = array()) {
+        $carbon_copies = $default_ccs;
+        foreach ($this->submitted_data as $key => $value) {
+            if(substr($key, 0, 8)=='members_' &&  ! empty($value) ) {
+                $value = is_array($value)?$value:array($value);
+                // check that value is not empty and that is does not
+                // already exist in the list of cc's
+                foreach ($value as $cc) {
+                    if( !empty ($cc) && ! in_array($cc, $carbon_copies)) {
+                        $carbon_copies[] = $cc;
+                    }
+                }
+            }
+        }
+        return $carbon_copies;
     }
     
 }

@@ -18,7 +18,9 @@ class Controller_Api extends Controller {
      */
     public function action_all_employees() {
         $hiring = new Model_Hiring($this->get_ldap());
-        $employees = Form_Helper::format_manager_list($hiring->buddy_list(),false);
+        $employees = Form_Helper::format_manager_list(
+            $hiring->all_emps_list(true), $add_empty_first = false
+        );
         foreach ($employees as $email => &$emp_label) {
            $emp_label .= " ({$email})";
         }

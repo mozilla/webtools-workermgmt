@@ -12,11 +12,11 @@ class Model_Hiring {
     $this->log = Kohana_Log::instance();
   }
 
-  public function manager_list() {
-      return $this->ldap->employee_list('manager');
+  public function manager_list($use_bugzilla_email = false) {
+      return $this->ldap->employee_list('manager', $use_bugzilla_email);
   }
-  public function buddy_list() {
-      return $this->ldap->employee_list('all');
+  public function all_emps_list($use_bugzilla_email = false) {
+      return $this->ldap->employee_list('all', $use_bugzilla_email);
   }
   public function employee_attributes($ldap_email) {
       return $this->ldap->employee_attributes($ldap_email);

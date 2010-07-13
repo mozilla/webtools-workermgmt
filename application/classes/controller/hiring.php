@@ -63,7 +63,7 @@ class Controller_Hiring extends Controller_Template {
     public function action_employee() {
         $hiring = new Model_Hiring($this->get_ldap());
         $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
-        $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->buddy_list());
+        $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->all_emps_list());
         /**
          * track required fields with this array, Validator uses it and form helper
          * uses it to determine which fields to decorate as 'required' in the UI
@@ -168,7 +168,7 @@ class Controller_Hiring extends Controller_Template {
     public function action_contractor() {
         $hiring = new Model_Hiring($this->get_ldap());
         $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
-        $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->buddy_list());
+        $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->all_emps_list());
         // allow only hire_type = 'Contractor'
         $this->select_lists['hire_type'] = array('Contractor'=>'Contractor');
         /**

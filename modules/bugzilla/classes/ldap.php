@@ -56,7 +56,7 @@ class Ldap {
      *  , ...
      * )
      */
-    public function employee_list($type='all') {
+    public function employee_list($type='all', $use_bugzilla_email = false) {
         $this->bind_as_user();
         $manager_list = null;
         $search_filter = null;
@@ -87,19 +87,27 @@ class Ldap {
         $cleaned_list = array();
         foreach ($manager_list as $manager) {
             // ensure keys to keep out of isset?:;   
-            $manager = array_merge(array('cn'=>null,'title'=>null,'mail'=>null,'bugzilla_email'=>null),$manager);
-
+            $manager = array_merge(array('cn'=>null,'title'=>null,'mail'=>null, 'bugzilla_email'=>null),$manager);
             if(! empty($manager['mail'])) {
-                $bugzilla_email = !empty($manager['bugzilla_email'])
-                        ?$manager['bugzilla_email']
+                $bugzilla_email = ! empty($manager['bugzillaemail'])
+                        ?$manager['bugzillaemail']
                         :$manager['mail'];
-                $cleaned_list[$manager['mail']] = array(
-                        'cn' => $manager['cn']?$manager['cn']:null,
-                        'title' => $manager['title']?$manager['title']:null,
-                        'bugzilla_email' => $bugzilla_email
-                );
-            }
+                if($use_bugzilla_email) {
+                    $cleaned_list[$bugzilla_email] = array(
+                            'cn' => $manager['cn']?$manager['cn']:null,
+                            'title' => $manager['title']?$manager['title']:null,
+                            'bugzilla_email' => $bugzilla_email
+                    );
+                } else {
+                    $cleaned_list[$manager['mail']] = array(
+                            'cn' => $manager['cn']?$manager['cn']:null,
+                            'title' => $manager['title']?$manager['title']:null,
+                            'bugzilla_email' => $bugzilla_email
+                    );
+                }
+            }   
         }
+        echo json_encode($cleaned_list);die;
         return $cleaned_list;
     }
     /**
