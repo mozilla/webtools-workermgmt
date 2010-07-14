@@ -149,7 +149,10 @@ class Controller_Hiring extends Controller_Template {
                 
             } else {
                 $form = arr::overwrite($form, $post->as_array());
-                client::validation_results(arr::overwrite($errors, $post->errors('hiring_employee_form_validations')));
+                client::validation_results(arr::overwrite(
+                    $errors,
+                    $post->errors('hiring_forms_validations'))
+                );
                 client::messageSend("There were errors in some fields", E_USER_WARNING);
             }
 
@@ -257,7 +260,10 @@ class Controller_Hiring extends Controller_Template {
 
             } else {
                 $form = arr::overwrite($form, $post->as_array());
-                client::validation_results(arr::overwrite($errors, $post->errors('hiring_contractor_form_validations')));
+                client::validation_results(arr::overwrite(
+                    $errors,
+                    $post->errors('hiring_forms_validations'))
+                );
                 client::messageSend("There were errors in some fields", E_USER_WARNING);
             }
 
