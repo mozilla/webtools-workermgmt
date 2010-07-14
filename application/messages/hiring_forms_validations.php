@@ -81,7 +81,5 @@ return array(
         'not_empty' => 'You must select a Machine Type',
         'default' => 'Invalid Input'
     ),
-    ''
-    
 
 );

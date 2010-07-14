@@ -92,7 +92,10 @@ class Controller_Webdev extends Controller_Template {
                 }
             } else {
                 $form = arr::overwrite($form, $post->as_array());
-                client::validation_results(arr::overwrite($errors, $post->errors('hiring_employee_form_validations')));
+                client::validation_results(arr::overwrite(
+                    $errors,
+                    $post->errors('webdev_forms_validations'))
+                );
                 client::messageSend("There were errors in some fields", E_USER_WARNING);
             }
 
