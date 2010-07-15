@@ -50,7 +50,7 @@ Defining a new Bug Filing
 
     2. override contruct_content() (be sure to call parent::contruct_content() in
        the first line of you method)
-       see application/classes/filing for examples
+       see application/classes/filing/ for examples
 
        This simply takes the $submitted_data (that most likely came from a web
        form submission) and uses that to build values for the Filing attributes
