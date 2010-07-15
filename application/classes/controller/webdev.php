@@ -28,7 +28,7 @@ class Controller_Webdev extends Controller_Template {
          */
         $required_fields = array('name','overview','scope','assumptions','deliverables');
         /**
-         * This should contain every field in the form
+         * This should contain every field in the form (required or not)
          */
         $form = array(
             'name' => '',

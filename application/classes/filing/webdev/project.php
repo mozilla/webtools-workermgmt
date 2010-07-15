@@ -2,8 +2,6 @@
 
 class Filing_Webdev_Project extends Filing {
     
-    protected $required_input_fields = array(
-    );
     /**
      * label that will be used for messaging.
      */

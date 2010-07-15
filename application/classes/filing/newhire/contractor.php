@@ -1,26 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 class Filing_Newhire_Contractor extends Filing {
-    
-    protected $required_input_fields = array(
-        'org_name',
-        'address',
-        'phone_number',
-        'email_address',
-        'fullname',
-        'start_date',
-        'end_date',
-        'pay_rate',
-        'payment_limit',
-        'contract_type',
-        'contractor_category',
-        'statement_of_work',
-        'manager_name',
-        'manager',
-        'location',
-        'location_other',
-        'manager_bz_email'
-    );
 
     protected $label = "Human Resources notification";
     

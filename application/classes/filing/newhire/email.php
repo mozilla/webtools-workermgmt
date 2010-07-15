@@ -2,22 +2,6 @@
 
 class Filing_Newhire_Email extends Filing {
     
-    protected $required_input_fields = array(
-        'fullname',
-        'start_date',
-        'end_date',
-        'username',
-        'hire_type',
-        'manager_name',
-        'manager',
-        'location',
-        'location_other',
-        'mail_alias',
-        'mail_lists',
-        'other_comments',
-        'manager_bz_email'
-    );
-
     protected $label = "Mail account request";
 
     /**

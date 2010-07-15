@@ -140,13 +140,6 @@ abstract class Filing {
      * html form. It is used to populate $this->attributes
      */
     protected $submitted_data = array();
-
-    /**
-     * this is an array of the keys required to be present in
-     * $submitted_data.  They can have empty values, it's just
-     * required that the keys are there.
-     */
-    protected $required_input_fields = array();
     
     /**
      * array of any field that were found to be missing
@@ -176,7 +169,6 @@ abstract class Filing {
         $this->attributes = array_fill_keys(array_keys($this->attributes), null);
         $this->bz_connector = $bz_connector;
         $this->submitted_data = $submitted_data;
-        $this->missing_required_fields = $this->required_input_fields;
     }
 
     public function __get($key) {
@@ -184,7 +176,7 @@ abstract class Filing {
             return $this->attributes[$key];
         }
         // allow public gtting of these attributes
-        if(in_array($key, array('bug_id', 'label', 'submitted_data','attributes','required_input_fields'))) {
+        if(in_array($key, array('bug_id', 'label', 'submitted_data','attributes'))) {
             return $this->$key;
         }
         return null;
@@ -218,28 +210,7 @@ abstract class Filing {
             $this->attributes[$name] .= $value;
         }
     }
-    /**
-     * Check that all the required input filed keys are present in the
-     * given input.
-     * This signals that we are ready to attempt to file the bug
-     *
-     * @throws self::EXCEPTION_MISSING_INPUT
-     * 
-     * @return void
-     */
-    public function validate_required_input_fields() {
-        $this->missing_required_fields = array_diff(
-            $this->required_input_fields,
-            array_keys($this->submitted_data)
-        );
-        if($this->missing_required_fields) {
-            $msg = "Missing required fields: "
-                . implode(', ', $this->missing_required_fields);
-            throw new Exception($msg, self::EXCEPTION_MISSING_INPUT);
-            Kohana_Log::instance()->add('error', __METHOD__." $msg");
-            
-        }
-    }
+    
     /**
      * This is where the business logic of how to contruct the bug goes,
      * so children of this classes to supply any values needed for the
@@ -279,10 +250,6 @@ abstract class Filing {
      */
     public function file() {
         $filing_response = array();
-        /**
-         * verify that all required key are present in the supplied user input
-         */
-        $this->validate_required_input_fields();
         /**
          * Take the user input an contruct the content for the bug filing
          */

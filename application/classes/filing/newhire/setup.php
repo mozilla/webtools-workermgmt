@@ -2,20 +2,6 @@
 
 class Filing_Newhire_Setup extends Filing {
     
-    protected $required_input_fields = array(
-        'fullname',
-        'start_date',
-        'username',
-        'hire_type',
-        'manager_name',
-        'manager',
-        'buddy_name',
-        'buddy',
-        'end_date',
-        'location',
-        'location_other',
-        'manager_bz_email'
-    );
     /**
      * label that will be used for messaging.
      */

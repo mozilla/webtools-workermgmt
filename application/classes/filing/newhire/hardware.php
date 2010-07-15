@@ -5,22 +5,6 @@
  */
 class Filing_Newhire_Hardware extends Filing {
     
-    protected $required_input_fields = array(
-        'fullname',
-        'start_date',
-        'end_date',
-        'username',
-        'hire_type',
-        'manager_name',
-        'manager',
-        'end_date',
-        'location',
-        'location_other',
-        'machine_type',
-        'machine_special_requests',
-        'manager_bz_email'
-    );
-
     protected $label = "Hardware request";
 
     /**

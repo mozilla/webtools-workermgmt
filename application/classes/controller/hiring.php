@@ -71,7 +71,7 @@ class Controller_Hiring extends Controller_Template {
         $required_fields = array('hire_type','first_name','last_name','email_address',
                                  'start_date' ,'manager','buddy','location');
         /**
-         * This should contain every field in the form
+         * This should contain every field in the form (required or not)
          */
         $form = array(
             'hire_type' => '',
@@ -180,7 +180,7 @@ class Controller_Hiring extends Controller_Template {
             'address', 'phone_number', 'email_address', 'start_date', 'end_date',
             'pay_rate', 'payment_limit', 'manager','location', 'statement_of_work');
         /**
-         * This should contain every field in the form
+         * This should contain every field in the form (required or not)
          */
         $form = array(
             'hire_type' => 'Contractor',

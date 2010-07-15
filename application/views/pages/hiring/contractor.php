@@ -96,8 +96,8 @@
      ?>
     </div>
 
-    <?php echo form::auto_label('statement_of_work_label');
-    client::validation('statement_of_work_label');
+    <?php echo form::auto_label('statement_of_work');
+    client::validation('statement_of_work');
     echo form::textarea(
             'statement_of_work=id',
             $form['statement_of_work'],
