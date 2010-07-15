@@ -23,11 +23,14 @@ class Filing_Newhire_Hardware extends Filing {
 
     protected $label = "Hardware request";
 
+    /**
+     * @see Filing::contruct_content()
+     * @see config/workermgmt.php $config['bug_defaults']
+     */
     public function  contruct_content() {
+        parent::contruct_content();
         $t = $this;
-        
-        $this->product = "mozilla.org";
-        $this->component = "Server Operations: Desktop Issues";
+
         $this->summary = "Hardware Request - {$t->input('fullname')} ({$t->input('start_date')})";
         $this->description = "Name: {$t->input('fullname')}\n"
             . "Username: {$t->input('username')}\n"
@@ -55,7 +58,6 @@ class Filing_Newhire_Hardware extends Filing {
         $this->cc = $t->input('manager_bz_email');
         $this->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
       
-        
     }
     
 }

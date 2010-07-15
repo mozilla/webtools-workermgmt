@@ -20,11 +20,14 @@ class Filing_Newhire_Email extends Filing {
 
     protected $label = "Mail account request";
 
+    /**
+     * @see Filing::contruct_content()
+     * @see config/workermgmt.php $config['bug_defaults']
+     */
     public function  contruct_content() {
+        parent::contruct_content();
         $t = $this;
-        
-        $this->product = "mozilla.org";
-        $this->component = "Server Operations: Account Requests";
+
         $this->summary = "LDAP/Zimbra Account Request - {$t->input('fullname')} "
             ."<{$t->input('username')}@mozilla.com> ({$t->input('start_date')})";
         $this->description =

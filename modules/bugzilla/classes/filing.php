@@ -113,13 +113,14 @@ abstract class Filing {
          */
         "alias"             => null,
         "assigned_to"       => null,
-        // these are defined as 'array' attributes (see $this->__get()
-        "cc"                => 'array',
-        "groups"            => 'array',
+        "cc"                => null,
+        "groups"            => null,
         "qa_contact"        => null,
         "status"            => null,
         "target_milestone"  => null
     );
+    // these are defined as 'array' attributes (see $this->__get()
+    private $array_attributes = array('cc', 'groups');
 
     /**
      * made available through __get
@@ -163,7 +164,7 @@ abstract class Filing {
 	 * @return  Filing
 	 */
 	public static function factory($filing_class, $submitted_data, $bz_connector) {
-		// Set class name
+        // Set class name
 		$filing_class = 'Filing_'.ucfirst($filing_class);
         return new $filing_class($submitted_data, $bz_connector);
 	}
@@ -176,17 +177,6 @@ abstract class Filing {
         $this->bz_connector = $bz_connector;
         $this->submitted_data = $submitted_data;
         $this->missing_required_fields = $this->required_input_fields;
-        $this->set_defaults();
-    }
-    /**
-     * Some common sensible defaults
-     * You can overide these in the
-     */
-    protected function set_defaults() {
-        $this->version = 'other';
-        $this->platform = 'All';
-        $this->op_sys = 'Other';
-        $this->severity = 'normal';
     }
 
     public function __get($key) {
@@ -203,12 +193,12 @@ abstract class Filing {
      * supports integer indexed attributes
      *
      * You signify an attribute in an array attrib by
-     * $this->field_definitions['foo'] => 'array';
+     * adding it to $this->array_attributes;
      */
     public function __set($key, $value) {
         if(key_exists($key, $this->attributes)) {
             // check if this is an array attribute
-            if($this->attributes[$key]=='array' &&  ! is_array($value)) {
+            if(in_array($key, $this->array_attributes) &&  ! is_array($value)) {
                 $this->attributes[$key][] = $value;
             } else {
                 $this->attributes[$key] = $value;
@@ -252,9 +242,33 @@ abstract class Filing {
     }
     /**
      * This is where the business logic of how to contruct the bug goes,
-     * so children of this class are required to implement it.
+     * so children of this classes to supply any values needed for the
+     * specific bug.
+     *
+     * @see config/workermgmt.php $config['bug_defaults'] on how to
+     * construct defualt bug values.
+     *
+     * be sure to call parent::contruct_content(); first in your
+     * child class's contruct_content method
      */
-    public abstract function contruct_content();
+    public function contruct_content() {
+        $filing_name = strtolower(str_replace('Filing_', '', get_class($this)));
+        if($bugs_defaults = Kohana::config("workermgmt.bug_defaults")) {
+            $bugs_defaults = array_change_key_case($bugs_defaults);
+            // add default that apply to ALL filings
+            if(key_exists('_all_', $bugs_defaults) && $bugs_defaults['_all_']) {
+                foreach ($bugs_defaults['_all_'] as $attribute_key => $value) {
+                    $this->$attribute_key = $value;
+                }
+            }
+            // add defaults specific to this type of filing
+            if(key_exists($filing_name, $bugs_defaults) && $bugs_defaults[$filing_name]) {
+                foreach ($bugs_defaults[$filing_name] as $attribute_key => $value) {
+                    $this->$attribute_key = $value;
+                }
+            }
+        }
+    }
 
     /**
      *
@@ -322,10 +336,9 @@ abstract class Filing {
                 'groups'        => $this->groups,
                 'description'   => $this->description,
                 'cc'            => $this->cc,
-
                 'version'       => $this->version,
-                'platform'      => 'all',
-                'op_sys'        => 'all',
+                'platform'      => $this->platform,
+                'op_sys'        => $this->op_sys,
                 'severity'      => $this->severity,
                 'assigned_to'   => $this->assigned_to
             ),

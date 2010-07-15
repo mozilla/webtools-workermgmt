@@ -23,12 +23,14 @@ class Filing_Newhire_Contractor extends Filing {
     );
 
     protected $label = "Human Resources notification";
-
+    
+    /**
+     * @see Filing::contruct_content()
+     * @see config/workermgmt.php $config['bug_defaults']
+     */
     public function  contruct_content() {
+        parent::contruct_content();
         $t = $this;
-        
-        $this->product = "Mozilla Corporation";
-        $this->component = "Consulting";
 
         $summary_2nd_half = ($t->input('org_name')!==null ? $t->input('org_name') : $t->input('fullname'));
         $this->summary = "Contractor Request - {$summary_2nd_half} ({$t->input('start_date')})";
@@ -61,7 +63,6 @@ class Filing_Newhire_Contractor extends Filing {
             . "Category: {$t->input('contractor_category')}\n\n"
             . "Statement of work:\n{$t->input('statement_of_work')}\n"
         );
-        $this->cc = "accounting@mozilla.com";
         $this->cc = $t->input('manager_bz_email');
         $this->groups = array(self::CODE_CONTRACTOR_HIRING_GROUP);
         

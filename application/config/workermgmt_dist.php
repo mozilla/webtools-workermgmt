@@ -56,4 +56,40 @@ Dear %email_recipient%,
 THis email is to inform you that...
 XOXO;
 
+/**
+ * [optional]
+ * for a given type of bug, supply any defaults
+ * @see Filing::$attributes for supported keys,  non-supported keys are
+ *      ignored
+ *
+ * ex:
+ * $config['bug_defaults'] = array(
+ *    '_all_' => array(
+ *        'version' => 'other',
+ *        'platform' => 'All',
+ *    )
+ *    'Webdev_Project' => array(
+ *        'product' => 'Mozilla Corporation',
+ *        'cc' => array('nobody@example.com','frank@example.com'),
+ *        'assigned_to' => 'joe@example.com'
+ *    ),
+ * );
+ *
+ * You can essentually use this to fill in any 'static' values for bugs and
+ * then Use your Filing child class contruct_content() method to construct
+ * anything that required the input from the form and/or has more complex
+ * logic.
+ *
+ */
+$config['bug_defaults'] = array(
+    // all bugs start with these defaults
+    '_ALL_' => array(
+
+    ),
+    'Webdev_Project' => array(
+        'cc' => array('nobody@example.com','frank@example.com'),
+        'assigned_to' => 'joe@example.com'
+    ),
+);
+
 return $config;

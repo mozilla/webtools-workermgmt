@@ -20,12 +20,15 @@ class Filing_Newhire_Setup extends Filing {
      * label that will be used for messaging.
      */
     protected $label = "Karen/Accounting notification";
-    
+
+    /**
+     * @see Filing::contruct_content()
+     * @see config/workermgmt.php $config['bug_defaults']
+     */
     public function  contruct_content() {
+        parent::contruct_content();
         $t = $this;
         
-        $this->product = "Mozilla Corporation";
-        $this->component = "Facilities Management";
         $this->summary = "New Hire Notification - {$t->input('fullname')} ({$t->input('start_date')})";
         $this->description = "Name: {$t->input('fullname')}\n"
             . "E-mail: {$t->input('username')}@mozilla.com\n"
@@ -40,7 +43,6 @@ class Filing_Newhire_Setup extends Filing {
             ? $t->input('location_other')
             : $t->input('location');
         $this->append_to('description', "Location: {$location}");
-        $this->cc = "accounting@mozilla.com";
         $this->cc = $t->input('manager_bz_email');
         $this->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
         
