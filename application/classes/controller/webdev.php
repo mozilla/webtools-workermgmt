@@ -83,7 +83,6 @@ class Controller_Webdev extends Controller_Template {
             }
 
             if ($post->check()) {
-                // check for invalid
                 $form = Arr::overwrite($form, $post->as_array());
                 // File the appropriate Bugs
                 $bugs_to_file = array('Webdev_Project');
