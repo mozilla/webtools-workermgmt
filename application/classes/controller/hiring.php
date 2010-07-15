@@ -142,8 +142,6 @@ class Controller_Hiring extends Controller_Template {
                     if( ! empty($form['buddy']) ) {
                       $this->notify_buddy($form, $hiring);
                     }
-                }
-                if( ! client::has_errors()) {
                     $this->request->redirect('hiring/employee');
                 }
                 
@@ -251,10 +249,8 @@ class Controller_Hiring extends Controller_Template {
                 if($this->file_these($bugs_to_file, $form)) {
                     // Send Buddy Email
                     if( ! empty($form['buddy']) ) {
-                      $this->notify_buddy($form, $hiring);
+                      $this->notify_buddy($form, $hiring);  
                     }
-                }
-                if( ! client::has_errors()) {
                     $this->request->redirect('hiring/contractor');
                 }
 
