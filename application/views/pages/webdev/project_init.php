@@ -1,5 +1,5 @@
 <h2>Project Initiation Form</h2>
-<p>For any Mozilla project that contains Web Dev as a dependency, please fill
+<p>For any Mozilla project that contains Webdev as a dependency, please fill
    out the following form prior to kickoff.</p>
 <p><strong>*</strong> denotes a required field</p>
 <form class="app_form" method="post" action="" id="project_init_form" accept-charset="utf-8">
@@ -148,7 +148,7 @@
 
     <?php
     echo form::auto_label('deliverables');?>
-    <p>List all specs, PRDs, wireframes, design comps, etc. that web dev should
+    <p>List all specs, PRDs, wireframes, design comps, etc. that Webdev should
        expect and need for this project and include target delivery date for each:</p>
     <?php
     client::validation('deliverables');

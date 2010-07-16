@@ -9,7 +9,7 @@ class Controller_Webdev extends Controller_Template {
     public function  before() {
         parent::before();
         $this->template->breadcrumbs = $this->auto_crumb();
-        $this->template->main_title = "Mozilla Web Dev";
+        $this->template->main_title = "Mozilla Webdev";
     }
 
     public function action_index() {

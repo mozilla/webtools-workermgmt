@@ -5,7 +5,7 @@ class Filing_Webdev_Project extends Filing {
     /**
      * label that will be used for messaging.
      */
-    protected $label = "Web Dev Project";
+    protected $label = "Webdev Project";
 
     /**
      * @see Filing::contruct_content()

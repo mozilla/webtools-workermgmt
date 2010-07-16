@@ -1,6 +1,6 @@
 <?php
 $breadcrumbs = isset($breadcrumbs)?$breadcrumbs:array(array('home'));
-$logout_link = isset ($logout_link) ? $logout_link : HTML::anchor('authenticate/logout', "Logout");
+$logout_link = isset ($logout_link) ? $logout_link : HTML::anchor('authenticate/logout', "Log out");
 $title = isset($title)?$title:"Mozilla Web Tools";
 ?>
 <!DOCTYPE html>
