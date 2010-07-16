@@ -132,7 +132,7 @@ class Client {
      */
     public static function validation($input_key) {
         if(isset(self::$validation_results[$input_key])&&!empty(self::$validation_results[$input_key])) {
-            echo("<span class=\"error\">".htmlspecialchars(self::$validation_results[$input_key], ENT_NOQUOTES, 'UTF-8')."</span>");
+            echo("<span class=\"error\">".HTML::chars(self::$validation_results[$input_key], ENT_NOQUOTES, 'UTF-8')."</span>");
         }
     }
 

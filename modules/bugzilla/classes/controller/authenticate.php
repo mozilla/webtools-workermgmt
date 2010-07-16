@@ -34,7 +34,7 @@ class Controller_Authenticate extends Controller_Template {
                     client::messageSend($this->bugzilla->error_message(), E_USER_WARNING);
                 }
             } else {
-                client::validation_results($post->errors());
+                client::validation_results($post->errors('authentication'));
                 client::messageSend("There were errors in some fields", E_USER_WARNING);
             }
         }
