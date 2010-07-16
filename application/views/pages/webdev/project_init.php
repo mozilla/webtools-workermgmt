@@ -7,7 +7,7 @@
     <?php
     echo Form::csrf_token();
 
-    echo form::auto_label('name');
+    echo form::auto_label('name', 'Project Name');
     client::validation('name');
     echo form::input('name=id',$form['name'],array('class'=>'first_focus'));
     ?>
@@ -34,7 +34,7 @@
         </div>
         <div class="multi-lookup">
         <?php
-        echo form::auto_label('members_marketing', 'Marketing', array('id'=>'members_marketing_group'));
+        echo form::auto_label('members_marketing', 'Engagement', array('id'=>'members_marketing_group'));
         client::validation('members_marketing');?>
         </div>
         <div class="multi-lookup">
