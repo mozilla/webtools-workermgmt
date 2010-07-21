@@ -1,2 +1,3 @@
+# block all
 User-agent: *
 Disallow: /
