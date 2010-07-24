@@ -22,12 +22,23 @@ class Ldap {
 
     private $log;
 
+    public static function instance() {
+        static $ldap;
+        if(empty($ldap)) {
+            if( kohana::config('workermgmt.in_dev_mode') && kohana::config('workermgmt.use_mock_ldap')) {
+              $ldap = new Ldap_Mock(kohana::config('workermgmt'), Httpauth::credentials());
+            } else {
+              $ldap = new self(kohana::config('workermgmt'), Httpauth::credentials());
+            }
+        }
+        return $ldap;
+    }
     /**
      *
      * @param array $config
      * @param array $credentials array('username'=>'...', 'password'=>'...')
      */
-    public function  __construct(Kohana_Config_File $config, array $credentials) {
+    private function  __construct(Kohana_Config_File $config, array $credentials) {
         $this->credentials = $credentials;
         $this->host = isset($config['ldap_host'])?$config['ldap_host']:null;
         $this->anon_bind = isset($config['ldap_anon_bind'])?$config['ldap_anon_bind']:null;

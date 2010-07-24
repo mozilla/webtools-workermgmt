@@ -9,8 +9,13 @@
  */
 class Controller_Authenticate extends Controller_Template {
 
+    private $bugzilla_client;
+
     public function  __construct(Kohana_Request $request) {
-        $this->bugzilla = Bugzilla_Client::instance(Kohana::config('workermgmt'));
+        $this->bugzilla_client = new Bugzilla_Client(
+            Kohana::config('workermgmt'),
+            $this->httpauth_credentials()
+        );
         parent::__construct($request);
     }  
 
@@ -28,10 +33,10 @@ class Controller_Authenticate extends Controller_Template {
                 ->rule('bz_password', 'not_empty');
 
             if($post->check()) {
-                if($this->bugzilla->login($username,$password)) {
+                if($this->bugzilla_client->login($username,$password)) {
                     $this->request->redirect('/');
                 } else {
-                    client::messageSend($this->bugzilla->error_message(), E_USER_WARNING);
+                    client::messageSend($this->bugzilla_client->error_message(), E_USER_WARNING);
                 }
             } else {
                 client::validation_results($post->errors('authentication'));
@@ -49,9 +54,15 @@ class Controller_Authenticate extends Controller_Template {
      * note: Route set to /logout
      */
     public function action_logout() {
-        $this->bugzilla->logout();
+        $this->bugzilla_client->logout();
         client::messageSend("You have logged out", E_USER_NOTICE);
         $this->request->redirect('authenticate/login');
+    }
+
+    private function httpauth_credentials() {
+        return Kohana::config('workermgmt.in_dev_mode')
+            ? Httpauth::credentials()
+            : null;
     }
 
 }

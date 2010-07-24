@@ -16,11 +16,13 @@ class Bugzilla_Client {
     private $bz_token=null;
 
     private $config;
+    private $httpauth_credentials;
 
     private $log;
 
-    public function  __construct(Kohana_Config_File $config) {
+    public function  __construct(Kohana_Config_File $config, array $httpauth_credentials = null) {
         $this->config = $config;
+        $this->httpauth_credentials = $httpauth_credentials;
         $this->bz_id = Session::instance()->get('bz_id');
         $this->bz_token = Session::instance()->get('bz_token');
         $this->curler = new Curler();
@@ -42,17 +44,6 @@ class Bugzilla_Client {
     public function config($key) {
         return isset ($this->config[$key]) ? $this->config[$key] : null;
 
-    }
-
-    /**
-     * Return a static instance of Bugzilla.
-     *
-     * @return  object
-     */
-    public static function instance(Kohana_Config_File $config) {
-        static $instance;
-        empty($instance) and $instance = new self($config);
-        return $instance;
     }
 
     /**
@@ -111,6 +102,7 @@ class Bugzilla_Client {
                 array(
                 'return_headers'=>true,
                 'headers' => $additional_headers,
+                'authenticate' => $this->httpauth_credentials,
                 // when not in production have curl ignore ssl warings which are
                 // most ofter due to self signed certs
                 'ssl_verify_peer' => ! kohana::config('workermgmt.in_dev_mode')

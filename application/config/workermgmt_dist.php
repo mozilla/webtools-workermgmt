@@ -3,7 +3,7 @@
 /**
  * if in_dev_mode is true
  *  - Allowes the use of $config['use_mock_ldap'] = true;
- *  - Turns off ssl verification for curl calls to bugzilla
+ *  - Use for any other adjustments needed in non prod Env
  */
 $config['in_dev_mode'] = true;
 // if true, will send email to buddy specified in hiring form
