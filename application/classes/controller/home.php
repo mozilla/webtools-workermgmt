@@ -4,7 +4,7 @@
  *
  * @author  skeen
  */
-class Controller_Home extends Controller_Template {
+class Controller_Home extends Controller_Filing {
 
 
     public function  before() {

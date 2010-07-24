@@ -4,7 +4,7 @@
  *
  * @author  skeen
  */
-class Controller_Webdev extends Controller_Template {
+class Controller_Webdev extends Controller_Filing {
 
     public function  before() {
         parent::before();
@@ -20,7 +20,7 @@ class Controller_Webdev extends Controller_Template {
     private $select_lists = null;
 
     public function action_project_init() {
-        $hiring = new Model_Hiring($this->get_ldap());
+        $hiring = new Model_Hiring(Ldap::instance());
         
         /**
          * track required fields with this array, Validator uses it and form helper

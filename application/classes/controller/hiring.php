@@ -4,7 +4,7 @@
  *
  * @author     Sam Keen
  */
-class Controller_Hiring extends Controller_Template {
+class Controller_Hiring extends Controller_Filing {
 
     public function  before() {
         parent::before();
@@ -61,7 +61,7 @@ class Controller_Hiring extends Controller_Template {
      * Form for hiring Employee and Interns
      */
     public function action_employee() {
-        $hiring = new Model_Hiring($this->get_ldap());
+        $hiring = new Model_Hiring(Ldap::instance());
         $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
         $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->all_emps_list());
         /**
@@ -167,7 +167,7 @@ class Controller_Hiring extends Controller_Template {
      * Form for submitting Contractor hirings
      */
     public function action_contractor() {
-        $hiring = new Model_Hiring($this->get_ldap());
+        $hiring = new Model_Hiring(Ldap::instance());
         $this->select_lists['manager'] = Form_Helper::format_manager_list($hiring->manager_list());
         $this->select_lists['buddy'] = Form_Helper::format_manager_list($hiring->all_emps_list());
         // allow only hire_type = 'Contractor'
