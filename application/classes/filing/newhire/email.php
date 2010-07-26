@@ -5,11 +5,11 @@ class Filing_Newhire_Email extends Filing {
     protected $label = "Mail account request";
 
     /**
-     * @see Filing::contruct_content()
+     * @see Filing::construct_content()
      * @see config/workermgmt.php $config['bug_defaults']
      */
-    public function  contruct_content() {
-        parent::contruct_content();
+    public function  construct_content() {
+        parent::construct_content();
         $t = $this;
 
         $this->summary = "LDAP/Zimbra Account Request - {$t->input('fullname')} "

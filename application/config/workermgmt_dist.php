@@ -76,7 +76,7 @@ XOXO;
  * );
  *
  * You can essentually use this to fill in any 'static' values for bugs and
- * then Use your Filing child class contruct_content() method to construct
+ * then Use your Filing child class construct_content() method to construct
  * anything that required the input from the form and/or has more complex
  * logic.
  *

@@ -131,9 +131,22 @@ abstract class Filing {
      * Set this to a human approriate label for this bug in the child class.
      * Used for messaging
      *
+     * Reasonable default set in __contructor
+     *
      * made available through __get
      */
-    protected $label = "Unspecified";
+    protected $label = null;
+
+    /**
+     * Success Message
+     * Allowed insertable params are
+     *   - {label} : Replaced with $this->label
+     *   - {bug} : replaced with hyperlink to the bug that was created
+     *         <a target="_blank" href="https://bugzilla-stage-tip.mozilla.org/show_bug.cgi?id=577133">bug 577133</a>
+     *
+     * made available through __get
+     */
+    protected $success_message = "{label} -- {bug} created";
     
     /**
      * Typically this is an array of data that came from a submitted
@@ -169,6 +182,9 @@ abstract class Filing {
         $this->attributes = array_fill_keys(array_keys($this->attributes), null);
         $this->bz_connector = $bz_connector;
         $this->submitted_data = $submitted_data;
+        if($this->label===null) {
+            $this->label = str_replace(array('Filing_','_'), array('',' '), get_class($this));
+        }
     }
 
     public function __get($key) {
@@ -176,7 +192,7 @@ abstract class Filing {
             return $this->attributes[$key];
         }
         // allow public gtting of these attributes
-        if(in_array($key, array('bug_id', 'label', 'submitted_data','attributes'))) {
+        if(in_array($key, array('bug_id', 'label', 'success_message', 'submitted_data','attributes'))) {
             return $this->$key;
         }
         return null;
@@ -219,10 +235,10 @@ abstract class Filing {
      * @see config/workermgmt.php $config['bug_defaults'] on how to
      * construct defualt bug values.
      *
-     * be sure to call parent::contruct_content(); first in your
-     * child class's contruct_content method
+     * be sure to call parent::construct_content(); first in your
+     * child class's construct_content method
      */
-    public function contruct_content() {
+    public function construct_content() {
         $filing_name = strtolower(str_replace('Filing_', '', get_class($this)));
         if($bugs_defaults = Kohana::config("workermgmt.bug_defaults")) {
             $bugs_defaults = array_change_key_case($bugs_defaults);
@@ -253,7 +269,7 @@ abstract class Filing {
         /**
          * Take the user input an contruct the content for the bug filing
          */
-        $this->contruct_content();
+        $this->construct_content();
         /**
          * send the bug to Bugzilla.
          */

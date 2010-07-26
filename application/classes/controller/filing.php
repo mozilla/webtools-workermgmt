@@ -29,16 +29,6 @@ class Controller_Filing extends Controller_Template {
         }
 
     }
-    protected function get_ldap() {
-        if( kohana::config('workermgmt.in_dev_mode') && kohana::config('workermgmt.use_mock_ldap')) {
-          $ldap = new Ldap_Mock(kohana::config('workermgmt'), Httpauth::credentials());
-        } else {
-          $ldap = new Ldap(kohana::config('workermgmt'), Httpauth::credentials());
-        }
-        return $ldap;
-    }
-
-
 
     /**
      * works well for structured portions of the site (like admin interfaces)
@@ -48,8 +38,8 @@ class Controller_Filing extends Controller_Template {
     protected function auto_crumb() {
 
         $crumbs = isset($this->static_crumb_base)&&$this->static_crumb_base
-                ?array($this->static_crumb_base)
-                :array();
+            ? array($this->static_crumb_base)
+            : array();
         /*
          * build | base / controller / action
          */
@@ -82,14 +72,18 @@ class Controller_Filing extends Controller_Template {
             try {
                 $filing = Filing::factory($bug_to_file, $form_input, $this->bugzilla_client);
                 $filing->file();
+                $bug_link = sprintf("<a href=\"%s/show_bug.cgi?id=%d\" target=\"_blank\">bug %d</a>",
+                    $this->bugzilla_client->config('bugzilla_url'),
+                    $filing->bug_id,
+                    $filing->bug_id
+                );
                 Client::messageSend(
-                    sprintf("%s -- <a href=\"%s/show_bug.cgi?id=%d\" target=\"_blank\">bug %d</a>",
-                            $filing->label,
-                            $this->bugzilla_client->config('bugzilla_url'),
-                            $filing->bug_id,
-                            $filing->bug_id
-                    )
-                , E_USER_NOTICE);
+                    str_replace(
+                        array('{label}','{bug}'),
+                        array($filing->label, $bug_link),
+                        $filing->success_message),
+                    E_USER_NOTICE
+                );
                 $success = true;
             } catch (Exception $e) {
                 /**
@@ -100,7 +94,7 @@ class Controller_Filing extends Controller_Template {
                     $this->request->redirect('authenticate/login');
                 /**
                  * either the supplied $submitted_data to the Filing instance
-                 * was missing or contruct_content() method of the Filing
+                 * was missing or construct_content() method of the Filing
                  * instance tried to access a submitted content key that did
                  * not exist.
                  */

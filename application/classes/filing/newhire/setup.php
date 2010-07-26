@@ -8,11 +8,11 @@ class Filing_Newhire_Setup extends Filing {
     protected $label = "Karen/Accounting notification";
 
     /**
-     * @see Filing::contruct_content()
+     * @see Filing::construct_content()
      * @see config/workermgmt.php $config['bug_defaults']
      */
-    public function  contruct_content() {
-        parent::contruct_content();
+    public function  construct_content() {
+        parent::construct_content();
         $t = $this;
         
         $this->summary = "New Hire Notification - {$t->input('fullname')} ({$t->input('start_date')})";

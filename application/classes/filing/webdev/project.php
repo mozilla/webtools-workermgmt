@@ -7,12 +7,16 @@ class Filing_Webdev_Project extends Filing {
      */
     protected $label = "Webdev Project";
 
+    protected $success_message = "Success! {bug} has been
+        created for this project and the Webdev team
+        will be in touch.";
+
     /**
-     * @see Filing::contruct_content()
+     * @see Filing::construct_content()
      * @see config/workermgmt.php $config['bug_defaults']
      */
-    public function  contruct_content() {
-        parent::contruct_content();
+    public function  construct_content() {
+        parent::construct_content();
         $t = $this;
         
         $this->summary = "{$t->input('name')}";

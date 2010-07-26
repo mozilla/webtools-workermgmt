@@ -14,7 +14,7 @@ Defining a new Bug Filing
 
 
 
-2. Build a controller that extends Controller (application/classes/controller.php)
+2. Build a controller that extends Controller_Filing (application/classes/controller/filing.php)
      to handle the Form submission
 
    Do all the normal Kohana stuff to validate the form input as needed, once that
@@ -43,12 +43,10 @@ Defining a new Bug Filing
 
 
 
-4. extend Filing class (i.e classes/filing/newhire/setup.php) and do 2 things.
+4. extend Filing class (i.e classes/filing/newhire/setup.php) and
+   do 1 (+2 optional) things.
 
-    1. set protected $label.  This is the 'meant for humans' label for this
-       type of bug.  It is used for messaging and feedback.
-
-    2. override contruct_content() (be sure to call parent::contruct_content() in
+    1. override construct_content() (be sure to call parent::construct_content() in
        the first line of you method)
        see application/classes/filing/ for examples
 
@@ -60,4 +58,15 @@ Defining a new Bug Filing
        $config['bug_defaults'] because they require values from the submitted
        form or have other business logic involved in their construction.
        'description' among others are often defined here
+
+    2. [optional] set protected $label.  Default value is the class name minus
+       the Filing and _'s replaced with spaces.  This is the 'meant for humans'
+       label for this type of bug.  It is used for messaging and feedback.
+
+    3. [optional] set protected $success_message.  Default value is
+       "{label} -- {bug} created", where {label} is replaced with the filing class
+       $label attribute and {bug} is replaced with a hyperlink to the bug like so:
+       <a target="_blank" href="https://bugzilla-stage-tip.mozilla.org/show_bug.cgi?id=577133">bug 577133</a>
+       .  This is the 'meant for humans' message that is displayed after a bug
+       is created.
  

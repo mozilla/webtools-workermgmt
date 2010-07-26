@@ -8,11 +8,11 @@ class Filing_Newhire_Hardware extends Filing {
     protected $label = "Hardware request";
 
     /**
-     * @see Filing::contruct_content()
+     * @see Filing::construct_content()
      * @see config/workermgmt.php $config['bug_defaults']
      */
-    public function  contruct_content() {
-        parent::contruct_content();
+    public function  construct_content() {
+        parent::construct_content();
         $t = $this;
 
         $this->summary = "Hardware Request - {$t->input('fullname')} ({$t->input('start_date')})";

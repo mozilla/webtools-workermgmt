@@ -64,7 +64,7 @@ class Controller_Webdev extends Controller_Filing {
             }
             Form_Helper::filter_disallowed_values($this->select_lists);
             $post = new Validate($_POST);
-            // hack to have Validate keep psot key/values after ->check()
+            // hack to have Validate keep post key/values after ->check()
             // that did not have validation rules set (this is only needed
             // since we are not using models
             $post->labels(array_combine(array_keys($form), array_keys($form)));

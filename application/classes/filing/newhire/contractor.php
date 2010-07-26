@@ -5,11 +5,11 @@ class Filing_Newhire_Contractor extends Filing {
     protected $label = "Human Resources notification";
     
     /**
-     * @see Filing::contruct_content()
+     * @see Filing::construct_content()
      * @see config/workermgmt.php $config['bug_defaults']
      */
-    public function  contruct_content() {
-        parent::contruct_content();
+    public function  construct_content() {
+        parent::construct_content();
         $t = $this;
 
         $summary_2nd_half = ($t->input('org_name')!==null ? $t->input('org_name') : $t->input('fullname'));
