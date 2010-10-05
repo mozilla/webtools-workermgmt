@@ -6,6 +6,7 @@ class Httpauth {
 
     public static function credentials() {
         $credentials = null;
+        
         if($user = Arr::get($_SERVER,'PHP_AUTH_USER')) {
             $credentials = array(
                 'username' => $user,

@@ -275,6 +275,7 @@ abstract class Filing {
          */
         $filing_response = $this->send_bug_request();
         Kohana_Log::instance()->add('debug', __METHOD__." \$filing_response:".print_r($filing_response,1));
+        
         if($filing_response==null) {
             Kohana_Log::instance()->add('error', __METHOD__." null returned from \$this->send_bug_request()");
             throw new Exception("null returned from the request to Bugzilla", self::EXCEPTION_BUGZILLA_INTERACTION);
@@ -308,21 +309,20 @@ abstract class Filing {
      */
     private function send_bug_request() {
         $log = Kohana_Log::instance();
-
         $log->add('debug',"Starting [".__METHOD__."] with \$bug_meta = {$this}");
         $request = xmlrpc_encode_request(
             "Bug.create",
             array(
-                'product'       => $this->product,
-                'component'     => $this->component,
+                'product'       => $this->product       ? $this->product    : 'Mozilla Corporation',
+                'component'     => $this->component     ? $this->component  : 'Facilities Management',
                 'summary'       => $this->summary,
                 'groups'        => $this->groups,
                 'description'   => $this->description,
                 'cc'            => $this->cc,
-                'version'       => $this->version,
-                'platform'      => $this->platform,
-                'op_sys'        => $this->op_sys,
-                'severity'      => $this->severity,
+                'version'       => $this->version       ? $this->version    : 'other',
+                'platform'      => $this->platform      ? $this->platform   : 'All',
+                'op_sys'        => $this->op_sys        ? $this->op_sys     : 'All',
+                'severity'      => $this->severity      ? $this->severity   : 'minor',
                 'assigned_to'   => $this->assigned_to
             ),
             array(

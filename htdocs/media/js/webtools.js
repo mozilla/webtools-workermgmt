@@ -1,11 +1,10 @@
 $(document).ready(function(){
 
-
   if($().TextAreaResizer)  {
     $('textarea.resizable:not(.processed)').TextAreaResizer();
   }
   
-  $("#start_date, #end_date").datepicker();
+  $("#start_date, #end_date, #date_of_notice, #date_of_last_day").datepicker();
 
   /**
    * toggle the text field to fill in "other" location

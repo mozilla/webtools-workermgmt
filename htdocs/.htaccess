@@ -2,7 +2,8 @@
 RewriteEngine On
 
 # Installation directory
-RewriteBase /workermgmt-rewrite/
+RewriteBase /mozilla/workermgmt/htdocs
+#/workermgmt-rewrite/
 
 # Protect application and system files from being viewed
 RewriteRule ^(application|modules|system) - [F,L]

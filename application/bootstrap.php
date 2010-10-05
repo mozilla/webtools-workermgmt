@@ -1,5 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
+ 
 //-- Environment setup --------------------------------------------------------
 
 /**
@@ -49,16 +49,20 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
  * - boolean  profile     enable or disable internal profiling               TRUE
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
+ 
 Kohana::init(array(
-	'base_url'      => '/workermgmt-rewrite/',
-	'index_file'    => false,
+    // TODO: Remove all before comment
+	'base_url'      => '/mozilla/workermgmt/htdocs/',//'/workermgmt-rewrite/',
+	'index_file'    => '',
     'profile'       => false
 ));
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
  */
-Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
+//Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
+Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'), array('error'));
+
 
 /**
  * Attach a file reader to config. Multiple readers are supported.

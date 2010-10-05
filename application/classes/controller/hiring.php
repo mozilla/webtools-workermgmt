@@ -13,10 +13,8 @@ class Controller_Hiring extends Controller_Filing {
     }
 
     public function action_index() {
-
         $this->template->title = 'WebTools::New Hire Home';
         $this->template->content = new View('pages/hiring/index');
-
     }
 
     /**

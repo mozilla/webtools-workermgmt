@@ -133,7 +133,6 @@ class Ldap {
      *      [bugzilla_email] => someone-bug@somewhere.com
      *      [dn] => mail=someone@somewhere.com,o=com,dc=companyX
      * )
-
      *
      */
     public function employee_attributes($ldap_email) {
