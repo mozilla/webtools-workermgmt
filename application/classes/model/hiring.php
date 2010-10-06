@@ -64,7 +64,7 @@ class Model_Hiring {
          $this->log->add('info', "Sent Buddy Notification Email to [{$email_info['buddy_email']}] from [{$from}]");
       } else {
         $this->log->add('error', "One or both To and From email addresses for the Notify Buddy email were invalid\n"
-                ."To: {$email_info['buddy email']}\nFrom:{$from}");
+                ."To: {$email_info['buddy_email']}");
       }
     } else {
       $this->log->add('debug', "config('workermgmt.send_email') is false so Buddy notification email not sent");
