@@ -37,7 +37,7 @@ class Filing_Newhire_Setup extends Filing {
         if ($location == 'Toronto') {
             $this->cc = array(
                 $t->input('manager_bz_email'),
-                'hhall@moz' 
+                'hhall@mozilla.com' 
             );
         } else {
             $this->cc = $t->input('manager_bz_email');
