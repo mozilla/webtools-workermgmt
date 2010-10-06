@@ -43,10 +43,6 @@ class Filing_Newhire_Setup extends Filing {
             $this->cc = $t->input('manager_bz_email');
         }
         $this->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
-        
-        Debug::show($this);
-        die();
-        
     }
     
 }
