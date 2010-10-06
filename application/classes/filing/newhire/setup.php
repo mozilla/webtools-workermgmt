@@ -29,8 +29,23 @@ class Filing_Newhire_Setup extends Filing {
             ? $t->input('location_other')
             : $t->input('location');
         $this->append_to('description', "Location: {$location}");
-        $this->cc = $t->input('manager_bz_email');
+        
+        /**
+         * Adding Hilary Hall for all Toronto new hires
+         * See bug #590667
+         */
+        if ($location == 'Toronto') {
+            $this->cc = array(
+                $t->input('manager_bz_email'),
+                'hhall@moz' 
+            );
+        } else {
+            $this->cc = $t->input('manager_bz_email');
+        }
         $this->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
+        
+        Debug::show($this);
+        die();
         
     }
     
