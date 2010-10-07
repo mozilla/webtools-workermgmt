@@ -55,16 +55,19 @@ class Model_Hiring {
          && filter_var($email_info['buddy_email'], FILTER_VALIDATE_EMAIL)) {
 
         // replace elements in email template and subject line
-        foreach ($email_info as $placeholder_key => $value) {
-          $email_template = str_replace("%{$placeholder_key}%", $value, $email_template);
-          $email_info['subject'] = str_replace("%{$placeholder_key}%", $value, $email_info['subject']);
-        }
-         $from = !empty ($email_info['from_label']) ? "\"{$email_info['from_label']}\" <{$email_info['from_address']}>" : $email_info['from_address'];
+         foreach ($email_info as $placeholder_key => $value) {
+           $email_template = str_replace("%{$placeholder_key}%", $value, $email_template);
+           $email_info['subject'] = str_replace("%{$placeholder_key}%", $value, $email_info['subject']);
+         }
+         $from = !empty ($email_info['from_label']) 
+             ? "\"{$email_info['from_label']}\" <{$email_info['from_address']}>" 
+             : $email_info['from_address'];
+             
          $mail_sent = mail($email_info['buddy_email'], $email_info['subject'], $email_template, "From: ". $from);
          $this->log->add('info', "Sent Buddy Notification Email to [{$email_info['buddy_email']}] from [{$from}]");
       } else {
-        $this->log->add('error', "One or both To and From email addresses for the Notify Buddy email were invalid\n"
-                ."To: {$email_info['buddy_email']}");
+         $this->log->add('error', "One or both To and From email addresses for the Notify Buddy email were invalid\n"
+             ."To: {$email_info['buddy_email']}");
       }
     } else {
       $this->log->add('debug', "config('workermgmt.send_email') is false so Buddy notification email not sent");
