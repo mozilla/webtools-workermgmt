@@ -7,8 +7,8 @@ abstract class Filing {
 
     const ERROR_CODE_LOGIN_REQUIRED = 410;
 
-    const CODE_EMPLOYEE_HIRING_GROUP = 26;
-    const CODE_CONTRACTOR_HIRING_GROUP = 59;
+    const CODE_EMPLOYEE_HIRING_GROUP = 'mozilla-corporation-confidential'; //26;
+    const CODE_CONTRACTOR_HIRING_GROUP = 'consulting'; //59;
 
     const EXCEPTION_MISSING_INPUT = 100;
     const EXCEPTION_BUGZILLA_INTERACTION = 200;
@@ -172,7 +172,8 @@ abstract class Filing {
 	public static function factory($filing_class, $submitted_data, $bz_connector) {
         // Set class name
 		$filing_class = 'Filing_'.ucfirst($filing_class);
-        return new $filing_class($submitted_data, $bz_connector);
+        $oNewClass = new $filing_class($submitted_data, $bz_connector);
+		return $oNewClass;
 	}
     /**
      *
@@ -323,7 +324,7 @@ abstract class Filing {
                 'platform'      => $this->platform      ? $this->platform   : 'All',
                 'op_sys'        => $this->op_sys        ? $this->op_sys     : 'All',
                 'severity'      => $this->severity      ? $this->severity   : 'minor',
-                'assigned_to'   => $this->assigned_to
+                'assigned_to'   => $this->assigned_to,
             ),
             array(
                 'escaping' => array('markup'),
@@ -331,6 +332,26 @@ abstract class Filing {
             )
         );
         return xmlrpc_decode($this->bz_connector->call($request));
+    }
+    /**
+     * Sets bugs dependency
+     * @param Int     $dependent 
+     * @param Int     $depends_on 
+     * @param Object  $bugzilla_connector 
+     */
+    public static function set_bug_dependency($dependent, $depends_on, $bugzilla_client) {
+        $request = xmlrpc_encode_request(
+            "Bug.update",
+            array(
+                'ids'           => array($dependent),
+                'depends_on'    => array('add' => array($depends_on))
+            ),
+            array(
+                'escaping' => array('markup'),
+                'encoding' => 'utf-8'
+            )
+        );
+        return xmlrpc_decode($bugzilla_client->call($request));
     }
 
     /**
@@ -341,11 +362,8 @@ abstract class Filing {
      * @return string
      */
     protected function input($key) {
-        // any key asked for here should always exist.
-        if( ! key_exists ($key, $this->submitted_data)) {
-            throw new Exception(
-                "Asked for non-existent submitted_data key: [{$key}]",
-                self::EXCEPTION_MISSING_INPUT);
+        if( !key_exists ($key, $this->submitted_data)) {
+            return '';
         }
         return $this->submitted_data[$key];
     }

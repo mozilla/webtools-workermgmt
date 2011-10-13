@@ -5,7 +5,7 @@ class Filing_Leaving_Setup extends Filing {
     /**
      * label that will be used for messaging.
      */
-    protected $label = "Karen/Accounting notification";
+    protected $label = "Newhire notification";
 
     /**
      * @see Filing::construct_content()
@@ -15,6 +15,7 @@ class Filing_Leaving_Setup extends Filing {
         parent::construct_content();
         $t = $this;
         /*
+		'voluntary'				=> '',
         'full_name'             => '',
         'reason_for_leaving'    => '',
         'manager'               => '',
@@ -23,7 +24,8 @@ class Filing_Leaving_Setup extends Filing {
         'equipment_to_return'   => '',
         'do_notify_managers'    => ''
         */
-        $this->summary = "{$t->input('full_name')} is leaving company on {$t->input('date_of_last_day')}";
+		$sVoluntary = $t->input('voluntary') == 1 ? 'voluntary' : 'involuntary';
+        $this->summary = "{$t->input('full_name')} is leaving company [$sVoluntary] on {$t->input('date_of_last_day')}";
         $this->description = "Name: {$t->input('full_name')}\n"
             . "Manager: ({$t->input('manager')})\n"
             . "Reason for leaving: ({$t->input('reason_for_leaving')})\n"
@@ -31,7 +33,8 @@ class Filing_Leaving_Setup extends Filing {
             . "Last day of work: ({$t->input('date_of_last_day')})\n"
             . "Equipment to return: {$t->input('equipment_to_return')}";
         $this->cc = $t->input('manager');
+//        $this->attributes['cc'][] = 'sean@mozilla.com';    // Sean Alamares
+        $this->attributes['cc'][] = 'jill@mozilla.com';    // Jill Van de Ven
         $this->groups = array(self::CODE_EMPLOYEE_HIRING_GROUP);
     }
-    
 }

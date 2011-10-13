@@ -52,7 +52,7 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
  
 Kohana::init(array(
     // TODO: Remove all before comment
-	'base_url'      => '/mozilla/workermgmt/htdocs/',//'/workermgmt-rewrite/',
+	'base_url'      => '/workermgmt/htdocs/',//'/workermgmt-rewrite/',
 	'index_file'    => '',
     'profile'       => false
 ));

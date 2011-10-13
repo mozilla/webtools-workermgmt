@@ -1,6 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 class Model_Hiring {
+	static private $_aCountryCurrencyList = null;
   /**
    * Class constructor.
    *
@@ -11,7 +12,14 @@ class Model_Hiring {
     $this->ldap = $ldap;
     $this->log = Kohana_Log::instance();
   }
-
+	
+  public function country_currency_list() {
+	if (!is_array(self::$_aCountryCurrencyList)) {
+		include 'country_currency_list.php';
+		self::$_aCountryCurrencyList = $country_currency_list;
+	}
+	return self::$_aCountryCurrencyList;
+  }
   public function manager_list($use_bugzilla_email = false) {
       return $this->ldap->employee_list('manager', $use_bugzilla_email);
   }
@@ -74,8 +82,5 @@ class Model_Hiring {
     }
     return $mail_sent;
   }
-
-  
-  
 
 }

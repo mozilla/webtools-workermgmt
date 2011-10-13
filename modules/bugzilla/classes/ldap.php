@@ -38,7 +38,7 @@ class Ldap {
      * @param array $config
      * @param array $credentials array('username'=>'...', 'password'=>'...')
      */
-    private function  __construct(Kohana_Config_File $config, array $credentials) {
+    private function  __construct(Kohana_Config_File $config, $credentials=array()) {
         $this->credentials = $credentials;
         $this->host = isset($config['ldap_host'])?$config['ldap_host']:null;
         $this->anon_bind = isset($config['ldap_anon_bind'])?$config['ldap_anon_bind']:null;
@@ -228,8 +228,8 @@ class Ldap {
         }
         // cleanup, convert to expected underscore format
         foreach ($search_results as &$result) {
-            $result['employee_type']=$result['employeetype'];
-            unset ($result['employeetype']);
+            #$result['employee_type']=$result['employeetype'];
+            #unset ($result['employeetype']);
             if(isset ($result['bugzillaemail'])) {
                 $result['bugzilla_email']=$result['bugzillaemail'];
                 unset ($result['bugzillaemail']);

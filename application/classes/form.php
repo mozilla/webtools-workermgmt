@@ -7,7 +7,7 @@ class Form extends Kohana_Form {
      * can decorate them in the UI (adds class='required ..')
      *
      * Usage in Controller:
-     * form::required_fields(array('hire_type','first_name','last_name',...)
+     * form::required_fields(array('employee_type','first_name','last_name',...)
      *
      * @todo Make this more automagic, so dont have to maintain a seperate array
      */

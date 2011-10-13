@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 return array(
-	'not_empty'    => ':field must not be empty',
+	'not_empty'    => ':field is required',
 	'matches'      => ':field must be the same as :param1',
 	'regex'        => ':field does not match the required format',
 	'exact_length' => ':field must be exactly :param1 characters long',

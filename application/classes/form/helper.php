@@ -27,6 +27,23 @@ class Form_Helper {
         }
         return $managers;
     }
+	/**
+     * Foreach country in array, builds their display name
+     *  depending on what info is available.
+     *
+     * @param array $country_currency_list
+	 * @param boolean $add_empty_first
+     * @return array
+     */
+	public static function format_country_list(array $country_currency_list, $add_empty_first='Select...') {
+		foreach ($country_currency_list as $sKey=>&$aValue) {
+			$aValue = $sKey;
+		}
+		if($add_empty_first) {
+            $country_currency_list = array(''=>$add_empty_first)+$country_currency_list;
+        }
+		return $country_currency_list;
+	}
     /**
      * For non DB backed lookup lists used to populate UI elements like selects
      * and radio groups. THe submitted value is checked against the list array
@@ -36,11 +53,11 @@ class Form_Helper {
      *  the controller. They are the lookup list that populated a select list or
      *  radio group in the UI.
      *  ex: $select_lists = array(
-        'hire_type' => array(
-            ""  => "Select ...",
-            "Employee" => "Employee",
-            "Intern" =>  "Intern"
-        ),...
+     *   'employee_type' => array(
+     *       ""  => "Select ...",
+     *       "Employee" => "Employee",
+     *       "Intern" =>  "Intern"
+     *   ),...
      * @return void
      */
     public static function filter_disallowed_values($select_lists) {

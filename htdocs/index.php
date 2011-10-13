@@ -101,3 +101,5 @@ else
 
 // Bootstrap the application
 require APPPATH.'bootstrap'.EXT;
+
+print '<small style="position: fixed; bottom: 2px; right: 2px; font-size: 8px; color: #CCC">V05</small>';

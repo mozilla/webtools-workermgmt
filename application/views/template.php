@@ -17,7 +17,16 @@ $title = isset($title)?$title:"Mozilla Web Tools";
         ?>
         <?php echo isset($css_extra)?$css_extra:''; ?>
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-        <link rel="Top" href="https://bugzilla.mozilla.org/" />     
+        <link rel="Top" href="https://bugzilla.mozilla.org/" />
+
+   		<script type="text/javascript">var URL_BASE = "<?php echo URL::base(); ?>";</script>
+        <?php
+            echo HTML::script('media/js/jquery-1.4.2.min.js');
+            echo HTML::script('media/js/jquery-ui-1.7.2.custom.min.js');
+            echo HTML::script('media/js/webtools.js');
+			echo HTML::script('media/js/jquery.dom.js');
+        ?>
+        <?php echo isset($js_extra)?$js_extra:''; ?>
     </head>
     <body>
         <div id="container">
@@ -37,12 +46,5 @@ $title = isset($title)?$title:"Mozilla Web Tools";
             <?php echo $content ?>
 
         </div>
-        <script type="text/javascript">var URL_BASE = "<?php echo URL::base(); ?>";</script>
-        <?php
-            echo HTML::script('media/js/jquery-1.4.2.min.js');
-            echo HTML::script('media/js/jquery-ui-1.7.2.custom.min.js');
-            echo HTML::script('media/js/webtools.js');
-        ?>
-        <?php echo isset($js_extra)?$js_extra:''; ?>
     </body>
 </html>

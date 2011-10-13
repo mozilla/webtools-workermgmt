@@ -18,10 +18,10 @@ $(document).ready(function(){
   /**
    * toggle the edndate to show if HireType::Intern selected
    */
-  $('#hire_type').change(function() {
-    toggle_section('end_date_section',$(this).val()=='Intern');
+  $('#employee_type').change(function() {
+    toggle_section('end_date_section',$(this).val()=='Intern' || $('#employee_type').val()=='Seasonal');
   });
-  toggle_section('end_date_section',$('#hire_type').val()=='Intern');
+  toggle_section('end_date_section',$('#employee_type').val()=='Intern' || $('#employee_type').val()=='Seasonal');
 
   /**
    * For the two checkboxes, toggle the sections the represent

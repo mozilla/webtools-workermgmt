@@ -7,6 +7,13 @@
     <?php
         echo Form::csrf_token();
 
+		?>
+			
+			<label for="voluntary"><input id="voluntary" type="radio" name="voluntary" value="1" checked="checked" />Voluntary</label>
+			<label for="involuntary"><input id="involuntary" type="radio" name="voluntary" value="0" />Involuntary</label>
+		
+		<?php
+
         echo Form::auto_label('full_name');
         client::validation('full_name');
         echo Form::input('full_name=id', $form['full_name'], array('size'=>'20'));

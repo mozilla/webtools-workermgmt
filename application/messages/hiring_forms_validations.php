@@ -4,7 +4,7 @@
  */
 return array(
 
-    'hire_type' => array(
+    'employee_type' => array(
         'not_empty' => 'You must select a Hire Type',
         'default' => 'Invalid Input'
     ),
@@ -49,6 +49,46 @@ return array(
         'not_empty' => 'Address is required',
         'default' => 'Invalid Input'
     ),
+	'address_city' => array(
+        'not_empty' => 'City is required',
+        'default' => 'Invalid Input'
+    ),
+	'address_postal_code' => array(
+	    'not_empty' => 'Postal code is required',
+	    'default' => 'Invalid Input'
+	),
+	'address_country' => array(
+	    'not_empty' => 'Country is required',
+	    'default' => 'Invalid Input'
+	),
+	'address_province' => array(
+	    'not_empty' => 'Province/state is required',
+	    'default' => 'Invalid Input'
+	),
+	'address_street' => array(
+	    'not_empty' => 'Street address is required',
+	    'default' => 'Invalid Input'
+	),
+	'address_billing_city' => array(
+        'not_empty' => 'City is required',
+        'default' => 'Invalid Input'
+    ),
+	'address_billing_postal_code' => array(
+	    'not_empty' => 'Postal code is required',
+	    'default' => 'Invalid Input'
+	),
+	'address_billing_country' => array(
+	    'not_empty' => 'Country is required',
+	    'default' => 'Invalid Input'
+	),
+	'address_billing_province' => array(
+	    'not_empty' => 'Province/state is required',
+	    'default' => 'Invalid Input'
+	),
+	'address_billing_street' => array(
+	    'not_empty' => 'Street address is required',
+	    'default' => 'Invalid Input'
+	),
     'phone_number' => array(
         'not_empty' => 'Phone Number is required',
         'default' => 'Invalid Input'
@@ -81,5 +121,9 @@ return array(
         'not_empty' => 'You must select a Machine Type',
         'default' => 'Invalid Input'
     ),
+	'mail_needed' => array(
+        'not_empty' => 'You must select Yes or No',
+        'default' => 'Invalid Input'
+    ), 
 
 );

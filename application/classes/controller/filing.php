@@ -7,7 +7,7 @@ class Controller_Filing extends Controller_Template {
         'authenticate::logout'
     );
 
-    //                                    label        path
+    // label        path
     protected $static_crumb_base = array('web forms' => '/');
 
     public function __construct(Kohana_Request $request) {
@@ -24,10 +24,9 @@ class Controller_Filing extends Controller_Template {
         if( ! in_array($requested_area, $this->non_authed_areas)) {
             // run authentication
             if( ! $this->bugzilla_client->authenticated()) {
-                $this->request->redirect('authenticate/login');
+            	$this->request->redirect('authenticate/login'); // TODO: UNCOMMENT
             }
         }
-
     }
 
     /**
@@ -66,7 +65,7 @@ class Controller_Filing extends Controller_Template {
      * @param array $form_input The validated form input
      */
     protected function file_these(array $bugs_to_file, $form_input) {
-        $success = false;
+        $success = array();
         $filing = array();
         foreach ($bugs_to_file as $bug_to_file) {
             try {
@@ -84,7 +83,7 @@ class Controller_Filing extends Controller_Template {
                         $filing->success_message),
                     E_USER_NOTICE
                 );
-                $success = true;
+                $success[] = $filing->bug_id;
             } catch (Exception $e) {
                 /**
                  * Timed out session most likely

@@ -20,6 +20,7 @@ class Controller_Leaving extends Controller_Filing {
             - send notification to current manager, erica and karen
         */
         $form = array(
+			      'voluntary'				      => '',
             'full_name'             => '',
             'reason_for_leaving'    => '',
             'manager'               => '',

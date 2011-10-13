@@ -21,7 +21,6 @@ class Bugzilla_Client {
     private $log;
 
     public function  __construct(Kohana_Config_File $config, array $httpauth_credentials = null) {
-        //Debug::show($config);
         $this->config = $config;
         $this->httpauth_credentials = $httpauth_credentials;
         $this->bz_id = Session::instance()->get('bz_id');
