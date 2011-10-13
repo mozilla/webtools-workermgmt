@@ -228,8 +228,8 @@ class Ldap {
         }
         // cleanup, convert to expected underscore format
         foreach ($search_results as &$result) {
-            #$result['employee_type']=$result['employeetype'];
-            #unset ($result['employeetype']);
+            $result['employee_type']=$result['employeetype'];
+            unset ($result['employeetype']);
             if(isset ($result['bugzillaemail'])) {
                 $result['bugzilla_email']=$result['bugzillaemail'];
                 unset ($result['bugzillaemail']);
