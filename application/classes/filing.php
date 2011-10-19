@@ -268,7 +268,7 @@ abstract class Filing {
     public function file() {
         $filing_response = array();
         /**
-         * Take the user input an contruct the content for the bug filing
+         * Take the user input and construct the content for the bug filing
          */
         $this->construct_content();
         /**
