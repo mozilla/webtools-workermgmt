@@ -87,7 +87,7 @@ function select_to_autocomplete(element_id, config) {
     $(jq_element_id+'_autocomplete').autocomplete(
         list_items,{matchContains: true}
     ).result(function(event, data, formatted) {
-        var match = formatted?formatted.match(/\((.*)\)$/):null;
+        var match = formatted?formatted.match(/\(([^\(]*)\)$/):null;
         $(jq_element_id).val(match ? match[1] : null);
         return false;
     // on blur, invoke search again incase there were edits
