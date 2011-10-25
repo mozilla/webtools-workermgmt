@@ -58,8 +58,7 @@ class Filing_Newhire_Contractor extends Filing {
             . "Statement of work:\n{$t->input('statement_of_work')}\n"
         );
         $this->cc = array(
-			$t->input('manager_bz_email'),
-			'eanda@mozilla.com'
+			$t->input('manager_bz_email')
 		);
         $this->groups = array(self::CODE_CONTRACTOR_HIRING_GROUP);
     }

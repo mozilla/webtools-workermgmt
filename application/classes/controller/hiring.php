@@ -438,7 +438,7 @@ class Controller_Hiring extends Controller_Filing {
      * Sends the email to notify the people involved in hiring process of a newhire
      * 
 	 * 	For employee and seasonal: <recruiting@mozilla.com> and <jcook@mozilla.com> and <[hiring manager]>
-	 *	For interns: 			   <college@mozilla.com> and <jcook@mozilla.com> and <[hiring manager]>
+	 *	For interns: 			   <jcook@mozilla.com> and <[hiring manager]>
 	 *	All 3 of them CC to: 	   <peoplepeople@mozilla.com> and <[office contact]>
 	 *
      * @param array $form_input
@@ -459,7 +459,6 @@ class Controller_Hiring extends Controller_Filing {
 		
 		switch ($aForm['employee_type']) {
 			case 'Intern':
-				$aTo[] = 'college@mozilla.com';
 				$aTo[] = 'jcook@mozilla.com';
 				break;
 			case 'Seasonal':
