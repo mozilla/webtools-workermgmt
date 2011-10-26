@@ -49,9 +49,7 @@ class Filing_Newhire_Setup extends Filing {
 		switch ($t->input('employee_type')) {
 			case 'Intern':
 				$this->cc = array(
-		        	$t->input('manager_bz_email'),
-					'college@mozilla.com',
-					'eanda@mozilla.com',
+		        	$t->input('manager_bz_email')
 		       	);
 				break;
 			case 'Seasonal':
