@@ -1,4 +1,7 @@
 .DS_Store
+bootstrap.php
 application/cache
+cache
 logs
 application/config/workermgmt.php
+htdocs/.htaccess
