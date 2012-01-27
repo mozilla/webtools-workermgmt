@@ -59,7 +59,9 @@ class Filing_Newhire_Setup extends Filing {
 		        	$t->input('manager_bz_email'),
 					'emcclure@mozilla.com',
 					'dcoleman@mozilla.com',
-					'jill@mozilla.com'
+					'jill@mozilla.com',
+					'lgray@mozilla.com',
+					'rberto@mozilla.com'
 		       	);
 				break;
 		}
