@@ -17,7 +17,7 @@ class Controller_Leaving extends Controller_Filing {
             - date of notice given
             - last day of work
             - equipment to be returned (IT inventory can tell us this)
-            - send notification to current manager, erica and karen
+            - send notification to current manager, erica and lisa
         */
         $form = array(
 			      'voluntary'				      => '',
