@@ -404,14 +404,14 @@
 
 <script>
 	/*
-	USA: Karen Prescott
+	USA: Lisa Gray
 	Canada: Hilary Hall
 	France: Tristan Nitot
 	New Zealand: Robert O'Callahan
-	Other: Karen Prescott
+	Other: Lisa Gray
 	*/
 	var aOfficeContacts = [
-		'Karen Prescott <karen@mozilla.com>',
+		'Lisa Gray <lgray@mozilla.com>',
 		'Robert O\'Callahan <rocallahan@mozilla.com>',
 		'Tristan Nitot <tnitot@mozilla.com>',
 		'Hilary Hall <hhall@mozilla.com>'
